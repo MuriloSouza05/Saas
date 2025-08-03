@@ -266,7 +266,15 @@ export function DashboardCharts({ className }: ChartsProps) {
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={casesByStatus}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-              <XAxis dataKey="status" stroke="#6B7280" angle={-45} textAnchor="end" height={80} />
+              <XAxis
+                dataKey="status"
+                stroke="#6B7280"
+                angle={-45}
+                textAnchor="end"
+                height={80}
+                interval={0}
+                fontSize={12}
+              />
               <YAxis stroke="#6B7280" />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="count" name="Casos" radius={[4, 4, 0, 0]}>
