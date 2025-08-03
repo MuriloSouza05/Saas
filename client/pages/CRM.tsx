@@ -748,14 +748,18 @@ export function CRM() {
               </Button>
               <Button
                 onClick={() => {
-                  setPipelineStagesConfig(prev =>
-                    prev.map(stage => ({
+                  console.log('Salvando stages:', tempStageNames);
+                  setPipelineStagesConfig(prev => {
+                    const newConfig = prev.map(stage => ({
                       ...stage,
                       name: tempStageNames[stage.id] || stage.name
-                    }))
-                  );
+                    }));
+                    console.log('Nova configuração:', newConfig);
+                    return newConfig;
+                  });
                   setEditingStages(false);
                   setTempStageNames({});
+                  alert('Nomes dos stages atualizados com sucesso!');
                 }}
               >
                 Salvar Alterações
