@@ -34,6 +34,16 @@ import { TaskForm } from '@/components/Tasks/TaskForm';
 import { TaskBoard } from '@/components/Tasks/TaskBoard';
 import { TaskViewDialog } from '@/components/Tasks/TaskViewDialog';
 import { Task, TaskBoard as TaskBoardType, TaskStatus, TaskPriority, TaskStats } from '@/types/tasks';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, Eye, Edit, Trash2 } from 'lucide-react';
 
 // Mock data - in real app would come from API
 const mockTasks: Task[] = [
