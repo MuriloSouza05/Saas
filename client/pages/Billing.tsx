@@ -850,7 +850,7 @@ export function Billing() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Sistema de Cobrança</h1>
             <p className="text-muted-foreground">
-              Estimates, Invoices e Envoices para controle financeiro
+              Estimates e Invoices para controle financeiro
             </p>
           </div>
           <DropdownMenu>
