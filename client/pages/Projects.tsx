@@ -341,10 +341,30 @@ export function Projects() {
               Gerenciamento de projetos jurídicos com sistema Kanban
             </p>
           </div>
-          <Button onClick={() => handleAddProject('novo')}>
-            <Plus className="h-4 w-4 mr-2" />
-            Novo Projeto
-          </Button>
+          <div className="flex space-x-2">
+            <div className="flex border rounded-lg p-1">
+              <Button
+                variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('kanban')}
+              >
+                <Grid3X3 className="h-4 w-4 mr-1" />
+                Kanban
+              </Button>
+              <Button
+                variant={viewMode === 'compact' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('compact')}
+              >
+                <List className="h-4 w-4 mr-1" />
+                Lista
+              </Button>
+            </div>
+            <Button onClick={() => handleAddProject('novo')}>
+              <Plus className="h-4 w-4 mr-2" />
+              Novo Projeto
+            </Button>
+          </div>
         </div>
 
         {/* Metrics Cards */}
