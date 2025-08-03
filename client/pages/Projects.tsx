@@ -282,17 +282,6 @@ function ProjectCompactView({
                       <Edit className="h-4 w-4 mr-2" />
                       Editar
                     </DropdownMenuItem>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem>Mover para:</DropdownMenuItem>
-                      {statusOptions.map((status) => (
-                        <DropdownMenuItem
-                          key={status.value}
-                          onClick={() => onMoveProject(project.id, status.value as ProjectStatus)}
-                        >
-                          {status.label}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
                     <DropdownMenuItem
                       onClick={() => onDeleteProject(project.id)}
                       className="text-red-600"
@@ -487,7 +476,7 @@ export function Projects() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Projetos</h1>
             <p className="text-muted-foreground">
-              Gerenciamento de projetos jurídicos com sistema Kanban
+              Gerenciamento de projetos jur��dicos com sistema Kanban
             </p>
           </div>
           <div className="flex space-x-2">
