@@ -642,23 +642,18 @@ export function CashFlow() {
   };
 
   const copyLastTransaction = () => {
-    try {
-      if (transactions.length > 0) {
-        const lastTransaction = transactions[transactions.length - 1];
-        const copiedTransaction = {
-          ...lastTransaction,
-          id: '', // Clear ID so it creates a new transaction
-          description: `${lastTransaction.description} (Cópia)`,
-          date: new Date().toISOString().split('T')[0] + 'T00:00:00Z',
-        };
-        setEditingTransaction(copiedTransaction);
-        setShowTransactionForm(true);
-      } else {
-        alert('Nenhuma transação disponível para copiar');
-      }
-    } catch (error) {
-      console.error('Erro ao copiar última transação:', error);
-      alert('Erro ao copiar última transação. Tente novamente.');
+    if (transactions.length > 0) {
+      const lastTransaction = transactions[transactions.length - 1];
+      const copiedTransaction = {
+        ...lastTransaction,
+        id: '', // Clear ID so it creates a new transaction
+        description: `${lastTransaction.description} (Cópia)`,
+        date: new Date().toISOString().split('T')[0] + 'T00:00:00Z',
+      };
+      setEditingTransaction(copiedTransaction);
+      setShowTransactionForm(true);
+    } else {
+      alert('Nenhuma transação disponível para copiar');
     }
   };
 
