@@ -11,7 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { Users, Plus, Search, Filter, Target, BarChart3, TrendingUp } from 'lucide-react';
+import { Users, Plus, Search, Filter, Target, BarChart3, TrendingUp, Grid3X3, List, Edit2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
   Select,
