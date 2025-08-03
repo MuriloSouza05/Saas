@@ -545,16 +545,7 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
             />
 
             <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => {
-                try {
-                  setTimeout(() => {
-                    onOpenChange(false);
-                  }, 0);
-                } catch (error) {
-                  console.error('Erro ao cancelar:', error);
-                  onOpenChange(false);
-                }
-              }}>
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancelar
               </Button>
               <Button type="submit">
