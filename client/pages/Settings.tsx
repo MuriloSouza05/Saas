@@ -880,59 +880,6 @@ export function Settings() {
           {/* Financial Settings */}
           <TabsContent value="financial">
             <div className="space-y-6">
-              {/* Contas Bancárias */}
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="flex items-center">
-                    <DollarSign className="h-5 w-5 mr-2" />
-                    Contas Bancárias
-                  </CardTitle>
-                  <Button onClick={() => {
-                    setEditingAccount(null);
-                    setShowNewAccountModal(true);
-                  }}>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Nova Conta
-                  </Button>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {accounts.map((conta) => (
-                      <div key={conta.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center space-x-4">
-                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <DollarSign className="h-5 w-5 text-blue-600" />
-                          </div>
-                          <div>
-                            <div className="font-medium">{conta.bank}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {conta.type} • {conta.account}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <div className="text-right">
-                            <div className="font-semibold">
-                              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(conta.balance)}
-                            </div>
-                            <div className="text-sm text-green-600">+2.5% mês</div>
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setEditingAccount(conta);
-                              setShowNewAccountModal(true);
-                            }}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
 
               {/* Formas de Pagamento */}
               <Card>
