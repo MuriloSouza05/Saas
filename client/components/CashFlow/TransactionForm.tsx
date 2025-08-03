@@ -544,7 +544,7 @@ export function TransactionForm({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Nenhum projeto</SelectItem>
+                          <SelectItem value="none">Nenhum projeto</SelectItem>
                           {mockProjects.map((project) => (
                             <SelectItem key={project.id} value={project.id}>
                               {project.name}
@@ -571,7 +571,7 @@ export function TransactionForm({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Nenhum cliente</SelectItem>
+                          <SelectItem value="none">Nenhum cliente</SelectItem>
                           {mockClients.map((client) => (
                             <SelectItem key={client.id} value={client.id}>
                               {client.name}
