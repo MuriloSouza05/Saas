@@ -132,6 +132,119 @@ const mockDeals: Deal[] = [
   },
 ];
 
+interface PipelineListViewProps {
+  deals: Deal[];
+  stages: PipelineStage[];
+  onEditDeal: (deal: Deal) => void;
+  onDeleteDeal: (dealId: string) => void;
+  onMoveDeal: (dealId: string, newStage: DealStage) => void;
+}
+
+function PipelineListView({
+  deals,
+  stages,
+  onEditDeal,
+  onDeleteDeal,
+  onMoveDeal
+}: PipelineListViewProps) {
+  const getStageInfo = (stageId: string) => {
+    const stage = stages.find(s => s.id === stageId);
+    return stage || { name: stageId, color: 'gray' };
+  };
+
+  const getStageColor = (color: string) => {
+    const colors = {
+      blue: 'bg-blue-100 text-blue-800',
+      yellow: 'bg-yellow-100 text-yellow-800',
+      purple: 'bg-purple-100 text-purple-800',
+      orange: 'bg-orange-100 text-orange-800',
+      green: 'bg-green-100 text-green-800',
+      red: 'bg-red-100 text-red-800',
+      gray: 'bg-gray-100 text-gray-800'
+    };
+    return colors[color] || colors.gray;
+  };
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(value);
+  };
+
+  return (
+    <div className="space-y-3">
+      {deals.map((deal) => {
+        const stageInfo = getStageInfo(deal.stage);
+        return (
+          <Card key={deal.id} className="hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4 flex-1">
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback>{deal.title.substring(0, 2).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <h3 className="font-semibold text-sm truncate">{deal.title}</h3>
+                      <Badge className={getStageColor(stageInfo.color)}>
+                        {stageInfo.name}
+                      </Badge>
+                    </div>
+
+                    <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                      <span>{deal.clientName}</span>
+                      <span>•</span>
+                      <span>{formatCurrency(deal.value)}</span>
+                      <span>•</span>
+                      <span>Criado: {new Date(deal.createdAt).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <div className="text-right">
+                    <div className="text-sm font-medium">{deal.probability}%</div>
+                    <div className="text-xs text-muted-foreground">Prob.</div>
+                  </div>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => onEditDeal(deal)}>
+                        <Edit className="h-4 w-4 mr-2" />
+                        Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => onDeleteDeal(deal.id)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Excluir
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
+
+      {deals.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground">
+          Nenhum deal encontrado no pipeline.
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function CRM() {
   const [activeTab, setActiveTab] = useState('clients');
   const [showClientForm, setShowClientForm] = useState(false);
