@@ -125,7 +125,7 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
           status: task.status || 'not_started',
           priority: task.priority || 'medium',
           assignedTo: task.assignedTo || '',
-          projectId: task.projectId || '',
+          projectId: task.projectId || 'none',
           clientId: task.clientId || '',
           estimatedHours: task.estimatedHours || 0,
           actualHours: task.actualHours || 0,
