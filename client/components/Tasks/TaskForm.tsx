@@ -44,7 +44,7 @@ const taskSchema = z.object({
   clientId: z.string().optional(),
   estimatedHours: z.number().optional(),
   actualHours: z.number().optional(),
-  progress: z.number().min(0).max(100),
+  progress: z.number().min(0).max(100).optional(),
   notes: z.string().optional(),
 });
 
