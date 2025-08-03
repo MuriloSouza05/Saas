@@ -62,14 +62,7 @@ export interface Invoice extends BaseDocument {
   lastReminderAt?: string;
 }
 
-export interface Envoice extends BaseDocument {
-  type: 'envoice';
-  number: string; // ENV-{id}
-  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
-  paymentMethod?: PaymentMethod;
-  internalNotes?: string;
-  attachments: DocumentAttachment[];
-}
+
 
 export type DocumentStatus = 
   | 'DRAFT'
@@ -122,7 +115,7 @@ export interface DocumentAttachment {
 export interface DocumentTemplate {
   id: string;
   name: string;
-  type: 'estimate' | 'invoice' | 'envoice';
+  type: 'estimate' | 'invoice';
   content: string; // HTML template
   variables: TemplateVariable[];
   isDefault: boolean;
@@ -141,7 +134,7 @@ export interface TemplateVariable {
 export interface BillingStats {
   totalEstimates: number;
   totalInvoices: number;
-  totalEnvoices: number;
+
   pendingAmount: number;
   paidAmount: number;
   overdueAmount: number;
@@ -152,7 +145,7 @@ export interface BillingStats {
 export interface BillingActivity {
   id: string;
   type: 'created' | 'sent' | 'viewed' | 'paid' | 'overdue' | 'cancelled';
-  documentType: 'estimate' | 'invoice' | 'envoice';
+  documentType: 'estimate' | 'invoice';
   documentId: string;
   documentNumber: string;
   description: string;
