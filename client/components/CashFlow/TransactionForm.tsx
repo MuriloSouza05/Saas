@@ -266,13 +266,9 @@ export function TransactionForm({
    * Adiciona uma nova tag à lista
    */
   const addTag = () => {
-    try {
-      if (newTag.trim() && !tags.includes(newTag.trim())) {
-        setTags([...tags, newTag.trim()]);
-        setNewTag('');
-      }
-    } catch (error) {
-      console.error('Erro ao adicionar tag:', error);
+    if (newTag.trim() && !tags.includes(newTag.trim())) {
+      setTags([...tags, newTag.trim()]);
+      setNewTag('');
     }
   };
 
@@ -280,11 +276,7 @@ export function TransactionForm({
    * Remove uma tag da lista
    */
   const removeTag = (tagToRemove: string) => {
-    try {
-      setTags(tags.filter(tag => tag !== tagToRemove));
-    } catch (error) {
-      console.error('Erro ao remover tag:', error);
-    }
+    setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
   /**
