@@ -38,7 +38,7 @@ const clientSchema = z.object({
   mobile: z.string().min(1, 'Telefone é obrigatório'),
   country: z.string().min(1, 'País é obrigatório'),
   state: z.string().min(1, 'Estado é obrigatório'),
-  address: z.string().min(1, 'Endere��o é obrigatório'),
+  address: z.string().optional(),
   city: z.string().min(1, 'Cidade é obrigatória'),
   zipCode: z.string().min(1, 'CEP é obrigatório'),
   budget: z.number().min(0, 'Orçamento deve ser positivo'),
