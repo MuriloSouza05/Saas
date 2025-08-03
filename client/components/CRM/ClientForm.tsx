@@ -545,6 +545,20 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="registeredBy"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Colaborador que Cadastrou</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nome do colaborador" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
 
