@@ -188,55 +188,49 @@ export function TransactionForm({
    * Effect para atualizar formulário quando a transação ou props mudarem
    */
   useEffect(() => {
-    try {
-      console.log('useEffect executado:', { transaction, forceRecurring });
-      
-      const recurringState = forceRecurring || transaction?.isRecurring || false;
-      setIsRecurring(recurringState);
-      
-      if (transaction) {
-        // Preenche formulário com dados da transação existente
-        form.reset({
-          type: transaction.type || 'income',
-          amount: transaction.amount || 0,
-          categoryId: transaction.categoryId || '',
-          description: transaction.description || '',
-          date: transaction.date ? transaction.date.split('T')[0] : new Date().toISOString().split('T')[0],
-          paymentMethod: transaction.paymentMethod || undefined,
-          status: transaction.status || 'confirmed',
-          projectId: transaction.projectId || 'none',
-          clientId: transaction.clientId || 'none',
-          notes: transaction.notes || '',
-          isRecurring: recurringState,
-          recurringFrequency: transaction.recurringFrequency || 'monthly',
-        });
-        setTags(transaction.tags || []);
-      } else {
-        // Reseta formulário para nova transação
-        form.reset({
-          type: 'income',
-          amount: 0,
-          categoryId: '',
-          description: '',
-          date: new Date().toISOString().split('T')[0],
-          paymentMethod: undefined,
-          status: 'confirmed',
-          projectId: 'none',
-          clientId: 'none',
-          notes: '',
-          isRecurring: recurringState,
-          recurringFrequency: 'monthly',
-        });
-        setTags([]);
-      }
-      
-      // Limpa erros anteriores
-      setError(null);
-    } catch (error) {
-      console.error('Erro no useEffect do TransactionForm:', error);
-      setError('Erro ao carregar dados do formulário');
+    if (!open) return;
+
+    const recurringState = forceRecurring || transaction?.isRecurring || false;
+    setIsRecurring(recurringState);
+
+    if (transaction) {
+      // Preenche formulário com dados da transação existente
+      form.reset({
+        type: transaction.type || 'income',
+        amount: transaction.amount || 0,
+        categoryId: transaction.categoryId || '',
+        description: transaction.description || '',
+        date: transaction.date ? transaction.date.split('T')[0] : new Date().toISOString().split('T')[0],
+        paymentMethod: transaction.paymentMethod || undefined,
+        status: transaction.status || 'confirmed',
+        projectId: transaction.projectId || 'none',
+        clientId: transaction.clientId || 'none',
+        notes: transaction.notes || '',
+        isRecurring: recurringState,
+        recurringFrequency: transaction.recurringFrequency || 'monthly',
+      });
+      setTags(transaction.tags || []);
+    } else {
+      // Reseta formulário para nova transação
+      form.reset({
+        type: 'income',
+        amount: 0,
+        categoryId: '',
+        description: '',
+        date: new Date().toISOString().split('T')[0],
+        paymentMethod: undefined,
+        status: 'confirmed',
+        projectId: 'none',
+        clientId: 'none',
+        notes: '',
+        isRecurring: recurringState,
+        recurringFrequency: 'monthly',
+      });
+      setTags([]);
     }
-  }, [transaction, form, forceRecurring]);
+
+    setError(null);
+  }, [transaction, forceRecurring, open]);
 
   /**
    * Função para fechar o modal de forma segura
