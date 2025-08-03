@@ -148,6 +148,9 @@ export function CRM() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [advancedFilters, setAdvancedFilters] = useState<any>(null);
+  const [pipelineViewMode, setPipelineViewMode] = useState<'kanban' | 'list'>('kanban');
+  const [editingStages, setEditingStages] = useState(false);
+  const [tempStageNames, setTempStageNames] = useState<{[key: string]: string}>({});
 
   // Filter clients based on search, status, and advanced filters
   const filteredClients = useMemo(() => {
