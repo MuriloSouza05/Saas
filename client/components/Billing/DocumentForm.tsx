@@ -226,28 +226,30 @@ export function DocumentForm({
 
   // Atualizar formulário quando document mudar
   useEffect(() => {
-    if (document) {
+    if (!open) return;
+
+    if (doc) {
       form.reset({
-        date: document.date ? document.date.split('T')[0] : new Date().toISOString().split('T')[0],
-        dueDate: document.dueDate ? document.dueDate.split('T')[0] : '',
-        senderId: document.senderId || '1',
-        receiverId: document.receiverId || '',
-        title: document.title || '',
-        description: document.description || '',
-        currency: document.currency || 'BRL',
-        discount: document.discount || 0,
-        discountType: document.discountType || 'fixed',
-        fee: document.fee || 0,
-        feeType: document.feeType || 'fixed',
-        tax: document.tax || 0,
-        taxType: document.taxType || 'percentage',
-        notes: document.notes || '',
+        date: doc.date ? doc.date.split('T')[0] : new Date().toISOString().split('T')[0],
+        dueDate: doc.dueDate ? doc.dueDate.split('T')[0] : '',
+        senderId: doc.senderId || '1',
+        receiverId: doc.receiverId || '',
+        title: doc.title || '',
+        description: doc.description || '',
+        currency: doc.currency || 'BRL',
+        discount: doc.discount || 0,
+        discountType: doc.discountType || 'fixed',
+        fee: doc.fee || 0,
+        feeType: doc.feeType || 'fixed',
+        tax: doc.tax || 0,
+        taxType: doc.taxType || 'percentage',
+        notes: doc.notes || '',
       });
-      setItems(document.items || []);
+      setItems(doc.items || []);
     } else {
       setItems([]);
     }
-  }, [document, form]);
+  }, [doc, open]);
 
   const handleSubmit = (data: DocumentFormData) => {
     onSubmit({ ...data, items });
