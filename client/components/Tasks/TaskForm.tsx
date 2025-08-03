@@ -113,31 +113,49 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
     },
   });
 
-  // Atualizar formulário quando task mudar
+  // Atualizar formulário quando task mudar ou modal abrir
   useEffect(() => {
-    if (task) {
-      form.reset({
-        title: task.title || '',
-        description: task.description || '',
-        startDate: task.startDate ? task.startDate.split('T')[0] : '',
-        endDate: task.endDate ? task.endDate.split('T')[0] : '',
-        status: task.status || 'not_started',
-        priority: task.priority || 'medium',
-        assignedTo: task.assignedTo || '',
-        projectId: task.projectId || '',
-        clientId: task.clientId || '',
-        estimatedHours: task.estimatedHours || 0,
-        actualHours: task.actualHours || 0,
-        progress: task.progress || 0,
-        notes: task.notes || '',
-      });
-      setTags(task.tags || []);
-      setSubtasks(task.subtasks || []);
-    } else {
-      setTags([]);
-      setSubtasks([]);
+    if (open) {
+      if (task) {
+        form.reset({
+          title: task.title || '',
+          description: task.description || '',
+          startDate: task.startDate ? task.startDate.split('T')[0] : '',
+          endDate: task.endDate ? task.endDate.split('T')[0] : '',
+          status: task.status || 'not_started',
+          priority: task.priority || 'medium',
+          assignedTo: task.assignedTo || '',
+          projectId: task.projectId || '',
+          clientId: task.clientId || '',
+          estimatedHours: task.estimatedHours || 0,
+          actualHours: task.actualHours || 0,
+          progress: task.progress || 0,
+          notes: task.notes || '',
+        });
+        setTags(task.tags || []);
+        setSubtasks(task.subtasks || []);
+      } else {
+        // Reset para nova tarefa
+        form.reset({
+          title: '',
+          description: '',
+          startDate: '',
+          endDate: '',
+          status: 'not_started',
+          priority: 'medium',
+          assignedTo: '',
+          projectId: '',
+          clientId: '',
+          estimatedHours: 0,
+          actualHours: 0,
+          progress: 0,
+          notes: '',
+        });
+        setTags([]);
+        setSubtasks([]);
+      }
     }
-  }, [task, form]);
+  }, [task, form, open]);
 
   const handleSubmit = (data: TaskFormData) => {
     onSubmit({ ...data, tags, subtasks });
