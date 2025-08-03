@@ -715,6 +715,15 @@ export function CashFlow() {
               <Download className="h-4 w-4 mr-2" />
               Exportar CSV
             </Button>
+            <Button
+              variant="outline"
+              onClick={deleteAllTransactions}
+              className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+              disabled={transactions.length === 0}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Apagar Todas
+            </Button>
           </div>
         </div>
 
@@ -761,7 +770,7 @@ export function CashFlow() {
             <CardContent className="flex flex-col items-center justify-center p-6 text-center">
               <Clock className="h-8 w-8 text-purple-600 mb-2" />
               <h3 className="font-semibold text-purple-900 mb-1">Criar Recorrente</h3>
-              <p className="text-sm text-purple-700 mb-3">Transação automática</p>
+              <p className="text-sm text-purple-700 mb-3">Transação autom��tica</p>
               <Button
                 size="sm"
                 variant="outline"
