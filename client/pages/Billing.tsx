@@ -108,7 +108,7 @@ const mockEstimates: Estimate[] = [
     receiverId: '1',
     receiverName: 'Maria Silva Santos',
     receiverDetails: mockClientDetails,
-    title: 'Orçamento para Serviços Jurídicos',
+    title: 'Or��amento para Serviços Jurídicos',
     description: 'Serviços de consultoria e elaboração de contrato',
     items: mockItems,
     subtotal: 2500,
@@ -300,14 +300,6 @@ export function Billing() {
         remindersSent: 0,
       };
       setInvoices([...invoices, invoice]);
-    } else if (documentType === 'envoice') {
-      const envoice: Envoice = {
-        ...baseDoc,
-        type: 'envoice',
-        number: `ENV-${(envoices.length + 1).toString().padStart(3, '0')}`,
-        priority: 'MEDIUM',
-      };
-      setEnvoices([...envoices, envoice]);
     }
   };
 
