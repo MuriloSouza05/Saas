@@ -158,7 +158,14 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
   }, [task, form, open]);
 
   const handleSubmit = (data: TaskFormData) => {
-    onSubmit({ ...data, tags, subtasks });
+    // Convert "none" back to empty string for projectId
+    const submitData = {
+      ...data,
+      projectId: data.projectId === 'none' ? '' : data.projectId,
+      tags,
+      subtasks
+    };
+    onSubmit(submitData);
     onOpenChange(false);
     form.reset();
     setTags([]);
