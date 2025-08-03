@@ -296,7 +296,7 @@ export function Settings() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 md:grid-cols-8">
+          <TabsList className="grid w-full grid-cols-4 md:grid-cols-7">
             <TabsTrigger value="company" className="flex items-center">
               <Building className="h-4 w-4 mr-1" />
               <span className="hidden sm:inline">Empresa</span>
