@@ -910,27 +910,7 @@ export function Settings() {
                       </div>
                     </div>
 
-                    <div>
-                      <Label>Configurações de Cobrança</Label>
-                      <div className="mt-2 space-y-4">
-                        <div>
-                          <Label htmlFor="prazo-pagamento">Prazo de Pagamento (dias)</Label>
-                          <Input id="prazo-pagamento" defaultValue="30" />
-                        </div>
-                        <div>
-                          <Label htmlFor="juros-mora">Juros de Mora (%)</Label>
-                          <Input id="juros-mora" defaultValue="1.0" />
-                        </div>
-                        <div>
-                          <Label htmlFor="multa-atraso">Multa por Atraso (%)</Label>
-                          <Input id="multa-atraso" defaultValue="2.0" />
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Switch id="cobranca-automatica" />
-                          <Label htmlFor="cobranca-automatica">Cobrança Automática</Label>
-                        </div>
-                      </div>
-                    </div>
+
                   </div>
                 </CardContent>
               </Card>
