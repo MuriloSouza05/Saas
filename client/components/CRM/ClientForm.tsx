@@ -41,7 +41,7 @@ const clientSchema = z.object({
   address: z.string().optional(),
   city: z.string().min(1, 'Cidade é obrigatória'),
   zipCode: z.string().optional(),
-  budget: z.number().min(0, 'Orçamento deve ser positivo'),
+  budget: z.number().min(0, 'Orçamento deve ser positivo').optional(),
   currency: z.enum(['BRL', 'USD', 'EUR']),
   level: z.string().optional(),
   description: z.string().optional(),
