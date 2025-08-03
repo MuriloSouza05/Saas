@@ -48,9 +48,9 @@ const expensesByCategory = [
 const casesByStatus = [
   { status: 'Em Andamento', count: 15, color: '#10B981' },
   { status: 'Em Análise', count: 8, color: '#F59E0B' },
-  { status: 'Aguardando Cliente', count: 5, color: '#F97316' },
+  { status: 'Aguardando', count: 5, color: '#F97316' },
   { status: 'Revisão', count: 3, color: '#8B5CF6' },
-  { status: 'Concluído', count: 12, color: '#6B7280' },
+  { status: 'Concluído', count: 12, color: '#059669' },
 ];
 
 const clientsGrowth = [
