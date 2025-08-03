@@ -280,7 +280,7 @@ export function DocumentForm({
     switch (type) {
       case 'estimate': return isEditing ? 'Editar Orçamento' : 'Novo Orçamento';
       case 'invoice': return isEditing ? 'Editar Fatura' : 'Nova Fatura';
-      case 'envoice': return isEditing ? 'Editar Envoice' : 'Nova Envoice';
+
       default: return 'Documento';
     }
   };
