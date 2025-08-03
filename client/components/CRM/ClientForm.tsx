@@ -40,7 +40,7 @@ const clientSchema = z.object({
   state: z.string().min(1, 'Estado é obrigatório'),
   address: z.string().optional(),
   city: z.string().min(1, 'Cidade é obrigatória'),
-  zipCode: z.string().min(1, 'CEP é obrigatório'),
+  zipCode: z.string().optional(),
   budget: z.number().min(0, 'Orçamento deve ser positivo'),
   currency: z.enum(['BRL', 'USD', 'EUR']),
   level: z.string().optional(),
