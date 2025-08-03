@@ -406,10 +406,30 @@ export function Tasks() {
               Gerenciamento pessoal de tarefas por colaborador
             </p>
           </div>
-          <Button onClick={() => handleAddTask('not_started')}>
-            <Plus className="h-4 w-4 mr-2" />
-            Nova Tarefa
-          </Button>
+          <div className="flex space-x-2">
+            <div className="flex border rounded-lg p-1">
+              <Button
+                variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('kanban')}
+              >
+                <Grid3X3 className="h-4 w-4 mr-1" />
+                Kanban
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+              >
+                <List className="h-4 w-4 mr-1" />
+                Lista
+              </Button>
+            </div>
+            <Button onClick={() => handleAddTask('not_started')}>
+              <Plus className="h-4 w-4 mr-2" />
+              Nova Tarefa
+            </Button>
+          </div>
         </div>
 
         {/* Statistics Cards */}
