@@ -64,7 +64,7 @@ interface DocumentFormProps {
   document?: BaseDocument;
   onSubmit: (data: DocumentFormData & { items: BillingItem[] }) => void;
   isEditing?: boolean;
-  type: 'estimate' | 'invoice' | 'envoice';
+  type: 'estimate' | 'invoice';
 }
 
 const mockCompanies = [
