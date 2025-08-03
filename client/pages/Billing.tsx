@@ -730,7 +730,7 @@ export function Billing() {
             <div style="font-weight: 600; margin-bottom: 4px;">Documento baixado!</div>
             <div style="opacity: 0.9; font-size: 13px;">
               ${document.type === 'estimate' ? 'Orçamento' :
-                document.type === 'invoice' ? 'Fatura' : 'Envoice'} ${document.number}
+                document.type === 'invoice' ? 'Fatura' : 'Fatura'} ${document.number}
             </div>
           </div>
         </div>
@@ -808,7 +808,7 @@ export function Billing() {
     }
 
     alert(`📋 ${document.type === 'estimate' ? 'Orçamento' :
-           document.type === 'invoice' ? 'Fatura' : 'Envoice'} duplicado com sucesso!`);
+           document.type === 'invoice' ? 'Fatura' : 'Fatura'} duplicado com sucesso!`);
   };
 
   const formatCurrency = (value: number) => {
