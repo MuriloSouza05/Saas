@@ -608,14 +608,6 @@ export function Settings() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label>Notificações por Email</Label>
-                      <p className="text-sm text-muted-foreground">Receber notificações por email</p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
                       <Label>Notificações Push</Label>
                       <p className="text-sm text-muted-foreground">Notificações no navegador</p>
                     </div>
