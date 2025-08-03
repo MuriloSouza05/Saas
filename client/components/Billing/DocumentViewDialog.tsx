@@ -72,7 +72,7 @@ export function DocumentViewDialog({
     const typeMap = {
       estimate: 'Orçamento',
       invoice: 'Fatura',
-      envoice: 'Envoice',
+
     };
     return typeMap[type as keyof typeof typeMap] || type;
   };
