@@ -803,8 +803,6 @@ export function Billing() {
       setEstimates(prev => [...prev, newDocument]);
     } else if (document.type === 'invoice') {
       setInvoices(prev => [...prev, newDocument]);
-    } else if (document.type === 'envoice') {
-      setEnvoices(prev => [...prev, newDocument]);
     }
 
     alert(`📋 ${document.type === 'estimate' ? 'Orçamento' :
