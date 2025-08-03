@@ -251,12 +251,10 @@ export function DocumentForm({
 
   const handleSubmit = (data: DocumentFormData) => {
     onSubmit({ ...data, items });
-    handleClose();
+    onOpenChange(false);
   };
 
   const handleClose = () => {
-    onOpenChange(false);
-    form.reset();
     setItems([]);
     setNewItem({
       description: '',
@@ -265,6 +263,7 @@ export function DocumentForm({
       tax: 0,
       taxType: 'percentage',
     });
+    onOpenChange(false);
   };
 
   const formatCurrency = (value: number) => {
