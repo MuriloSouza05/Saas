@@ -255,24 +255,17 @@ export function TransactionForm({
    * Inclui validação e tratamento de erro
    */
   const handleSubmit = (data: TransactionFormData) => {
-    try {
-      console.log('Submetendo dados do formulário:', data);
-      
-      const submitData = {
-        ...data,
-        projectId: data.projectId === 'none' ? '' : data.projectId,
-        clientId: data.clientId === 'none' ? '' : data.clientId,
-        tags,
-        isRecurring,
-        recurringFrequency: isRecurring ? data.recurringFrequency : undefined
-      };
-      
-      onSubmit(submitData);
-      handleClose();
-    } catch (error) {
-      console.error('Erro ao submeter formulário:', error);
-      setError('Erro ao salvar transação. Tente novamente.');
-    }
+    const submitData = {
+      ...data,
+      projectId: data.projectId === 'none' ? '' : data.projectId,
+      clientId: data.clientId === 'none' ? '' : data.clientId,
+      tags,
+      isRecurring,
+      recurringFrequency: isRecurring ? data.recurringFrequency : undefined
+    };
+
+    onSubmit(submitData);
+    onOpenChange(false);
   };
 
   /**
