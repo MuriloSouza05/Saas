@@ -883,7 +883,7 @@ export function Billing() {
             <CardContent>
               <div className="text-2xl font-bold">{formatCurrency(stats.pendingAmount)}</div>
               <p className="text-xs text-muted-foreground">
-                {stats.totalEstimates + stats.totalInvoices + stats.totalEnvoices} documentos
+                {stats.totalEstimates + stats.totalInvoices} documentos
               </p>
             </CardContent>
           </Card>
