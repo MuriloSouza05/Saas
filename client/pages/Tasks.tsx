@@ -549,15 +549,25 @@ export function Tasks() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <TaskBoard
-              boards={taskBoards}
-              onAddTask={handleAddTask}
-              onEditTask={handleEditTask}
-              onDeleteTask={handleDeleteTask}
-              onMoveTask={handleMoveTask}
-              onViewTask={handleViewTask}
-              onToggleSubtask={handleToggleSubtask}
-            />
+            {viewMode === 'kanban' ? (
+              <TaskBoard
+                boards={taskBoards}
+                onAddTask={handleAddTask}
+                onEditTask={handleEditTask}
+                onDeleteTask={handleDeleteTask}
+                onMoveTask={handleMoveTask}
+                onViewTask={handleViewTask}
+                onToggleSubtask={handleToggleSubtask}
+              />
+            ) : (
+              <TasksListView
+                tasks={filteredTasks}
+                onEditTask={handleEditTask}
+                onDeleteTask={handleDeleteTask}
+                onViewTask={handleViewTask}
+                onMoveTask={handleMoveTask}
+              />
+            )}
           </CardContent>
         </Card>
 
