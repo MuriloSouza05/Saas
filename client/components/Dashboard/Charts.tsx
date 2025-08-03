@@ -264,12 +264,12 @@ export function DashboardCharts({ className }: ChartsProps) {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={casesByStatus} layout="horizontal">
+            <BarChart data={casesByStatus}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-              <XAxis type="number" stroke="#6B7280" />
-              <YAxis dataKey="status" type="category" stroke="#6B7280" width={120} />
+              <XAxis dataKey="status" stroke="#6B7280" angle={-45} textAnchor="end" height={80} />
+              <YAxis stroke="#6B7280" />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="count" name="Casos">
+              <Bar dataKey="count" name="Casos" radius={[4, 4, 0, 0]}>
                 {casesByStatus.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
