@@ -55,6 +55,7 @@ const clientSchema = z.object({
   inssStatus: z.string().optional(),
   amountPaid: z.number().optional(),
   referredBy: z.string().optional(),
+  registeredBy: z.string().optional(),
 });
 
 type ClientFormData = z.infer<typeof clientSchema>;
