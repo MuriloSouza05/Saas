@@ -400,7 +400,7 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Nenhum projeto</SelectItem>
+                          <SelectItem value="none">Nenhum projeto</SelectItem>
                           {projectOptions.map((project) => (
                             <SelectItem key={project.id} value={project.id}>
                               {project.name}
