@@ -197,7 +197,7 @@ export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing =
                   name="description"
                   render={({ field }) => (
                     <FormItem className="md:col-span-2">
-                      <FormLabel>Descrição *</FormLabel>
+                      <FormLabel>Descrição</FormLabel>
                       <FormControl>
                         <Textarea placeholder="Descrição detalhada do projeto..." {...field} />
                       </FormControl>
@@ -239,7 +239,7 @@ export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing =
                   name="address"
                   render={({ field }) => (
                     <FormItem className="md:col-span-2">
-                      <FormLabel>Endereço *</FormLabel>
+                      <FormLabel>Endereço</FormLabel>
                       <FormControl>
                         <Input placeholder="Endereço completo" {...field} />
                       </FormControl>
@@ -253,7 +253,7 @@ export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing =
                   name="budget"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Orçamento *</FormLabel>
+                      <FormLabel>Orçamento</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
@@ -379,7 +379,7 @@ export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing =
                   name="progress"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Progresso (%) *</FormLabel>
+                      <FormLabel>Progresso (%)</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
