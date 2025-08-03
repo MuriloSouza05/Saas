@@ -33,17 +33,17 @@ import { Project, ProjectContact, ProjectStatus } from '@/types/projects';
 
 const projectSchema = z.object({
   title: z.string().min(1, 'Título é obrigatório'),
-  description: z.string().min(1, 'Descrição é obrigatória'),
+  description: z.string().optional(),
   clientName: z.string().min(1, 'Cliente é obrigatório'),
   organization: z.string().optional(),
-  address: z.string().min(1, 'Endereço é obrigatório'),
-  budget: z.number().min(0, 'Orçamento deve ser positivo'),
+  address: z.string().optional(),
+  budget: z.number().min(0, 'Orçamento deve ser positivo').optional(),
   currency: z.enum(['BRL', 'USD', 'EUR']),
   status: z.enum(['novo', 'analise', 'andamento', 'aguardando', 'revisao', 'concluido', 'cancelado', 'arquivado']),
   startDate: z.string().min(1, 'Data de início é obrigatória'),
   dueDate: z.string().min(1, 'Data de vencimento é obrigatória'),
   priority: z.enum(['low', 'medium', 'high', 'urgent']),
-  progress: z.number().min(0).max(100),
+  progress: z.number().min(0).max(100).optional(),
   notes: z.string().optional(),
 });
 
