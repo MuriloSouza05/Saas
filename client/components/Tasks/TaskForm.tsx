@@ -144,7 +144,7 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
           status: 'not_started',
           priority: 'medium',
           assignedTo: '',
-          projectId: '',
+          projectId: 'none',
           clientId: '',
           estimatedHours: 0,
           actualHours: 0,
