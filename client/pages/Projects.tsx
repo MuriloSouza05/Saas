@@ -178,6 +178,145 @@ const mockProjects: Project[] = [
   }
 ];
 
+interface ProjectCompactViewProps {
+  projects: Project[];
+  onEditProject: (project: Project) => void;
+  onDeleteProject: (projectId: string) => void;
+  onViewProject: (project: Project) => void;
+  onMoveProject: (projectId: string, newStatus: ProjectStatus) => void;
+}
+
+function ProjectCompactView({
+  projects,
+  onEditProject,
+  onDeleteProject,
+  onViewProject,
+  onMoveProject
+}: ProjectCompactViewProps) {
+  const getStatusColor = (status: ProjectStatus) => {
+    const colors = {
+      novo: 'bg-blue-100 text-blue-800',
+      analise: 'bg-yellow-100 text-yellow-800',
+      andamento: 'bg-green-100 text-green-800',
+      aguardando: 'bg-orange-100 text-orange-800',
+      revisao: 'bg-purple-100 text-purple-800',
+      concluido: 'bg-green-100 text-green-800',
+      cancelado: 'bg-red-100 text-red-800',
+      arquivado: 'bg-gray-100 text-gray-800'
+    };
+    return colors[status] || colors.novo;
+  };
+
+  const getStatusLabel = (status: ProjectStatus) => {
+    const labels = {
+      novo: 'Novo',
+      analise: 'Em Análise',
+      andamento: 'Em Andamento',
+      aguardando: 'Aguardando Cliente',
+      revisao: 'Revisão',
+      concluido: 'Concluído',
+      cancelado: 'Cancelado',
+      arquivado: 'Arquivado'
+    };
+    return labels[status] || status;
+  };
+
+  const statusOptions = [
+    { value: 'novo', label: 'Novo' },
+    { value: 'analise', label: 'Em Análise' },
+    { value: 'andamento', label: 'Em Andamento' },
+    { value: 'aguardando', label: 'Aguardando Cliente' },
+    { value: 'revisao', label: 'Revisão' },
+    { value: 'concluido', label: 'Concluído' },
+    { value: 'cancelado', label: 'Cancelado' },
+    { value: 'arquivado', label: 'Arquivado' }
+  ];
+
+  return (
+    <div className="space-y-3">
+      {projects.map((project) => (
+        <Card key={project.id} className="hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4 flex-1">
+                <Avatar className="h-10 w-10">
+                  <AvatarFallback>{project.title.substring(0, 2).toUpperCase()}</AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <h3 className="font-semibold text-sm truncate">{project.title}</h3>
+                    <Badge className={getStatusColor(project.status)}>
+                      {getStatusLabel(project.status)}
+                    </Badge>
+                  </div>
+
+                  <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                    <span>{project.clientName}</span>
+                    <span>•</span>
+                    <span>Vence: {new Date(project.dueDate).toLocaleDateString('pt-BR')}</span>
+                    <span>•</span>
+                    <span>R$ {project.budget.toLocaleString('pt-BR')}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="text-right">
+                  <div className="text-sm font-medium">{project.progress}%</div>
+                  <Progress value={project.progress} className="w-20 h-2" />
+                </div>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => onViewProject(project)}>
+                      <Eye className="h-4 w-4 mr-2" />
+                      Visualizar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onEditProject(project)}>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Editar
+                    </DropdownMenuItem>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem>Mover para:</DropdownMenuItem>
+                      {statusOptions.map((status) => (
+                        <DropdownMenuItem
+                          key={status.value}
+                          onClick={() => onMoveProject(project.id, status.value as ProjectStatus)}
+                        >
+                          {status.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                    <DropdownMenuItem
+                      onClick={() => onDeleteProject(project.id)}
+                      className="text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Excluir
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+
+      {projects.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground">
+          Nenhum projeto encontrado com os filtros aplicados.
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Projects() {
   const [activeTab, setActiveTab] = useState('kanban');
   const [showProjectForm, setShowProjectForm] = useState(false);
