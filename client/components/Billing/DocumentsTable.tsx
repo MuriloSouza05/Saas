@@ -134,8 +134,7 @@ export function DocumentsTable({
         return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Orçamento</Badge>;
       case 'invoice':
         return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Fatura</Badge>;
-      case 'envoice':
-        return <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">Envoice</Badge>;
+
       default:
         return <Badge variant="outline">{type}</Badge>;
     }
