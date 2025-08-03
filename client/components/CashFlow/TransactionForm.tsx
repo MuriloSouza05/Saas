@@ -243,25 +243,11 @@ export function TransactionForm({
    * Previne travamentos ao resetar estados
    */
   const handleClose = () => {
-    try {
-      console.log('Fechando modal de transação');
-      
-      // Resetar formulário e estados de forma segura
-      form.reset();
-      setTags(transaction?.tags || []);
-      setNewTag('');
-      setIsRecurring(false);
-      setError(null);
-      
-      // Fechar modal de forma assíncrona para evitar travamento
-      setTimeout(() => {
-        onOpenChange(false);
-      }, 0);
-    } catch (error) {
-      console.error('Erro ao fechar formulário:', error);
-      // Garantir que o modal seja fechado mesmo em caso de erro
-      onOpenChange(false);
-    }
+    setTags([]);
+    setNewTag('');
+    setIsRecurring(false);
+    setError(null);
+    onOpenChange(false);
   };
 
   /**
