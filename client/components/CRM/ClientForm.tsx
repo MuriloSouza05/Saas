@@ -34,7 +34,7 @@ import { Client } from '@/types/crm';
 const clientSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
   organization: z.string().optional(),
-  email: z.string().email('Email inválido'),
+  email: z.string().email('Email inválido').optional().or(z.literal('')),
   mobile: z.string().min(1, 'Telefone é obrigatório'),
   country: z.string().min(1, 'País é obrigatório'),
   state: z.string().min(1, 'Estado é obrigatório'),
