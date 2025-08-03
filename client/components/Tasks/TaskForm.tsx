@@ -372,7 +372,7 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
                   name="progress"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Progresso (%) *</FormLabel>
+                      <FormLabel>Progresso (%)</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
