@@ -541,13 +541,23 @@ export function CRM() {
                 </div>
               </CardHeader>
               <CardContent>
-                <Pipeline
-                  stages={pipelineStages}
-                  onAddDeal={handleAddDeal}
-                  onEditDeal={handleEditDeal}
-                  onDeleteDeal={handleDeleteDeal}
-                  onMoveDeal={handleMoveDeal}
-                />
+                {pipelineViewMode === 'kanban' ? (
+                  <Pipeline
+                    stages={pipelineStages}
+                    onAddDeal={handleAddDeal}
+                    onEditDeal={handleEditDeal}
+                    onDeleteDeal={handleDeleteDeal}
+                    onMoveDeal={handleMoveDeal}
+                  />
+                ) : (
+                  <PipelineListView
+                    deals={deals}
+                    stages={pipelineStages}
+                    onEditDeal={handleEditDeal}
+                    onDeleteDeal={handleDeleteDeal}
+                    onMoveDeal={handleMoveDeal}
+                  />
+                )}
               </CardContent>
             </Card>
           </TabsContent>
