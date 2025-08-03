@@ -915,67 +915,7 @@ export function Settings() {
                 </CardContent>
               </Card>
 
-              {/* Impostos e Taxas */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Impostos e Taxas</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <h3 className="font-medium">Regime Tributário</h3>
-                      <Select defaultValue="simples">
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="simples">Simples Nacional</SelectItem>
-                          <SelectItem value="presumido">Lucro Presumido</SelectItem>
-                          <SelectItem value="real">Lucro Real</SelectItem>
-                          <SelectItem value="mei">MEI</SelectItem>
-                        </SelectContent>
-                      </Select>
 
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="aliquota-simples">Alíquota Simples (%)</Label>
-                          <Input id="aliquota-simples" defaultValue="6.0" className="w-20" />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="aliquota-iss">ISS (%)</Label>
-                          <Input id="aliquota-iss" defaultValue="2.0" className="w-20" />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="aliquota-ir">IR Fonte (%)</Label>
-                          <Input id="aliquota-ir" defaultValue="1.5" className="w-20" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <h3 className="font-medium">Taxas de Transação</h3>
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="taxa-pix">Taxa PIX (%)</Label>
-                          <Input id="taxa-pix" defaultValue="0.0" className="w-20" />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="taxa-cartao">Taxa Cartão (%)</Label>
-                          <Input id="taxa-cartao" defaultValue="3.5" className="w-20" />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="taxa-boleto">Taxa Boleto (R$)</Label>
-                          <Input id="taxa-boleto" defaultValue="2.50" className="w-20" />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="taxa-ted">Taxa TED (R$)</Label>
-                          <Input id="taxa-ted" defaultValue="15.00" className="w-20" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
 
               {/* Categorias Contábeis */}
               <Card>
@@ -1179,7 +1119,7 @@ export function Settings() {
                         <Download className="h-4 w-4 mr-2" />
                         Gerar Backup
                       </Button>
-                      <Button variant="outline" onClick={() => alert('🔄 Abrindo assistente de restauração...')}>
+                      <Button variant="outline" onClick={() => alert('�� Abrindo assistente de restauração...')}>
                         <Upload className="h-4 w-4 mr-2" />
                         Restaurar Backup
                       </Button>
