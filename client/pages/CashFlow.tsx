@@ -478,6 +478,159 @@ export function CashFlow() {
     }
   };
 
+  const exportMonthlyReport = () => {
+    try {
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth();
+      const currentYear = currentDate.getFullYear();
+
+      const monthlyTransactions = transactions.filter(transaction => {
+        const transactionDate = new Date(transaction.date);
+        return transactionDate.getMonth() === currentMonth && transactionDate.getFullYear() === currentYear;
+      });
+
+      const monthlyIncome = monthlyTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+      const monthlyExpense = monthlyTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+      const monthlyBalance = monthlyIncome - monthlyExpense;
+
+      const headers = ['Data', 'Tipo', 'Descrição', 'Categoria', 'Valor'];
+      const csvData = monthlyTransactions.map(transaction => [
+        new Date(transaction.date).toLocaleDateString('pt-BR'),
+        transaction.type === 'income' ? 'Receita' : 'Despesa',
+        transaction.description,
+        transaction.category,
+        `R$ ${transaction.amount.toFixed(2).replace('.', ',')}`
+      ]);
+
+      csvData.push([]);
+      csvData.push(['RESUMO MENSAL']);
+      csvData.push(['Total Receitas', '', '', '', `R$ ${monthlyIncome.toFixed(2).replace('.', ',')}`]);
+      csvData.push(['Total Despesas', '', '', '', `R$ ${monthlyExpense.toFixed(2).replace('.', ',')}`]);
+      csvData.push(['Saldo do Mês', '', '', '', `R$ ${monthlyBalance.toFixed(2).replace('.', ',')}`]);
+
+      const csvContent = [headers, ...csvData]
+        .map(row => row.map(field => `"${field || ''}"`).join(';'))
+        .join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `relatorio-mensal-${currentMonth + 1}-${currentYear}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      alert('✅ Relatório mensal exportado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao exportar relatório mensal:', error);
+      alert('❌ Erro ao exportar relatório mensal. Tente novamente.');
+    }
+  };
+
+  const exportCategoriesReport = () => {
+    try {
+      const categoryTotals = {};
+
+      transactions.forEach(transaction => {
+        const categoryName = transaction.category;
+        const key = `${transaction.type}-${categoryName}`;
+        if (!categoryTotals[key]) {
+          categoryTotals[key] = { type: transaction.type, category: categoryName, total: 0, count: 0 };
+        }
+        categoryTotals[key].total += transaction.amount;
+        categoryTotals[key].count += 1;
+      });
+
+      const headers = ['Tipo', 'Categoria', 'Quantidade de Transações', 'Valor Total', 'Valor Médio'];
+      const csvData = Object.values(categoryTotals).map((category: any) => [
+        category.type === 'income' ? 'Receita' : 'Despesa',
+        category.category,
+        category.count,
+        `R$ ${category.total.toFixed(2).replace('.', ',')}`,
+        `R$ ${(category.total / category.count).toFixed(2).replace('.', ',')}`
+      ]);
+
+      const csvContent = [headers, ...csvData]
+        .map(row => row.map(field => `"${field}"`).join(';'))
+        .join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `analise-categorias-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      alert('✅ Relatório por categorias exportado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao exportar relatório por categorias:', error);
+      alert('❌ Erro ao exportar relatório por categorias. Tente novamente.');
+    }
+  };
+
+  const exportCashFlowReport = () => {
+    try {
+      const monthlyData = {};
+
+      transactions.forEach(transaction => {
+        const date = new Date(transaction.date);
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+        if (!monthlyData[monthKey]) {
+          monthlyData[monthKey] = { income: 0, expense: 0 };
+        }
+
+        if (transaction.type === 'income') {
+          monthlyData[monthKey].income += transaction.amount;
+        } else {
+          monthlyData[monthKey].expense += transaction.amount;
+        }
+      });
+
+      const headers = ['Mês/Ano', 'Total Receitas', 'Total Despesas', 'Saldo do Mês', 'Saldo Acumulado'];
+      let accumulatedBalance = 0;
+
+      const csvData = Object.entries(monthlyData)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([month, data]: [string, any]) => {
+          const monthBalance = data.income - data.expense;
+          accumulatedBalance += monthBalance;
+
+          return [
+            month,
+            `R$ ${data.income.toFixed(2).replace('.', ',')}`,
+            `R$ ${data.expense.toFixed(2).replace('.', ',')}`,
+            `R$ ${monthBalance.toFixed(2).replace('.', ',')}`,
+            `R$ ${accumulatedBalance.toFixed(2).replace('.', ',')}`
+          ];
+        });
+
+      const csvContent = [headers, ...csvData]
+        .map(row => row.map(field => `"${field}"`).join(';'))
+        .join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `fluxo-caixa-mensal-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      alert('✅ Relatório de fluxo de caixa exportado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao exportar relatório de fluxo de caixa:', error);
+      alert('❌ Erro ao exportar relatório de fluxo de caixa. Tente novamente.');
+    }
+  };
+
   const copyLastTransaction = () => {
     try {
       if (transactions.length > 0) {
