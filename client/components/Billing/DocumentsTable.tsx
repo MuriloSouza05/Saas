@@ -141,20 +141,6 @@ export function DocumentsTable({
   };
 
   const getPriorityBadge = (document: Document) => {
-    if (document.type === 'envoice') {
-      const envoice = document as Envoice;
-      const colorMap = {
-        LOW: 'bg-gray-100 text-gray-800',
-        MEDIUM: 'bg-blue-100 text-blue-800',
-        HIGH: 'bg-orange-100 text-orange-800',
-        URGENT: 'bg-red-100 text-red-800',
-      };
-      return (
-        <Badge className={colorMap[envoice.priority]}>
-          {envoice.priority}
-        </Badge>
-      );
-    }
     return null;
   };
 
