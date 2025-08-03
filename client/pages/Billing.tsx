@@ -353,12 +353,9 @@ export function Billing() {
       setEstimates(prev => updateDocumentStatus(prev, document.id, 'SENT'));
     } else if (document.type === 'invoice') {
       setInvoices(prev => updateDocumentStatus(prev, document.id, 'SENT'));
-    } else if (document.type === 'envoice') {
-      setEnvoices(prev => updateDocumentStatus(prev, document.id, 'SENT'));
     }
 
-    alert(`✅ ${document.type === 'estimate' ? 'Orçamento' :
-           document.type === 'invoice' ? 'Fatura' : 'Envoice'} enviado com sucesso para ${document.clientEmail}!`);
+    alert(`✅ ${document.type === 'estimate' ? 'Orçamento' : 'Fatura'} enviado com sucesso para ${document.clientEmail}!`);
   };
 
   /**
