@@ -183,13 +183,7 @@ export function Settings() {
     }
   };
 
-  const handleSaveAppearance = () => {
-    try {
-      alert('✅ Tema aplicado com sucesso!');
-    } catch (error) {
-      setError('Erro ao aplicar tema');
-    }
-  };
+
 
   const handleSaveNotifications = () => {
     try {
@@ -1160,7 +1154,7 @@ export function Settings() {
                 {editingAccount ? 'Editar Conta Bancária' : 'Nova Conta Bancária'}
               </DialogTitle>
               <DialogDescription>
-                {editingAccount ? 'Atualize as informações da conta bancária.' : 'Adicione uma nova conta bancária ao sistema.'}
+                {editingAccount ? 'Atualize as informaç��es da conta bancária.' : 'Adicione uma nova conta bancária ao sistema.'}
               </DialogDescription>
             </DialogHeader>
 
