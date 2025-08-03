@@ -561,7 +561,7 @@ export function Billing() {
           <div class="document-title">
             <span>
               ${document.type === 'estimate' ? '📋 ORÇAMENTO' :
-                document.type === 'invoice' ? '📄 FATURA' : '��� ENVOICE'} Nº ${document.number}
+                document.type === '📄 FATURA'} Nº ${document.number}
             </span>
             <span class="status-badge">${
               document.status === 'PAID' ? 'PAGO' :
