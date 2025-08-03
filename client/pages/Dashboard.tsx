@@ -313,7 +313,7 @@ export function Dashboard() {
         {/* Metric Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
-            title="�� RECEITAS"
+            title="💰 RECEITAS"
             value={metrics.revenue.value}
             change={metrics.revenue.change}
             trend={metrics.revenue.trend}
