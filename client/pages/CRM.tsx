@@ -27,6 +27,22 @@ import { AdvancedFilters } from '@/components/CRM/AdvancedFilters';
 import { DealForm } from '@/components/CRM/DealForm';
 import { ClientViewDialog } from '@/components/CRM/ClientViewDialog';
 import { Client, Deal, PipelineStage, DealStage } from '@/types/crm';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, Eye, Edit, Trash2 } from 'lucide-react';
 
 // Mock data - in real app would come from API
 const mockClients: Client[] = [
