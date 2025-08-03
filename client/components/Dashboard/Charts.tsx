@@ -83,9 +83,9 @@ export function DashboardCharts({ className }: ChartsProps) {
           <p className="font-medium">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} style={{ color: entry.color }} className="text-sm">
-              {entry.name}: {entry.name.includes('Receitas') || entry.name.includes('Despesas') || entry.name.includes('Saldo') 
-                ? formatCurrency(entry.value) 
-                : entry.value}
+              {entry.name}: {entry.name.includes('Receitas') || entry.name.includes('Despesas') || entry.name.includes('Saldo')
+                ? formatCurrency(entry.value)
+                : `${entry.value} ${entry.name === 'Casos' ? 'casos' : ''}`}
             </p>
           ))}
         </div>
