@@ -977,9 +977,6 @@ export function Billing() {
                 <TabsTrigger value="invoice">
                   Faturas ({invoices.length})
                 </TabsTrigger>
-                <TabsTrigger value="envoice">
-                  Envoices ({envoices.length})
-                </TabsTrigger>
               </TabsList>
 
               <TabsContent value={activeTab} className="mt-4">
