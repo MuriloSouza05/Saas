@@ -267,7 +267,7 @@ export function DashboardCharts({ className }: ChartsProps) {
             <BarChart data={casesByStatus} layout="horizontal">
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
               <XAxis type="number" stroke="#6B7280" />
-              <YAxis dataKey="status" type="category" stroke="#6B7280" width={100} />
+              <YAxis dataKey="status" type="category" stroke="#6B7280" width={120} />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="count" name="Casos">
                 {casesByStatus.map((entry, index) => (
