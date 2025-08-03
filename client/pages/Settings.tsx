@@ -593,77 +593,7 @@ export function Settings() {
             </Card>
           </TabsContent>
 
-          {/* Appearance Settings */}
-          <TabsContent value="appearance">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Palette className="h-5 w-5 mr-2" />
-                  Personalização Visual
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="theme">Tema</Label>
-                    <Select defaultValue="light">
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="light">Claro</SelectItem>
-                        <SelectItem value="dark">Escuro</SelectItem>
-                        <SelectItem value="auto">Automático</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="primary-color">Cor Primária</Label>
-                      <div className="flex items-center space-x-2 mt-2">
-                        <div className="w-8 h-8 bg-blue-600 rounded border" />
-                        <Input id="primary-color" value="#3B82F6" />
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="secondary-color">Cor Secundária</Label>
-                      <div className="flex items-center space-x-2 mt-2">
-                        <div className="w-8 h-8 bg-green-600 rounded border" />
-                        <Input id="secondary-color" value="#10B981" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="font-family">Família de Fonte</Label>
-                    <Select defaultValue="inter">
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="inter">Inter</SelectItem>
-                        <SelectItem value="roboto">Roboto</SelectItem>
-                        <SelectItem value="system">Sistema</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Switch id="sidebar-collapsed" />
-                    <Label htmlFor="sidebar-collapsed">Sidebar Recolhida por Padrão</Label>
-                  </div>
-                </div>
-
-                <div className="flex justify-end">
-                  <Button onClick={handleSaveAppearance}>
-                    <Save className="h-4 w-4 mr-2" />
-                    Aplicar Tema
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
           {/* Notifications */}
           <TabsContent value="notifications">
