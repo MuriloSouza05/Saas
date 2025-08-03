@@ -869,10 +869,6 @@ export function Billing() {
                 <Receipt className="mr-2 h-4 w-4" />
                 Fatura (Invoice)
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleCreateDocument('envoice')}>
-                <CreditCard className="mr-2 h-4 w-4" />
-                Envoice (Controle Interno)
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
