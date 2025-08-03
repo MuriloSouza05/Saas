@@ -701,7 +701,7 @@ export function DocumentForm({
                 Cancelar
               </Button>
               <Button type="submit">
-                {isEditing ? 'Atualizar' : 'Criar'} {type === 'estimate' ? 'Orçamento' : type === 'invoice' ? 'Fatura' : 'Envoice'}
+                {isEditing ? 'Atualizar' : 'Criar'} {type === 'estimate' ? 'Orçamento' : 'Fatura'}
               </Button>
             </div>
           </form>
