@@ -378,8 +378,7 @@ export function Billing() {
         <html>
         <head>
           <meta charset="utf-8">
-          <title>${document.type === 'estimate' ? 'Orçamento' :
-                   document.type === 'invoice' ? 'Fatura' : 'Envoice'} - ${document.number}</title>
+          <title>${document.type === 'estimate' ? 'Orçamento' : 'Fatura'} - ${document.number}</title>
           <style>
             * { box-sizing: border-box; }
             body {
@@ -562,7 +561,7 @@ export function Billing() {
           <div class="document-title">
             <span>
               ${document.type === 'estimate' ? '📋 ORÇAMENTO' :
-                document.type === 'invoice' ? '📄 FATURA' : '💼 ENVOICE'} Nº ${document.number}
+                document.type === 'invoice' ? '📄 FATURA' : '��� ENVOICE'} Nº ${document.number}
             </span>
             <span class="status-badge">${
               document.status === 'PAID' ? 'PAGO' :
