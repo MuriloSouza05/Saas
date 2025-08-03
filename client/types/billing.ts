@@ -132,7 +132,6 @@ export interface TemplateVariable {
 export interface BillingStats {
   totalEstimates: number;
   totalInvoices: number;
-
   pendingAmount: number;
   paidAmount: number;
   overdueAmount: number;
