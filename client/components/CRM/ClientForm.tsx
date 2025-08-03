@@ -124,6 +124,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
       inssStatus: client?.inssStatus || '',
       amountPaid: client?.amountPaid || 0,
       referredBy: client?.referredBy || '',
+      registeredBy: client?.registeredBy || 'Dr. Advogado',
     },
   });
 
