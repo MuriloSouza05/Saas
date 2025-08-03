@@ -123,7 +123,7 @@ export function DocumentsTable({
     switch (type) {
       case 'estimate': return 'Orçamento';
       case 'invoice': return 'Fatura';
-      case 'envoice': return 'Envoice';
+
       default: return type;
     }
   };
