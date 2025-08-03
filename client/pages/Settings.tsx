@@ -309,10 +309,7 @@ export function Settings() {
               <Mail className="h-4 w-4 mr-1" />
               <span className="hidden sm:inline">Email</span>
             </TabsTrigger>
-            <TabsTrigger value="appearance" className="flex items-center">
-              <Palette className="h-4 w-4 mr-1" />
-              <span className="hidden sm:inline">Visual</span>
-            </TabsTrigger>
+
             <TabsTrigger value="notifications" className="flex items-center">
               <Bell className="h-4 w-4 mr-1" />
               <span className="hidden sm:inline">Notificações</span>
