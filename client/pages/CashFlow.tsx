@@ -1319,15 +1319,15 @@ export function CashFlow() {
                       <Download className="h-4 w-4 mr-2" />
                       CSV Completo
                     </Button>
-                    <Button variant="outline" onClick={() => alert('📊 Exportando relatório mensal...')}>
+                    <Button variant="outline" onClick={exportMonthlyReport}>
                       <Calendar className="h-4 w-4 mr-2" />
                       Relatório Mensal
                     </Button>
-                    <Button variant="outline" onClick={() => alert('📈 Exportando análise de categorias...')}>
+                    <Button variant="outline" onClick={exportCategoriesReport}>
                       <BarChart3 className="h-4 w-4 mr-2" />
                       Por Categorias
                     </Button>
-                    <Button variant="outline" onClick={() => alert('💰 Exportando fluxo de caixa...')}>
+                    <Button variant="outline" onClick={exportCashFlowReport}>
                       <TrendingUp className="h-4 w-4 mr-2" />
                       Fluxo de Caixa
                     </Button>
