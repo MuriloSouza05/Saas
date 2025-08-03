@@ -709,6 +709,60 @@ export function CRM() {
           client={viewingClient}
           onEdit={handleEditFromView}
         />
+
+        {/* Stage Names Editing Dialog */}
+        <Dialog open={editingStages} onOpenChange={setEditingStages}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Editar Nomes dos Stages</DialogTitle>
+              <DialogDescription>
+                Personalize os nomes dos stages do pipeline de vendas.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              {pipelineStagesConfig.map((stage) => (
+                <div key={stage.id}>
+                  <label className="text-sm font-medium">{stage.name} (Atual)</label>
+                  <Input
+                    value={tempStageNames[stage.id] || stage.name}
+                    onChange={(e) => setTempStageNames({
+                      ...tempStageNames,
+                      [stage.id]: e.target.value
+                    })}
+                    placeholder={stage.name}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-end space-x-2 mt-6">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEditingStages(false);
+                  setTempStageNames({});
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={() => {
+                  setPipelineStagesConfig(prev =>
+                    prev.map(stage => ({
+                      ...stage,
+                      name: tempStageNames[stage.id] || stage.name
+                    }))
+                  );
+                  setEditingStages(false);
+                  setTempStageNames({});
+                }}
+              >
+                Salvar Alterações
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );
