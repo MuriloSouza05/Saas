@@ -227,7 +227,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email *</FormLabel>
+                      <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input type="email" placeholder="email@exemplo.com" {...field} />
                       </FormControl>
@@ -294,7 +294,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                   name="address"
                   render={({ field }) => (
                     <FormItem className="md:col-span-2">
-                      <FormLabel>Endereço *</FormLabel>
+                      <FormLabel>Endereço</FormLabel>
                       <FormControl>
                         <Input placeholder="Rua, número, bairro" {...field} />
                       </FormControl>
@@ -322,7 +322,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                   name="zipCode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>CEP *</FormLabel>
+                      <FormLabel>CEP</FormLabel>
                       <FormControl>
                         <Input placeholder="00000-000" {...field} />
                       </FormControl>
@@ -336,7 +336,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                   name="budget"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Orçamento *</FormLabel>
+                      <FormLabel>Orçamento</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
