@@ -631,6 +631,15 @@ export function CashFlow() {
     }
   };
 
+  const deleteAllTransactions = () => {
+    const confirmMessage = "Tem certeza que deseja apagar todas as transações? Essa ação não pode ser desfeita!";
+
+    if (window.confirm(confirmMessage)) {
+      setTransactions([]);
+      alert('✅ Todas as transações foram apagadas com sucesso!');
+    }
+  };
+
   const copyLastTransaction = () => {
     try {
       if (transactions.length > 0) {
