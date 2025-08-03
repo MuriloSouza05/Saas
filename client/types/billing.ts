@@ -62,8 +62,6 @@ export interface Invoice extends BaseDocument {
   lastReminderAt?: string;
 }
 
-
-
 export type DocumentStatus = 
   | 'DRAFT'
   | 'SENT'
