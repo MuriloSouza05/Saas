@@ -193,51 +193,22 @@ export function CRM() {
     });
   }, [clients, searchTerm, statusFilter, advancedFilters]);
 
+  // Initial pipeline stages configuration
+  const [pipelineStagesConfig, setPipelineStagesConfig] = useState([
+    { id: 'opportunity', name: 'Oportunidade', color: 'blue' },
+    { id: 'contacted', name: 'Em Contato', color: 'yellow' },
+    { id: 'advanced', name: 'Conversas Avançadas', color: 'purple' },
+    { id: 'proposal', name: 'Com Proposta', color: 'orange' },
+    { id: 'won', name: 'Cliente Bem Sucedido', color: 'green' },
+    { id: 'lost', name: 'Cliente Perdido', color: 'red' },
+    { id: 'general', name: 'Geral', color: 'gray' },
+  ]);
+
   // Pipeline stages with deals
-  const pipelineStages: PipelineStage[] = [
-    {
-      id: 'opportunity',
-      name: 'Oportunidade',
-      color: 'blue',
-      deals: deals.filter(deal => deal.stage === 'opportunity'),
-    },
-    {
-      id: 'contacted',
-      name: 'Em Contato',
-      color: 'yellow',
-      deals: deals.filter(deal => deal.stage === 'contacted'),
-    },
-    {
-      id: 'advanced',
-      name: 'Conversas Avançadas',
-      color: 'purple',
-      deals: deals.filter(deal => deal.stage === 'advanced'),
-    },
-    {
-      id: 'proposal',
-      name: 'Com Proposta',
-      color: 'orange',
-      deals: deals.filter(deal => deal.stage === 'proposal'),
-    },
-    {
-      id: 'won',
-      name: 'Cliente Bem Sucedido',
-      color: 'green',
-      deals: deals.filter(deal => deal.stage === 'won'),
-    },
-    {
-      id: 'lost',
-      name: 'Cliente Perdido',
-      color: 'red',
-      deals: deals.filter(deal => deal.stage === 'lost'),
-    },
-    {
-      id: 'general',
-      name: 'Geral',
-      color: 'gray',
-      deals: deals.filter(deal => deal.stage === 'general'),
-    },
-  ];
+  const pipelineStages: PipelineStage[] = pipelineStagesConfig.map(stage => ({
+    ...stage,
+    deals: deals.filter(deal => deal.stage === stage.id),
+  }));
 
   const handleSubmitClient = (data: any) => {
     if (editingClient) {
