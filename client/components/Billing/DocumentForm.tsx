@@ -695,16 +695,7 @@ export function DocumentForm({
             />
 
             <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => {
-                try {
-                  setTimeout(() => {
-                    handleClose();
-                  }, 0);
-                } catch (error) {
-                  console.error('Erro ao cancelar:', error);
-                  handleClose();
-                }
-              }}>
+              <Button type="button" variant="outline" onClick={handleClose}>
                 Cancelar
               </Button>
               <Button type="submit">
