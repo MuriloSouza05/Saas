@@ -44,7 +44,6 @@ import { DocumentViewDialog } from '@/components/Billing/DocumentViewDialog';
 import {
   Estimate,
   Invoice,
-  Envoice,
   BillingStats,
   DocumentStatus,
   CompanyDetails,
@@ -170,70 +169,26 @@ const mockInvoices: Invoice[] = [
   },
 ];
 
-const mockEnvoices: Envoice[] = [
-  {
-    id: '3',
-    type: 'envoice',
-    number: 'ENV-001',
-    date: '2024-01-25T00:00:00Z',
-    dueDate: '2024-02-25T00:00:00Z',
-    senderId: '1',
-    senderName: 'Escritório Silva & Associados',
-    senderDetails: mockCompanyDetails,
-    receiverId: '2',
-    receiverName: 'João Carlos Oliveira',
-    receiverDetails: mockClientDetails,
-    title: 'Controle Interno - Ação Trabalhista',
-    description: 'Cobrança interna para controle de recebíveis',
-    items: [
-      {
-        id: '3',
-        description: 'Ação trabalhista - honorários',
-        quantity: 1,
-        rate: 5000,
-        amount: 5000,
-        tax: 0,
-      },
-    ],
-    subtotal: 5000,
-    discount: 0,
-    discountType: 'fixed',
-    fee: 0,
-    feeType: 'fixed',
-    tax: 0,
-    taxType: 'fixed',
-    total: 5000,
-    currency: 'BRL',
-    status: 'PENDING',
-    priority: 'HIGH',
-    paymentMethod: 'PIX',
-    internalNotes: 'Aguardando finalização do processo',
-    attachments: [],
-    createdAt: '2024-01-25T09:00:00Z',
-    updatedAt: '2024-01-25T09:00:00Z',
-    createdBy: 'Dr. Silva',
-    lastModifiedBy: 'Dr. Silva',
-  },
-];
+
 
 export function Billing() {
   const [activeTab, setActiveTab] = useState('all');
   const [showDocumentForm, setShowDocumentForm] = useState(false);
   const [showDocumentView, setShowDocumentView] = useState(false);
-  const [documentType, setDocumentType] = useState<'estimate' | 'invoice' | 'envoice'>('estimate');
+  const [documentType, setDocumentType] = useState<'estimate' | 'invoice'>('estimate');
   const [editingDocument, setEditingDocument] = useState<any>(undefined);
   const [viewingDocument, setViewingDocument] = useState<any>(null);
 
   const [estimates, setEstimates] = useState<Estimate[]>(mockEstimates);
   const [invoices, setInvoices] = useState<Invoice[]>(mockInvoices);
-  const [envoices, setEnvoices] = useState<Envoice[]>(mockEnvoices);
+
 
   const [selectedDocs, setSelectedDocs] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
   // Combine all documents
-  const allDocuments = [...estimates, ...invoices, ...envoices];
+  const allDocuments = [...estimates, ...invoices];
 
   // Filter documents
   const filteredDocuments = useMemo(() => {
@@ -265,7 +220,6 @@ export function Billing() {
   const stats: BillingStats = useMemo(() => {
     const totalEstimates = estimates.length;
     const totalInvoices = invoices.length;
-    const totalEnvoices = envoices.length;
 
     const pendingAmount = allDocuments
       .filter(doc => ['PENDING', 'SENT', 'VIEWED'].includes(doc.status))
@@ -293,14 +247,13 @@ export function Billing() {
     return {
       totalEstimates,
       totalInvoices,
-      totalEnvoices,
       pendingAmount,
       paidAmount,
       overdueAmount,
       thisMonthRevenue,
       averagePaymentTime: 15, // Mock value
     };
-  }, [estimates, invoices, envoices, allDocuments]);
+  }, [estimates, invoices, allDocuments]);
 
   const handleCreateDocument = (type: 'estimate' | 'invoice' | 'envoice') => {
     setDocumentType(type);
