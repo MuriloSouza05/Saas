@@ -642,9 +642,12 @@ export function TransactionForm({
 
             {/* Seção: Botões de Ação */}
             <div className="flex justify-between">
-              <Button type="button" variant="outline" onClick={copyLastTransaction}>
-                Copiar Última
-              </Button>
+              {!forceRecurring && (
+                <Button type="button" variant="outline" onClick={copyLastTransaction}>
+                  Copiar Última
+                </Button>
+              )}
+              {forceRecurring && <div></div>}
               <div className="flex space-x-2">
                 <Button type="button" variant="outline" onClick={handleClose}>
                   Cancelar
