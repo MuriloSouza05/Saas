@@ -207,6 +207,7 @@ export function Tasks() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
   const [assigneeFilter, setAssigneeFilter] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
 
   // Filter tasks based on search, status, priority, and assignee
   const filteredTasks = useMemo(() => {
