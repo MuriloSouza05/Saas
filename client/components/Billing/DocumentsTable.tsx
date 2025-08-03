@@ -28,9 +28,9 @@ import {
   Clock,
   AlertCircle
 } from 'lucide-react';
-import { Estimate, Invoice, Envoice, DocumentStatus, PaymentStatus } from '@/types/billing';
+import { Estimate, Invoice, DocumentStatus, PaymentStatus } from '@/types/billing';
 
-type Document = Estimate | Invoice | Envoice;
+type Document = Estimate | Invoice;
 
 interface DocumentsTableProps {
   documents: Document[];
