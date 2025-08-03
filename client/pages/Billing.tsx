@@ -108,7 +108,7 @@ const mockEstimates: Estimate[] = [
     receiverId: '1',
     receiverName: 'Maria Silva Santos',
     receiverDetails: mockClientDetails,
-    title: 'Or��amento para Serviços Jurídicos',
+    title: 'Orçamento para Serviços Jurídicos',
     description: 'Serviços de consultoria e elaboração de contrato',
     items: mockItems,
     subtotal: 2500,
@@ -324,7 +324,6 @@ export function Billing() {
   const handleDeleteDoc = (docId: string) => {
     setEstimates(estimates.filter(doc => doc.id !== docId));
     setInvoices(invoices.filter(doc => doc.id !== docId));
-    setEnvoices(envoices.filter(doc => doc.id !== docId));
     setSelectedDocs(selectedDocs.filter(id => id !== docId));
   };
 
