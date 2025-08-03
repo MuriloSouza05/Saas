@@ -255,7 +255,7 @@ export function Billing() {
     };
   }, [estimates, invoices, allDocuments]);
 
-  const handleCreateDocument = (type: 'estimate' | 'invoice' | 'envoice') => {
+  const handleCreateDocument = (type: 'estimate' | 'invoice') => {
     setDocumentType(type);
     setEditingDocument(undefined);
     setShowDocumentForm(true);
