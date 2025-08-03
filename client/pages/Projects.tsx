@@ -176,6 +176,7 @@ export function Projects() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<'kanban' | 'compact'>('kanban');
 
   // Filter projects based on search, status, and priority
   const filteredProjects = useMemo(() => {
