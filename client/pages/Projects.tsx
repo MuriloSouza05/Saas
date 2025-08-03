@@ -479,14 +479,24 @@ export function Projects() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ProjectKanban
-              stages={projectStages}
-              onAddProject={handleAddProject}
-              onEditProject={handleEditProject}
-              onDeleteProject={handleDeleteProject}
-              onMoveProject={handleMoveProject}
-              onViewProject={handleViewProject}
-            />
+            {viewMode === 'kanban' ? (
+              <ProjectKanban
+                stages={projectStages}
+                onAddProject={handleAddProject}
+                onEditProject={handleEditProject}
+                onDeleteProject={handleDeleteProject}
+                onMoveProject={handleMoveProject}
+                onViewProject={handleViewProject}
+              />
+            ) : (
+              <ProjectCompactView
+                projects={filteredProjects}
+                onEditProject={handleEditProject}
+                onDeleteProject={handleDeleteProject}
+                onViewProject={handleViewProject}
+                onMoveProject={handleMoveProject}
+              />
+            )}
           </CardContent>
         </Card>
 
