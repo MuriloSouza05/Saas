@@ -495,10 +495,50 @@ export function CRM() {
           <TabsContent value="pipeline" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Target className="h-5 w-5 mr-2" />
-                  Pipeline de Vendas
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center">
+                    <Target className="h-5 w-5 mr-2" />
+                    Pipeline de Vendas
+                  </CardTitle>
+                  <div className="flex items-center space-x-2">
+                    {/* View Mode Toggle */}
+                    <div className="flex border rounded-lg p-1">
+                      <Button
+                        variant={pipelineViewMode === 'kanban' ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => setPipelineViewMode('kanban')}
+                      >
+                        <Grid3X3 className="h-4 w-4 mr-1" />
+                        Kanban
+                      </Button>
+                      <Button
+                        variant={pipelineViewMode === 'list' ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => setPipelineViewMode('list')}
+                      >
+                        <List className="h-4 w-4 mr-1" />
+                        Lista
+                      </Button>
+                    </div>
+
+                    {/* Edit Stages Button */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setEditingStages(true);
+                        const initialNames = {};
+                        pipelineStagesConfig.forEach(stage => {
+                          initialNames[stage.id] = stage.name;
+                        });
+                        setTempStageNames(initialNames);
+                      }}
+                    >
+                      <Edit2 className="h-4 w-4 mr-1" />
+                      Editar Nomes
+                    </Button>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
                 <Pipeline
