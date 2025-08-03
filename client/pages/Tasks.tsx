@@ -18,7 +18,9 @@ import {
   Clock,
   TrendingUp,
   AlertTriangle,
-  Timer
+  Timer,
+  Grid3X3,
+  List
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
