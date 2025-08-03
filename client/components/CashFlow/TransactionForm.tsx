@@ -283,12 +283,8 @@ export function TransactionForm({
    * Copia dados da última transação (funcionalidade futura)
    */
   const copyLastTransaction = () => {
-    try {
-      console.log('Funcionalidade: Copiar última transação');
-      // TODO: Implementar cópia da última transação
-    } catch (error) {
-      console.error('Erro ao copiar última transação:', error);
-    }
+    console.log('Funcionalidade: Copiar última transação');
+    // TODO: Implementar cópia da última transação
   };
 
   // Exibe erro se houver problemas no componente
