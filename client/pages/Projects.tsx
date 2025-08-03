@@ -35,6 +35,16 @@ import { ProjectForm } from '@/components/Projects/ProjectForm';
 import { ProjectKanban } from '@/components/Projects/ProjectKanban';
 import { ProjectViewDialog } from '@/components/Projects/ProjectViewDialog';
 import { Project, ProjectStage, ProjectStatus } from '@/types/projects';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, Eye, Edit, Trash2 } from 'lucide-react';
 
 // Mock data - in real app would come from API
 const mockProjects: Project[] = [
