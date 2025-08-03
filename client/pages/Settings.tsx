@@ -999,17 +999,7 @@ export function Settings() {
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Autenticação de Dois Fatores</h3>
-                    <div className="flex items-center space-x-2 p-3 border rounded-lg">
-                      <Switch />
-                      <Label>Ativar autenticação de dois fatores (2FA)</Label>
-                    </div>
-                    <Button variant="outline" onClick={() => alert('📱 Configurando 2FA via QR Code...')}>
-                      <Shield className="h-4 w-4 mr-2" />
-                      Configurar 2FA
-                    </Button>
-                  </div>
+
 
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">Backup e Recuperação</h3>
