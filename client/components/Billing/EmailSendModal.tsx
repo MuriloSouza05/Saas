@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createSafeOnOpenChange, createSafeDialogHandler } from '@/lib/dialog-fix';
 import {
   Dialog,
   DialogContent,
