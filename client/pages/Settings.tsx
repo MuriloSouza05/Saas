@@ -1395,7 +1395,7 @@ export function Settings() {
         </Dialog>
 
         {/* Account Modal */}
-        <Dialog open={showNewAccountModal} onOpenChange={setShowNewAccountModal}>
+        <Dialog open={showNewAccountModal} onOpenChange={safeSetShowNewAccountModal}>
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle className="flex items-center">
