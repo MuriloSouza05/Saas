@@ -371,7 +371,7 @@ export function EmailSendModal({
           <div className="flex space-x-2">
             <Button
               variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={createSafeDialogHandler(() => safeOnOpenChange(false))}
             >
               <X className="h-4 w-4 mr-2" />
               Cancelar
