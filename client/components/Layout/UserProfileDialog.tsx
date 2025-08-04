@@ -54,6 +54,9 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
   const [avatarUrl, setAvatarUrl] = useState('/placeholder.svg');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
+  // Create safe onOpenChange handler
+  const safeOnOpenChange = createSafeOnOpenChange(onOpenChange);
+
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
