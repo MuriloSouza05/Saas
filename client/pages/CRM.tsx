@@ -743,15 +743,15 @@ export function CRM() {
             <div className="flex justify-end space-x-2 mt-6">
               <Button
                 variant="outline"
-                onClick={() => {
-                  setEditingStages(false);
+                onClick={createSafeDialogHandler(() => {
+                  safeSetEditingStages(false);
                   setTempStageNames({});
-                }}
+                })}
               >
                 Cancelar
               </Button>
               <Button
-                onClick={() => {
+                onClick={createSafeDialogHandler(() => {
                   console.log('Salvando stages:', tempStageNames);
                   setPipelineStagesConfig(prev => {
                     const newConfig = prev.map(stage => ({
@@ -761,10 +761,10 @@ export function CRM() {
                     console.log('Nova configuração:', newConfig);
                     return newConfig;
                   });
-                  setEditingStages(false);
+                  safeSetEditingStages(false);
                   setTempStageNames({});
                   alert('Nomes dos stages atualizados com sucesso!');
-                }}
+                })}
               >
                 Salvar Alterações
               </Button>
