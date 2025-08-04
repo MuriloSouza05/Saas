@@ -1052,7 +1052,7 @@ export function Billing() {
         <EmailSendModal
           open={showEmailModal}
           onOpenChange={setShowEmailModal}
-          documents={allDocuments.filter(doc => selectedDocs.includes(doc.id))}
+          documents={allDocuments.filter(doc => selectedDocs.includes(doc.id)) || []}
           onSendEmail={handleSendEmail}
         />
       </div>
