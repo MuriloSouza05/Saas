@@ -1452,22 +1452,15 @@ export function Settings() {
             <DialogFooter>
               <Button
                 variant="outline"
-                onClick={() => {
-                  try {
-                    setEditingAccount(null);
-                    setTimeout(() => {
-                      setShowNewAccountModal(false);
-                    }, 0);
-                  } catch (error) {
-                    console.error('Erro ao cancelar:', error);
-                    setShowNewAccountModal(false);
-                  }
-                }}
+                onClick={createSafeDialogHandler(() => {
+                  setEditingAccount(null);
+                  safeSetShowNewAccountModal(false);
+                })}
               >
                 Cancelar
               </Button>
               <Button
-                onClick={() => {
+                onClick={createSafeDialogHandler(() => {
                   if (editingAccount) {
                     alert('✅ Conta bancária atualizada com sucesso!');
                   } else {
@@ -1481,9 +1474,9 @@ export function Settings() {
                     setAccounts([...accounts, newAccount]);
                     alert('✅ Nova conta bancária adicionada com sucesso!');
                   }
-                  setShowNewAccountModal(false);
+                  safeSetShowNewAccountModal(false);
                   setEditingAccount(null);
-                }}
+                })}
               >
                 {editingAccount ? 'Atualizar' : 'Adicionar'} Conta
               </Button>
