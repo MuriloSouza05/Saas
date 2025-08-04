@@ -41,6 +41,7 @@ import {
 import { DocumentForm } from '@/components/Billing/DocumentForm';
 import { DocumentsTable } from '@/components/Billing/DocumentsTable';
 import { DocumentViewDialog } from '@/components/Billing/DocumentViewDialog';
+import { EmailSendModal } from '@/components/Billing/EmailSendModal';
 import {
   Estimate,
   Invoice,
