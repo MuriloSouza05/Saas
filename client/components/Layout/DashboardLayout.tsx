@@ -58,6 +58,7 @@ import {
 import { cn } from '@/lib/utils';
 import { UserProfileDialog } from './UserProfileDialog';
 import { NotificationsPanel } from './NotificationsPanel';
+import { useDialogBodyFix } from '@/hooks/use-dialog-body-fix';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
