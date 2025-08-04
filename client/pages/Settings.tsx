@@ -1369,11 +1369,11 @@ export function Settings() {
               <div className="flex space-x-2">
                 <Button
                   variant="outline"
-                  onClick={() => {
+                  onClick={createSafeDialogHandler(() => {
                     setCurrentTemplate(null);
                     setTemplateContent('');
-                    setShowTemplateModal(false);
-                  }}
+                    safeSetShowTemplateModal(false);
+                  })}
                 >
                   <X className="h-4 w-4 mr-2" />
                   Cancelar
