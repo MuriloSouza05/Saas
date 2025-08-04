@@ -845,7 +845,7 @@ export function Billing() {
 
   const handleOpenEmailModal = () => {
     if (selectedDocs.length === 0) {
-      alert('⚠️ Selecione pelo menos um documento para enviar por email.');
+      alert('���️ Selecione pelo menos um documento para enviar por email.');
       return;
     }
     setShowEmailModal(true);
@@ -975,6 +975,15 @@ export function Billing() {
               <SelectItem value="CANCELLED">Cancelado</SelectItem>
             </SelectContent>
           </Select>
+          <Button
+            variant="default"
+            onClick={handleOpenEmailModal}
+            disabled={selectedDocs.length === 0}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            <Mail className="h-4 w-4 mr-2" />
+            Enviar Email {selectedDocs.length > 0 && `(${selectedDocs.length})`}
+          </Button>
         </div>
 
         {/* Documents Table with Tabs */}
