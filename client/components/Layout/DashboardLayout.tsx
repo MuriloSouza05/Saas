@@ -81,6 +81,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Apply global dialog body freeze fix
+  useDialogBodyFix();
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
