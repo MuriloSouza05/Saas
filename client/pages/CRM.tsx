@@ -266,6 +266,9 @@ export function CRM() {
   const [editingStages, setEditingStages] = useState(false);
   const [tempStageNames, setTempStageNames] = useState<{[key: string]: string}>({});
 
+  // Create safe dialog handler
+  const safeSetEditingStages = createSafeOnOpenChange((open: boolean) => setEditingStages(open));
+
   // Filter clients based on search, status, and advanced filters
   const filteredClients = useMemo(() => {
     return clients.filter((client) => {
