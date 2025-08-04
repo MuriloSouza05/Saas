@@ -86,10 +86,10 @@ export function EmailSendModal({
     </div>
     
     <div class="content">
-        <p>Prezado(a) <strong>${document.clientName || 'Cliente'}</strong>,</p>
-        
+        <p>Prezado(a) <strong>${document.receiverName || document.clientName || 'Cliente'}</strong>,</p>
+
         <p>${isInvoice ? 'Segue fatura referente aos serviços prestados:' : 'Segue em anexo o orçamento solicitado para os serviços jurídicos:'}</p>
-        
+
         <table class="table">
             <tr>
                 <th>Empresa:</th>
@@ -97,22 +97,22 @@ export function EmailSendModal({
             </tr>
             <tr>
                 <th>${isInvoice ? 'Data de Emissão:' : 'Data:'}</th>
-                <td>${new Date(document.date).toLocaleDateString('pt-BR')}</td>
+                <td>${document.date ? new Date(document.date).toLocaleDateString('pt-BR') : 'N/A'}</td>
             </tr>
             ${isInvoice ? `
             <tr>
                 <th>Vencimento:</th>
-                <td><strong>${new Date(document.dueDate).toLocaleDateString('pt-BR')}</strong></td>
+                <td><strong>${document.dueDate ? new Date(document.dueDate).toLocaleDateString('pt-BR') : 'N/A'}</strong></td>
             </tr>
             ` : `
             <tr>
                 <th>Validade:</th>
-                <td>${new Date(document.validUntil || document.dueDate).toLocaleDateString('pt-BR')}</td>
+                <td>${(document.validUntil || document.dueDate) ? new Date(document.validUntil || document.dueDate).toLocaleDateString('pt-BR') : 'N/A'}</td>
             </tr>
             `}
             <tr>
                 <th>Cliente:</th>
-                <td>${document.clientName || 'Cliente'}</td>
+                <td>${document.receiverName || document.clientName || 'Cliente'}</td>
             </tr>
         </table>
         
