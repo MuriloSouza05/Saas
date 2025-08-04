@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * Utility to fix Radix UI Dialog body freeze issues
  * This fixes the common issue where pointer-events: none gets stuck on body
