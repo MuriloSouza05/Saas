@@ -174,7 +174,7 @@ export function EmailSendModal({
       
       alert(`✅ Email${documents.length > 1 ? 's' : ''} enviado${documents.length > 1 ? 's' : ''} com sucesso!\n\n📧 Destinatário${documents.length > 1 ? 's' : ''}: ${emailData.to}\n🎯 ${documents.length} documento${documents.length > 1 ? 's' : ''} enviado${documents.length > 1 ? 's' : ''}`);
       
-      onOpenChange(false);
+      safeOnOpenChange(false);
     } catch (error) {
       alert('❌ Erro ao enviar email. Verifique as configurações e tente novamente.');
     } finally {
