@@ -225,11 +225,13 @@ export function EmailSendModal({
           <div className="bg-muted/50 p-4 rounded-lg">
             <h4 className="font-medium mb-2">📄 Documentos Selecionados:</h4>
             <div className="flex flex-wrap gap-2">
-              {documents.map((doc) => (
-                <Badge key={doc.id} variant="secondary">
-                  {doc.type === 'invoice' ? '📄' : '📋'} {doc.number} - {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(doc.total)}
+              {documents && documents.length > 0 ? documents.map((doc) => (
+                <Badge key={doc?.id || Math.random()} variant="secondary">
+                  {doc?.type === 'invoice' ? '📄' : '📋'} {doc?.number || 'N/A'} - {doc?.total ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(doc.total) : 'R$ 0,00'}
                 </Badge>
-              ))}
+              )) : (
+                <Badge variant="outline">Nenhum documento selecionado</Badge>
+              )}
             </div>
           </div>
 
