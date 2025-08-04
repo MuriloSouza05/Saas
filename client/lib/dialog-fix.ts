@@ -69,3 +69,40 @@ export const createSafeOnOpenChange = (onOpenChange: (open: boolean) => void) =>
     onOpenChange(open);
   };
 };
+
+// Emergency fix function that can be called from anywhere
+export const forceFixBodyFreeze = () => {
+  console.warn('Emergency body freeze fix applied');
+
+  // Force remove all problematic styles
+  const body = document.body;
+  body.style.pointerEvents = '';
+  body.style.overflow = '';
+  body.removeAttribute('data-scroll-locked');
+
+  // Remove any lingering portal elements that might be causing issues
+  const portals = document.querySelectorAll('[data-radix-portal]');
+  portals.forEach(portal => {
+    const openElements = portal.querySelectorAll('[data-state="open"]');
+    if (openElements.length === 0) {
+      // No open dialogs in this portal, it's safe to clean up styles
+      fixDialogBodyFreeze();
+    }
+  });
+
+  // Force repaint
+  body.style.display = 'none';
+  body.offsetHeight; // Trigger reflow
+  body.style.display = '';
+};
+
+// Add global emergency key combination (Ctrl+Alt+F)
+if (typeof window !== 'undefined') {
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      forceFixBodyFreeze();
+      alert('🚑 Emergency body freeze fix applied!\nYou can also use Ctrl+Alt+F anytime if the interface freezes.');
+    }
+  });
+}
