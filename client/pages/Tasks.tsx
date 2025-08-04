@@ -18,7 +18,9 @@ import {
   Clock,
   TrendingUp,
   AlertTriangle,
-  Timer
+  Timer,
+  Grid3X3,
+  List
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -32,6 +34,16 @@ import { TaskForm } from '@/components/Tasks/TaskForm';
 import { TaskBoard } from '@/components/Tasks/TaskBoard';
 import { TaskViewDialog } from '@/components/Tasks/TaskViewDialog';
 import { Task, TaskBoard as TaskBoardType, TaskStatus, TaskPriority, TaskStats } from '@/types/tasks';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, Eye, Edit, Trash2 } from 'lucide-react';
 
 // Mock data - in real app would come from API
 const mockTasks: Task[] = [
@@ -185,6 +197,142 @@ const mockTasks: Task[] = [
   },
 ];
 
+interface TasksListViewProps {
+  tasks: Task[];
+  onEditTask: (task: Task) => void;
+  onDeleteTask: (taskId: string) => void;
+  onViewTask: (task: Task) => void;
+  onMoveTask: (taskId: string, newStatus: TaskStatus) => void;
+}
+
+function TasksListView({
+  tasks,
+  onEditTask,
+  onDeleteTask,
+  onViewTask,
+  onMoveTask
+}: TasksListViewProps) {
+  const getStatusColor = (status: TaskStatus) => {
+    const colors = {
+      not_started: 'bg-red-100 text-red-800',
+      in_progress: 'bg-yellow-100 text-yellow-800',
+      completed: 'bg-green-100 text-green-800',
+      on_hold: 'bg-gray-100 text-gray-800',
+      cancelled: 'bg-red-100 text-red-800'
+    };
+    return colors[status] || colors.not_started;
+  };
+
+  const getStatusLabel = (status: TaskStatus) => {
+    const labels = {
+      not_started: '🔴 Não Feito',
+      in_progress: '🟡 Em Progresso',
+      completed: '🟢 Feito',
+      on_hold: '⏸️ Pausado',
+      cancelled: '❌ Cancelado'
+    };
+    return labels[status] || status;
+  };
+
+  const getPriorityColor = (priority: TaskPriority) => {
+    const colors = {
+      low: 'text-gray-600',
+      medium: 'text-blue-600',
+      high: 'text-orange-600',
+      urgent: 'text-red-600'
+    };
+    return colors[priority] || colors.medium;
+  };
+
+  const statusOptions = [
+    { value: 'not_started', label: '🔴 Não Feito' },
+    { value: 'in_progress', label: '🟡 Em Progresso' },
+    { value: 'completed', label: '🟢 Feito' },
+    { value: 'on_hold', label: '⏸️ Pausado' },
+    { value: 'cancelled', label: '❌ Cancelado' }
+  ];
+
+  return (
+    <div className="space-y-3">
+      {tasks.map((task) => (
+        <Card key={task.id} className="hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4 flex-1">
+                <Avatar className="h-10 w-10">
+                  <AvatarFallback>{task.title.substring(0, 2).toUpperCase()}</AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <h3 className="font-semibold text-sm truncate">{task.title}</h3>
+                    <Badge className={getStatusColor(task.status)}>
+                      {getStatusLabel(task.status)}
+                    </Badge>
+                    <span className={`text-xs font-medium ${getPriorityColor(task.priority)}`}>
+                      {task.priority.toUpperCase()}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                    <span>{task.assignedTo}</span>
+                    <span>•</span>
+                    <span>Vence: {new Date(task.endDate).toLocaleDateString('pt-BR')}</span>
+                    {task.clientName && (
+                      <>
+                        <span>•</span>
+                        <span>{task.clientName}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="text-right">
+                  <div className="text-sm font-medium">{task.progress || 0}%</div>
+                  <Progress value={task.progress || 0} className="w-20 h-2" />
+                </div>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => onViewTask(task)}>
+                      <Eye className="h-4 w-4 mr-2" />
+                      Visualizar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onEditTask(task)}>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Editar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => onDeleteTask(task.id)}
+                      className="text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Excluir
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+
+      {tasks.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground">
+          Nenhuma tarefa encontrada com os filtros aplicados.
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Tasks() {
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [showTaskView, setShowTaskView] = useState(false);
@@ -195,6 +343,7 @@ export function Tasks() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
   const [assigneeFilter, setAssigneeFilter] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
 
   // Filter tasks based on search, status, priority, and assignee
   const filteredTasks = useMemo(() => {
@@ -393,10 +542,30 @@ export function Tasks() {
               Gerenciamento pessoal de tarefas por colaborador
             </p>
           </div>
-          <Button onClick={() => handleAddTask('not_started')}>
-            <Plus className="h-4 w-4 mr-2" />
-            Nova Tarefa
-          </Button>
+          <div className="flex space-x-2">
+            <div className="flex border rounded-lg p-1">
+              <Button
+                variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('kanban')}
+              >
+                <Grid3X3 className="h-4 w-4 mr-1" />
+                Kanban
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+              >
+                <List className="h-4 w-4 mr-1" />
+                Lista
+              </Button>
+            </div>
+            <Button onClick={() => handleAddTask('not_started')}>
+              <Plus className="h-4 w-4 mr-2" />
+              Nova Tarefa
+            </Button>
+          </div>
         </div>
 
         {/* Statistics Cards */}
@@ -516,15 +685,25 @@ export function Tasks() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <TaskBoard
-              boards={taskBoards}
-              onAddTask={handleAddTask}
-              onEditTask={handleEditTask}
-              onDeleteTask={handleDeleteTask}
-              onMoveTask={handleMoveTask}
-              onViewTask={handleViewTask}
-              onToggleSubtask={handleToggleSubtask}
-            />
+            {viewMode === 'kanban' ? (
+              <TaskBoard
+                boards={taskBoards}
+                onAddTask={handleAddTask}
+                onEditTask={handleEditTask}
+                onDeleteTask={handleDeleteTask}
+                onMoveTask={handleMoveTask}
+                onViewTask={handleViewTask}
+                onToggleSubtask={handleToggleSubtask}
+              />
+            ) : (
+              <TasksListView
+                tasks={filteredTasks}
+                onEditTask={handleEditTask}
+                onDeleteTask={handleDeleteTask}
+                onViewTask={handleViewTask}
+                onMoveTask={handleMoveTask}
+              />
+            )}
           </CardContent>
         </Card>
 

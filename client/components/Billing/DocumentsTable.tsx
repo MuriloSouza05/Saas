@@ -28,9 +28,9 @@ import {
   Clock,
   AlertCircle
 } from 'lucide-react';
-import { Estimate, Invoice, Envoice, DocumentStatus, PaymentStatus } from '@/types/billing';
+import { Estimate, Invoice, DocumentStatus, PaymentStatus } from '@/types/billing';
 
-type Document = Estimate | Invoice | Envoice;
+type Document = Estimate | Invoice;
 
 interface DocumentsTableProps {
   documents: Document[];
@@ -123,7 +123,7 @@ export function DocumentsTable({
     switch (type) {
       case 'estimate': return 'Orçamento';
       case 'invoice': return 'Fatura';
-      case 'envoice': return 'Envoice';
+
       default: return type;
     }
   };
@@ -134,28 +134,13 @@ export function DocumentsTable({
         return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Orçamento</Badge>;
       case 'invoice':
         return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Fatura</Badge>;
-      case 'envoice':
-        return <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">Envoice</Badge>;
+
       default:
         return <Badge variant="outline">{type}</Badge>;
     }
   };
 
   const getPriorityBadge = (document: Document) => {
-    if (document.type === 'envoice') {
-      const envoice = document as Envoice;
-      const colorMap = {
-        LOW: 'bg-gray-100 text-gray-800',
-        MEDIUM: 'bg-blue-100 text-blue-800',
-        HIGH: 'bg-orange-100 text-orange-800',
-        URGENT: 'bg-red-100 text-red-800',
-      };
-      return (
-        <Badge className={colorMap[envoice.priority]}>
-          {envoice.priority}
-        </Badge>
-      );
-    }
     return null;
   };
 

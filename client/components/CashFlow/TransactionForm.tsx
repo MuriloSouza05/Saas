@@ -172,8 +172,8 @@ export function TransactionForm({
       date: transaction?.date ? transaction.date.split('T')[0] : new Date().toISOString().split('T')[0],
       paymentMethod: transaction?.paymentMethod || undefined,
       status: transaction?.status || 'confirmed',
-      projectId: transaction?.projectId || '',
-      clientId: transaction?.clientId || '',
+      projectId: transaction?.projectId || 'none',
+      clientId: transaction?.clientId || 'none',
       notes: transaction?.notes || '',
       isRecurring: isRecurring,
       recurringFrequency: transaction?.recurringFrequency || 'monthly',
@@ -188,80 +188,60 @@ export function TransactionForm({
    * Effect para atualizar formulário quando a transação ou props mudarem
    */
   useEffect(() => {
-    try {
-      console.log('useEffect executado:', { transaction, forceRecurring });
-      
-      const recurringState = forceRecurring || transaction?.isRecurring || false;
-      setIsRecurring(recurringState);
-      
-      if (transaction) {
-        // Preenche formulário com dados da transação existente
-        form.reset({
-          type: transaction.type || 'income',
-          amount: transaction.amount || 0,
-          categoryId: transaction.categoryId || '',
-          description: transaction.description || '',
-          date: transaction.date ? transaction.date.split('T')[0] : new Date().toISOString().split('T')[0],
-          paymentMethod: transaction.paymentMethod || undefined,
-          status: transaction.status || 'confirmed',
-          projectId: transaction.projectId || '',
-          clientId: transaction.clientId || '',
-          notes: transaction.notes || '',
-          isRecurring: recurringState,
-          recurringFrequency: transaction.recurringFrequency || 'monthly',
-        });
-        setTags(transaction.tags || []);
-      } else {
-        // Reseta formulário para nova transação
-        form.reset({
-          type: 'income',
-          amount: 0,
-          categoryId: '',
-          description: '',
-          date: new Date().toISOString().split('T')[0],
-          paymentMethod: undefined,
-          status: 'confirmed',
-          projectId: '',
-          clientId: '',
-          notes: '',
-          isRecurring: recurringState,
-          recurringFrequency: 'monthly',
-        });
-        setTags([]);
-      }
-      
-      // Limpa erros anteriores
-      setError(null);
-    } catch (error) {
-      console.error('Erro no useEffect do TransactionForm:', error);
-      setError('Erro ao carregar dados do formulário');
+    if (!open) return;
+
+    const recurringState = forceRecurring || transaction?.isRecurring || false;
+    setIsRecurring(recurringState);
+
+    if (transaction) {
+      // Preenche formulário com dados da transação existente
+      form.reset({
+        type: transaction.type || 'income',
+        amount: transaction.amount || 0,
+        categoryId: transaction.categoryId || '',
+        description: transaction.description || '',
+        date: transaction.date ? transaction.date.split('T')[0] : new Date().toISOString().split('T')[0],
+        paymentMethod: transaction.paymentMethod || undefined,
+        status: transaction.status || 'confirmed',
+        projectId: transaction.projectId || 'none',
+        clientId: transaction.clientId || 'none',
+        notes: transaction.notes || '',
+        isRecurring: recurringState,
+        recurringFrequency: transaction.recurringFrequency || 'monthly',
+      });
+      setTags(transaction.tags || []);
+    } else {
+      // Reseta formulário para nova transação
+      form.reset({
+        type: 'income',
+        amount: 0,
+        categoryId: '',
+        description: '',
+        date: new Date().toISOString().split('T')[0],
+        paymentMethod: undefined,
+        status: 'confirmed',
+        projectId: 'none',
+        clientId: 'none',
+        notes: '',
+        isRecurring: recurringState,
+        recurringFrequency: 'monthly',
+      });
+      setTags([]);
     }
-  }, [transaction, form, forceRecurring]);
+
+    setError(null);
+  }, [transaction, forceRecurring, open]);
 
   /**
    * Função para fechar o modal de forma segura
    * Previne travamentos ao resetar estados
    */
   const handleClose = () => {
-    try {
-      console.log('Fechando modal de transação');
-      
-      // Resetar formulário e estados de forma segura
-      form.reset();
-      setTags(transaction?.tags || []);
-      setNewTag('');
-      setIsRecurring(false);
-      setError(null);
-      
-      // Fechar modal de forma assíncrona para evitar travamento
-      setTimeout(() => {
-        onOpenChange(false);
-      }, 0);
-    } catch (error) {
-      console.error('Erro ao fechar formulário:', error);
-      // Garantir que o modal seja fechado mesmo em caso de erro
-      onOpenChange(false);
-    }
+    setTags([]);
+    setNewTag('');
+    setIsRecurring(false);
+    setError(null);
+    onOpenChange(false);
   };
 
   /**
@@ -269,35 +249,26 @@ export function TransactionForm({
    * Inclui validação e tratamento de erro
    */
   const handleSubmit = (data: TransactionFormData) => {
-    try {
-      console.log('Submetendo dados do formulário:', data);
-      
-      const submitData = {
-        ...data,
-        tags,
-        isRecurring,
-        recurringFrequency: isRecurring ? data.recurringFrequency : undefined
-      };
-      
-      onSubmit(submitData);
-      handleClose();
-    } catch (error) {
-      console.error('Erro ao submeter formulário:', error);
-      setError('Erro ao salvar transação. Tente novamente.');
-    }
+    const submitData = {
+      ...data,
+      projectId: data.projectId === 'none' ? '' : data.projectId,
+      clientId: data.clientId === 'none' ? '' : data.clientId,
+      tags,
+      isRecurring,
+      recurringFrequency: isRecurring ? data.recurringFrequency : undefined
+    };
+
+    onSubmit(submitData);
+    onOpenChange(false);
   };
 
   /**
    * Adiciona uma nova tag à lista
    */
   const addTag = () => {
-    try {
-      if (newTag.trim() && !tags.includes(newTag.trim())) {
-        setTags([...tags, newTag.trim()]);
-        setNewTag('');
-      }
-    } catch (error) {
-      console.error('Erro ao adicionar tag:', error);
+    if (newTag.trim() && !tags.includes(newTag.trim())) {
+      setTags([...tags, newTag.trim()]);
+      setNewTag('');
     }
   };
 
@@ -305,23 +276,15 @@ export function TransactionForm({
    * Remove uma tag da lista
    */
   const removeTag = (tagToRemove: string) => {
-    try {
-      setTags(tags.filter(tag => tag !== tagToRemove));
-    } catch (error) {
-      console.error('Erro ao remover tag:', error);
-    }
+    setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
   /**
    * Copia dados da última transação (funcionalidade futura)
    */
   const copyLastTransaction = () => {
-    try {
-      console.log('Funcionalidade: Copiar última transação');
-      // TODO: Implementar cópia da última transação
-    } catch (error) {
-      console.error('Erro ao copiar última transação:', error);
-    }
+    console.log('Funcionalidade: Copiar última transação');
+    // TODO: Implementar cópia da última transação
   };
 
   // Exibe erro se houver problemas no componente
@@ -544,7 +507,7 @@ export function TransactionForm({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Nenhum projeto</SelectItem>
+                          <SelectItem value="none">Nenhum projeto</SelectItem>
                           {mockProjects.map((project) => (
                             <SelectItem key={project.id} value={project.id}>
                               {project.name}
@@ -571,7 +534,7 @@ export function TransactionForm({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Nenhum cliente</SelectItem>
+                          <SelectItem value="none">Nenhum cliente</SelectItem>
                           {mockClients.map((client) => (
                             <SelectItem key={client.id} value={client.id}>
                               {client.name}
@@ -675,20 +638,14 @@ export function TransactionForm({
 
             {/* Seção: Botões de Ação */}
             <div className="flex justify-between">
-              <Button type="button" variant="outline" onClick={copyLastTransaction}>
-                Copiar Última
-              </Button>
+              {!forceRecurring && (
+                <Button type="button" variant="outline" onClick={copyLastTransaction}>
+                  Copiar Última
+                </Button>
+              )}
+              {forceRecurring && <div></div>}
               <div className="flex space-x-2">
-                <Button type="button" variant="outline" onClick={() => {
-                  try {
-                    setTimeout(() => {
-                      handleClose();
-                    }, 0);
-                  } catch (error) {
-                    console.error('Erro ao cancelar:', error);
-                    handleClose();
-                  }
-                }}>
+                <Button type="button" variant="outline" onClick={handleClose}>
                   Cancelar
                 </Button>
                 <Button type="submit">

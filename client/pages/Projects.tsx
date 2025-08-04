@@ -19,7 +19,9 @@ import {
   BarChart3,
   Clock,
   TrendingUp,
-  AlertTriangle
+  AlertTriangle,
+  Grid3X3,
+  List
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -33,6 +35,16 @@ import { ProjectForm } from '@/components/Projects/ProjectForm';
 import { ProjectKanban } from '@/components/Projects/ProjectKanban';
 import { ProjectViewDialog } from '@/components/Projects/ProjectViewDialog';
 import { Project, ProjectStage, ProjectStatus } from '@/types/projects';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, Eye, Edit, Trash2 } from 'lucide-react';
 
 // Mock data - in real app would come from API
 const mockProjects: Project[] = [
@@ -166,6 +178,134 @@ const mockProjects: Project[] = [
   }
 ];
 
+interface ProjectCompactViewProps {
+  projects: Project[];
+  onEditProject: (project: Project) => void;
+  onDeleteProject: (projectId: string) => void;
+  onViewProject: (project: Project) => void;
+  onMoveProject: (projectId: string, newStatus: ProjectStatus) => void;
+}
+
+function ProjectCompactView({
+  projects,
+  onEditProject,
+  onDeleteProject,
+  onViewProject,
+  onMoveProject
+}: ProjectCompactViewProps) {
+  const getStatusColor = (status: ProjectStatus) => {
+    const colors = {
+      novo: 'bg-blue-100 text-blue-800',
+      analise: 'bg-yellow-100 text-yellow-800',
+      andamento: 'bg-green-100 text-green-800',
+      aguardando: 'bg-orange-100 text-orange-800',
+      revisao: 'bg-purple-100 text-purple-800',
+      concluido: 'bg-green-100 text-green-800',
+      cancelado: 'bg-red-100 text-red-800',
+      arquivado: 'bg-gray-100 text-gray-800'
+    };
+    return colors[status] || colors.novo;
+  };
+
+  const getStatusLabel = (status: ProjectStatus) => {
+    const labels = {
+      novo: 'Novo',
+      analise: 'Em Análise',
+      andamento: 'Em Andamento',
+      aguardando: 'Aguardando Cliente',
+      revisao: 'Revisão',
+      concluido: 'Concluído',
+      cancelado: 'Cancelado',
+      arquivado: 'Arquivado'
+    };
+    return labels[status] || status;
+  };
+
+  const statusOptions = [
+    { value: 'novo', label: 'Novo' },
+    { value: 'analise', label: 'Em Análise' },
+    { value: 'andamento', label: 'Em Andamento' },
+    { value: 'aguardando', label: 'Aguardando Cliente' },
+    { value: 'revisao', label: 'Revisão' },
+    { value: 'concluido', label: 'Concluído' },
+    { value: 'cancelado', label: 'Cancelado' },
+    { value: 'arquivado', label: 'Arquivado' }
+  ];
+
+  return (
+    <div className="space-y-3">
+      {projects.map((project) => (
+        <Card key={project.id} className="hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4 flex-1">
+                <Avatar className="h-10 w-10">
+                  <AvatarFallback>{project.title.substring(0, 2).toUpperCase()}</AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <h3 className="font-semibold text-sm truncate">{project.title}</h3>
+                    <Badge className={getStatusColor(project.status)}>
+                      {getStatusLabel(project.status)}
+                    </Badge>
+                  </div>
+
+                  <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                    <span>{project.clientName}</span>
+                    <span>•</span>
+                    <span>Vence: {new Date(project.dueDate).toLocaleDateString('pt-BR')}</span>
+                    <span>•</span>
+                    <span>R$ {project.budget.toLocaleString('pt-BR')}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="text-right">
+                  <div className="text-sm font-medium">{project.progress}%</div>
+                  <Progress value={project.progress} className="w-20 h-2" />
+                </div>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => onViewProject(project)}>
+                      <Eye className="h-4 w-4 mr-2" />
+                      Visualizar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onEditProject(project)}>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Editar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => onDeleteProject(project.id)}
+                      className="text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Excluir
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+
+      {projects.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground">
+          Nenhum projeto encontrado com os filtros aplicados.
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Projects() {
   const [activeTab, setActiveTab] = useState('kanban');
   const [showProjectForm, setShowProjectForm] = useState(false);
@@ -176,6 +316,7 @@ export function Projects() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<'kanban' | 'compact'>('kanban');
 
   // Filter projects based on search, status, and priority
   const filteredProjects = useMemo(() => {
@@ -335,13 +476,33 @@ export function Projects() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Projetos</h1>
             <p className="text-muted-foreground">
-              Gerenciamento de projetos jurídicos com sistema Kanban
+              Gerenciamento de projetos jur��dicos com sistema Kanban
             </p>
           </div>
-          <Button onClick={() => handleAddProject('novo')}>
-            <Plus className="h-4 w-4 mr-2" />
-            Novo Projeto
-          </Button>
+          <div className="flex space-x-2">
+            <div className="flex border rounded-lg p-1">
+              <Button
+                variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('kanban')}
+              >
+                <Grid3X3 className="h-4 w-4 mr-1" />
+                Kanban
+              </Button>
+              <Button
+                variant={viewMode === 'compact' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('compact')}
+              >
+                <List className="h-4 w-4 mr-1" />
+                Lista
+              </Button>
+            </div>
+            <Button onClick={() => handleAddProject('novo')}>
+              <Plus className="h-4 w-4 mr-2" />
+              Novo Projeto
+            </Button>
+          </div>
         </div>
 
         {/* Metrics Cards */}
@@ -456,14 +617,24 @@ export function Projects() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ProjectKanban
-              stages={projectStages}
-              onAddProject={handleAddProject}
-              onEditProject={handleEditProject}
-              onDeleteProject={handleDeleteProject}
-              onMoveProject={handleMoveProject}
-              onViewProject={handleViewProject}
-            />
+            {viewMode === 'kanban' ? (
+              <ProjectKanban
+                stages={projectStages}
+                onAddProject={handleAddProject}
+                onEditProject={handleEditProject}
+                onDeleteProject={handleDeleteProject}
+                onMoveProject={handleMoveProject}
+                onViewProject={handleViewProject}
+              />
+            ) : (
+              <ProjectCompactView
+                projects={filteredProjects}
+                onEditProject={handleEditProject}
+                onDeleteProject={handleDeleteProject}
+                onViewProject={handleViewProject}
+                onMoveProject={handleMoveProject}
+              />
+            )}
           </CardContent>
         </Card>
 

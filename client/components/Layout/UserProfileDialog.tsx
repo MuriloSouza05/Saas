@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import {
+  createSafeOnOpenChange,
+  createSafeDialogHandler,
+} from "@/lib/dialog-fix";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -13,33 +17,38 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Upload, Save } from 'lucide-react';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Upload, Save } from "lucide-react";
 
-const profileSchema = z.object({
-  name: z.string().min(1, 'Nome é obrigatório'),
-  email: z.string().email('Email inválido'),
-  phone: z.string().optional(),
-  bio: z.string().optional(),
-  currentPassword: z.string().optional(),
-  newPassword: z.string().optional(),
-  confirmPassword: z.string().optional(),
-}).refine((data) => {
-  if (data.newPassword && data.newPassword !== data.confirmPassword) {
-    return false;
-  }
-  return true;
-}, {
-  message: "Senhas não coincidem",
-  path: ["confirmPassword"],
-});
+const profileSchema = z
+  .object({
+    name: z.string().min(1, "Nome é obrigatório"),
+    email: z.string().email("Email inválido"),
+    phone: z.string().optional(),
+    bio: z.string().optional(),
+    currentPassword: z.string().optional(),
+    newPassword: z.string().optional(),
+    confirmPassword: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.newPassword && data.newPassword !== data.confirmPassword) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Senhas não coincidem",
+      path: ["confirmPassword"],
+    },
+  );
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
@@ -48,21 +57,27 @@ interface UserProfileDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps) {
+export function UserProfileDialog({
+  open,
+  onOpenChange,
+}: UserProfileDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState('/placeholder.svg');
+  const [avatarUrl, setAvatarUrl] = useState("/placeholder.svg");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+
+  // Create safe onOpenChange handler
+  const safeOnOpenChange = createSafeOnOpenChange(onOpenChange);
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: 'Dr. Advogado',
-      email: 'advogado@escritorio.com.br',
-      phone: '(11) 99999-1234',
-      bio: 'Advogado especialista em direito civil e trabalhista',
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
+      name: "Dr. Advogado",
+      email: "advogado@escritorio.com.br",
+      phone: "(11) 99999-1234",
+      bio: "Advogado especialista em direito civil e trabalhista",
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     },
   });
 
@@ -70,16 +85,21 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
     const file = event.target.files?.[0];
     if (file) {
       // Validate file type
-      const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+      const validTypes = [
+        "image/png",
+        "image/jpeg",
+        "image/jpg",
+        "image/svg+xml",
+      ];
       if (!validTypes.includes(file.type)) {
-        alert('Por favor, selecione apenas arquivos PNG, JPEG ou SVG.');
+        alert("Por favor, selecione apenas arquivos PNG, JPEG ou SVG.");
         return;
       }
 
       // Validate file size (max 5MB)
       const maxSize = 5 * 1024 * 1024; // 5MB
       if (file.size > maxSize) {
-        alert('O arquivo deve ter no máximo 5MB.');
+        alert("O arquivo deve ter no máximo 5MB.");
         return;
       }
 
@@ -96,40 +116,42 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
     }
   };
 
-  const handleClose = () => {
+  const handleClose = createSafeDialogHandler(() => {
     // Reset form and state
     form.reset();
-    setAvatarUrl('/placeholder.svg');
+    setAvatarUrl("/placeholder.svg");
     setAvatarFile(null);
     setIsLoading(false);
-    onOpenChange(false);
-  };
+    safeOnOpenChange(false);
+  });
 
   const handleSubmit = async (data: ProfileFormData) => {
     setIsLoading(true);
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const profileData = {
         ...data,
-        avatar: avatarFile ? {
-          file: avatarFile,
-          url: avatarUrl
-        } : null
+        avatar: avatarFile
+          ? {
+              file: avatarFile,
+              url: avatarUrl,
+            }
+          : null,
       };
 
-      console.log('Profile updated:', profileData);
+      console.log("Profile updated:", profileData);
       handleClose();
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={safeOnOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Meu Perfil</DialogTitle>
@@ -139,7 +161,10 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-6"
+          >
             {/* Avatar Section */}
             <div className="flex items-center space-x-4">
               <Avatar className="h-20 w-20">
@@ -158,7 +183,9 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => document.getElementById('avatar-upload')?.click()}
+                  onClick={() =>
+                    document.getElementById("avatar-upload")?.click()
+                  }
                 >
                   <Upload className="h-4 w-4 mr-2" />
                   Alterar Foto
@@ -194,7 +221,11 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="seu@email.com" {...field} />
+                        <Input
+                          type="email"
+                          placeholder="seu@email.com"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -223,7 +254,10 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
                   <FormItem>
                     <FormLabel>Bio/Descrição</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Conte um pouco sobre você..." {...field} />
+                      <Textarea
+                        placeholder="Conte um pouco sobre você..."
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -242,7 +276,11 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
                     <FormItem>
                       <FormLabel>Senha Atual</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="Digite sua senha atual" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="Digite sua senha atual"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -257,7 +295,11 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
                       <FormItem>
                         <FormLabel>Nova Senha</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="Nova senha" {...field} />
+                          <Input
+                            type="password"
+                            placeholder="Nova senha"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -271,7 +313,11 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
                       <FormItem>
                         <FormLabel>Confirmar Nova Senha</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="Confirme a nova senha" {...field} />
+                          <Input
+                            type="password"
+                            placeholder="Confirme a nova senha"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -282,16 +328,7 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
             </div>
 
             <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => {
-                try {
-                  setTimeout(() => {
-                    handleClose();
-                  }, 0);
-                } catch (error) {
-                  console.error('Erro ao cancelar:', error);
-                  handleClose();
-                }
-              }}>
+              <Button type="button" variant="outline" onClick={handleClose}>
                 Cancelar
               </Button>
               <Button type="submit" disabled={isLoading}>

@@ -44,7 +44,7 @@ const taskSchema = z.object({
   clientId: z.string().optional(),
   estimatedHours: z.number().optional(),
   actualHours: z.number().optional(),
-  progress: z.number().min(0).max(100),
+  progress: z.number().min(0).max(100).optional(),
   notes: z.string().optional(),
 });
 
@@ -104,7 +104,7 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
       status: task?.status || 'not_started',
       priority: task?.priority || 'medium',
       assignedTo: task?.assignedTo || '',
-      projectId: task?.projectId || '',
+      projectId: task?.projectId || 'none',
       clientId: task?.clientId || '',
       estimatedHours: task?.estimatedHours || 0,
       actualHours: task?.actualHours || 0,
@@ -113,34 +113,59 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
     },
   });
 
-  // Atualizar formulário quando task mudar
+  // Atualizar formulário quando task mudar ou modal abrir
   useEffect(() => {
-    if (task) {
-      form.reset({
-        title: task.title || '',
-        description: task.description || '',
-        startDate: task.startDate ? task.startDate.split('T')[0] : '',
-        endDate: task.endDate ? task.endDate.split('T')[0] : '',
-        status: task.status || 'not_started',
-        priority: task.priority || 'medium',
-        assignedTo: task.assignedTo || '',
-        projectId: task.projectId || '',
-        clientId: task.clientId || '',
-        estimatedHours: task.estimatedHours || 0,
-        actualHours: task.actualHours || 0,
-        progress: task.progress || 0,
-        notes: task.notes || '',
-      });
-      setTags(task.tags || []);
-      setSubtasks(task.subtasks || []);
-    } else {
-      setTags([]);
-      setSubtasks([]);
+    if (open) {
+      if (task) {
+        form.reset({
+          title: task.title || '',
+          description: task.description || '',
+          startDate: task.startDate ? task.startDate.split('T')[0] : '',
+          endDate: task.endDate ? task.endDate.split('T')[0] : '',
+          status: task.status || 'not_started',
+          priority: task.priority || 'medium',
+          assignedTo: task.assignedTo || '',
+          projectId: task.projectId || 'none',
+          clientId: task.clientId || '',
+          estimatedHours: task.estimatedHours || 0,
+          actualHours: task.actualHours || 0,
+          progress: task.progress || 0,
+          notes: task.notes || '',
+        });
+        setTags(task.tags || []);
+        setSubtasks(task.subtasks || []);
+      } else {
+        // Reset para nova tarefa
+        form.reset({
+          title: '',
+          description: '',
+          startDate: '',
+          endDate: '',
+          status: 'not_started',
+          priority: 'medium',
+          assignedTo: '',
+          projectId: 'none',
+          clientId: '',
+          estimatedHours: 0,
+          actualHours: 0,
+          progress: 0,
+          notes: '',
+        });
+        setTags([]);
+        setSubtasks([]);
+      }
     }
-  }, [task, form]);
+  }, [task, form, open]);
 
   const handleSubmit = (data: TaskFormData) => {
-    onSubmit({ ...data, tags, subtasks });
+    // Convert "none" back to empty string for projectId
+    const submitData = {
+      ...data,
+      projectId: data.projectId === 'none' ? '' : data.projectId,
+      tags,
+      subtasks
+    };
+    onSubmit(submitData);
     onOpenChange(false);
     form.reset();
     setTags([]);
@@ -347,7 +372,7 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
                   name="progress"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Progresso (%) *</FormLabel>
+                      <FormLabel>Progresso (%)</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
@@ -382,7 +407,7 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">Nenhum projeto</SelectItem>
+                          <SelectItem value="none">Nenhum projeto</SelectItem>
                           {projectOptions.map((project) => (
                             <SelectItem key={project.id} value={project.id}>
                               {project.name}
@@ -527,16 +552,7 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
             />
 
             <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => {
-                try {
-                  setTimeout(() => {
-                    onOpenChange(false);
-                  }, 0);
-                } catch (error) {
-                  console.error('Erro ao cancelar:', error);
-                  onOpenChange(false);
-                }
-              }}>
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancelar
               </Button>
               <Button type="submit">

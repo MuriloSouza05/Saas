@@ -22,7 +22,8 @@ import {
   TrendingUp,
   Receipt,
   CreditCard,
-  Calculator
+  Calculator,
+  Mail
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -41,10 +42,10 @@ import {
 import { DocumentForm } from '@/components/Billing/DocumentForm';
 import { DocumentsTable } from '@/components/Billing/DocumentsTable';
 import { DocumentViewDialog } from '@/components/Billing/DocumentViewDialog';
+import { EmailSendModal } from '@/components/Billing/EmailSendModal';
 import {
   Estimate,
   Invoice,
-  Envoice,
   BillingStats,
   DocumentStatus,
   CompanyDetails,
@@ -170,70 +171,27 @@ const mockInvoices: Invoice[] = [
   },
 ];
 
-const mockEnvoices: Envoice[] = [
-  {
-    id: '3',
-    type: 'envoice',
-    number: 'ENV-001',
-    date: '2024-01-25T00:00:00Z',
-    dueDate: '2024-02-25T00:00:00Z',
-    senderId: '1',
-    senderName: 'Escritório Silva & Associados',
-    senderDetails: mockCompanyDetails,
-    receiverId: '2',
-    receiverName: 'João Carlos Oliveira',
-    receiverDetails: mockClientDetails,
-    title: 'Controle Interno - Ação Trabalhista',
-    description: 'Cobrança interna para controle de recebíveis',
-    items: [
-      {
-        id: '3',
-        description: 'Ação trabalhista - honorários',
-        quantity: 1,
-        rate: 5000,
-        amount: 5000,
-        tax: 0,
-      },
-    ],
-    subtotal: 5000,
-    discount: 0,
-    discountType: 'fixed',
-    fee: 0,
-    feeType: 'fixed',
-    tax: 0,
-    taxType: 'fixed',
-    total: 5000,
-    currency: 'BRL',
-    status: 'PENDING',
-    priority: 'HIGH',
-    paymentMethod: 'PIX',
-    internalNotes: 'Aguardando finalização do processo',
-    attachments: [],
-    createdAt: '2024-01-25T09:00:00Z',
-    updatedAt: '2024-01-25T09:00:00Z',
-    createdBy: 'Dr. Silva',
-    lastModifiedBy: 'Dr. Silva',
-  },
-];
+
 
 export function Billing() {
   const [activeTab, setActiveTab] = useState('all');
   const [showDocumentForm, setShowDocumentForm] = useState(false);
   const [showDocumentView, setShowDocumentView] = useState(false);
-  const [documentType, setDocumentType] = useState<'estimate' | 'invoice' | 'envoice'>('estimate');
+  const [documentType, setDocumentType] = useState<'estimate' | 'invoice'>('estimate');
   const [editingDocument, setEditingDocument] = useState<any>(undefined);
   const [viewingDocument, setViewingDocument] = useState<any>(null);
 
   const [estimates, setEstimates] = useState<Estimate[]>(mockEstimates);
   const [invoices, setInvoices] = useState<Invoice[]>(mockInvoices);
-  const [envoices, setEnvoices] = useState<Envoice[]>(mockEnvoices);
+
 
   const [selectedDocs, setSelectedDocs] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   // Combine all documents
-  const allDocuments = [...estimates, ...invoices, ...envoices];
+  const allDocuments = [...estimates, ...invoices];
 
   // Filter documents
   const filteredDocuments = useMemo(() => {
@@ -265,7 +223,6 @@ export function Billing() {
   const stats: BillingStats = useMemo(() => {
     const totalEstimates = estimates.length;
     const totalInvoices = invoices.length;
-    const totalEnvoices = envoices.length;
 
     const pendingAmount = allDocuments
       .filter(doc => ['PENDING', 'SENT', 'VIEWED'].includes(doc.status))
@@ -293,16 +250,15 @@ export function Billing() {
     return {
       totalEstimates,
       totalInvoices,
-      totalEnvoices,
       pendingAmount,
       paidAmount,
       overdueAmount,
       thisMonthRevenue,
       averagePaymentTime: 15, // Mock value
     };
-  }, [estimates, invoices, envoices, allDocuments]);
+  }, [estimates, invoices, allDocuments]);
 
-  const handleCreateDocument = (type: 'estimate' | 'invoice' | 'envoice') => {
+  const handleCreateDocument = (type: 'estimate' | 'invoice') => {
     setDocumentType(type);
     setEditingDocument(undefined);
     setShowDocumentForm(true);
@@ -347,14 +303,6 @@ export function Billing() {
         remindersSent: 0,
       };
       setInvoices([...invoices, invoice]);
-    } else if (documentType === 'envoice') {
-      const envoice: Envoice = {
-        ...baseDoc,
-        type: 'envoice',
-        number: `ENV-${(envoices.length + 1).toString().padStart(3, '0')}`,
-        priority: 'MEDIUM',
-      };
-      setEnvoices([...envoices, envoice]);
     }
   };
 
@@ -379,7 +327,6 @@ export function Billing() {
   const handleDeleteDoc = (docId: string) => {
     setEstimates(estimates.filter(doc => doc.id !== docId));
     setInvoices(invoices.filter(doc => doc.id !== docId));
-    setEnvoices(envoices.filter(doc => doc.id !== docId));
     setSelectedDocs(selectedDocs.filter(id => id !== docId));
   };
 
@@ -409,12 +356,9 @@ export function Billing() {
       setEstimates(prev => updateDocumentStatus(prev, document.id, 'SENT'));
     } else if (document.type === 'invoice') {
       setInvoices(prev => updateDocumentStatus(prev, document.id, 'SENT'));
-    } else if (document.type === 'envoice') {
-      setEnvoices(prev => updateDocumentStatus(prev, document.id, 'SENT'));
     }
 
-    alert(`✅ ${document.type === 'estimate' ? 'Orçamento' :
-           document.type === 'invoice' ? 'Fatura' : 'Envoice'} enviado com sucesso para ${document.clientEmail}!`);
+    alert(`✅ ${document.type === 'estimate' ? 'Orçamento' : 'Fatura'} enviado com sucesso para ${document.clientEmail}!`);
   };
 
   /**
@@ -437,8 +381,7 @@ export function Billing() {
         <html>
         <head>
           <meta charset="utf-8">
-          <title>${document.type === 'estimate' ? 'Orçamento' :
-                   document.type === 'invoice' ? 'Fatura' : 'Envoice'} - ${document.number}</title>
+          <title>${document.type === 'estimate' ? 'Orçamento' : 'Fatura'} - ${document.number}</title>
           <style>
             * { box-sizing: border-box; }
             body {
@@ -621,7 +564,7 @@ export function Billing() {
           <div class="document-title">
             <span>
               ${document.type === 'estimate' ? '📋 ORÇAMENTO' :
-                document.type === 'invoice' ? '📄 FATURA' : '💼 ENVOICE'} Nº ${document.number}
+                document.type === '📄 FATURA'} Nº ${document.number}
             </span>
             <span class="status-badge">${
               document.status === 'PAID' ? 'PAGO' :
@@ -720,7 +663,7 @@ export function Billing() {
           <div class="footer">
             <div class="payment-info">
               <strong>💳 Formas de Pagamento Aceitas:</strong><br>
-              PIX, Transferência Bancária, Cartão de Crédito/Débito<br><br>
+              PIX, Transferência Bancária, Cart��o de Crédito/Débito<br><br>
               <strong>🏦 Dados Bancários:</strong><br>
               Banco do Brasil | Agência: 1234-5 | Conta Corrente: 67890-1<br>
               Chave PIX: contato@silva.adv.br
@@ -734,7 +677,7 @@ export function Billing() {
             ` : ''}
 
             <div class="footer-note">
-              <p><strong>Este documento foi gerado eletronicamente pelo sistema de gestão.</strong></p>
+              <p><strong>Este documento foi gerado eletronicamente pelo sistema de gest��o.</strong></p>
               <p>Escritório Silva & Associados - Soluções Jurídicas Especializadas</p>
               <p style="margin-top: 15px; font-size: 11px;">
                 📅 Documento gerado em: ${new Date().toLocaleString('pt-BR')}
@@ -790,7 +733,7 @@ export function Billing() {
             <div style="font-weight: 600; margin-bottom: 4px;">Documento baixado!</div>
             <div style="opacity: 0.9; font-size: 13px;">
               ${document.type === 'estimate' ? 'Orçamento' :
-                document.type === 'invoice' ? 'Fatura' : 'Envoice'} ${document.number}
+                document.type === 'invoice' ? 'Fatura' : 'Fatura'} ${document.number}
             </div>
           </div>
         </div>
@@ -863,12 +806,10 @@ export function Billing() {
       setEstimates(prev => [...prev, newDocument]);
     } else if (document.type === 'invoice') {
       setInvoices(prev => [...prev, newDocument]);
-    } else if (document.type === 'envoice') {
-      setEnvoices(prev => [...prev, newDocument]);
     }
 
     alert(`📋 ${document.type === 'estimate' ? 'Orçamento' :
-           document.type === 'invoice' ? 'Fatura' : 'Envoice'} duplicado com sucesso!`);
+           document.type === 'invoice' ? 'Fatura' : 'Fatura'} duplicado com sucesso!`);
   };
 
   const formatCurrency = (value: number) => {
@@ -876,6 +817,39 @@ export function Billing() {
       style: 'currency',
       currency: 'BRL'
     }).format(value);
+  };
+
+  const handleSendEmail = async (emailData: any) => {
+    try {
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer re_BLdUxfAX_Au4vh5xLAPcthy8bmCgXCcXr',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro na API: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Email enviado com sucesso:', result);
+
+      return result;
+    } catch (error) {
+      console.error('Erro ao enviar email:', error);
+      throw error;
+    }
+  };
+
+  const handleOpenEmailModal = () => {
+    if (selectedDocs.length === 0) {
+      alert('���️ Selecione pelo menos um documento para enviar por email.');
+      return;
+    }
+    setShowEmailModal(true);
   };
 
   return (
@@ -897,7 +871,7 @@ export function Billing() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Sistema de Cobrança</h1>
             <p className="text-muted-foreground">
-              Estimates, Invoices e Envoices para controle financeiro
+              Estimates e Invoices para controle financeiro
             </p>
           </div>
           <DropdownMenu>
@@ -916,10 +890,6 @@ export function Billing() {
                 <Receipt className="mr-2 h-4 w-4" />
                 Fatura (Invoice)
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleCreateDocument('envoice')}>
-                <CreditCard className="mr-2 h-4 w-4" />
-                Envoice (Controle Interno)
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -934,7 +904,7 @@ export function Billing() {
             <CardContent>
               <div className="text-2xl font-bold">{formatCurrency(stats.pendingAmount)}</div>
               <p className="text-xs text-muted-foreground">
-                {stats.totalEstimates + stats.totalInvoices + stats.totalEnvoices} documentos
+                {stats.totalEstimates + stats.totalInvoices} documentos
               </p>
             </CardContent>
           </Card>
@@ -1006,6 +976,15 @@ export function Billing() {
               <SelectItem value="CANCELLED">Cancelado</SelectItem>
             </SelectContent>
           </Select>
+          <Button
+            variant="default"
+            onClick={handleOpenEmailModal}
+            disabled={selectedDocs.length === 0}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            <Mail className="h-4 w-4 mr-2" />
+            Enviar Email {selectedDocs.length > 0 && `(${selectedDocs.length})`}
+          </Button>
         </div>
 
         {/* Documents Table with Tabs */}
@@ -1027,9 +1006,6 @@ export function Billing() {
                 </TabsTrigger>
                 <TabsTrigger value="invoice">
                   Faturas ({invoices.length})
-                </TabsTrigger>
-                <TabsTrigger value="envoice">
-                  Envoices ({envoices.length})
                 </TabsTrigger>
               </TabsList>
 
@@ -1070,6 +1046,14 @@ export function Billing() {
           onDownload={handleDownloadDoc}
           onSend={handleSendDoc}
           onDuplicate={handleDuplicateDoc}
+        />
+
+        {/* Email Send Modal */}
+        <EmailSendModal
+          open={showEmailModal}
+          onOpenChange={setShowEmailModal}
+          documents={allDocuments.filter(doc => selectedDocs.includes(doc.id)) || []}
+          onSendEmail={handleSendEmail}
         />
       </div>
     </DashboardLayout>

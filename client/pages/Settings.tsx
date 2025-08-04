@@ -62,23 +62,27 @@
  * Versão: 2.0
  */
 
-import React, { useState } from 'react';
-import { DashboardLayout } from '@/components/Layout/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
+import React, { useState } from "react";
+import {
+  createSafeOnOpenChange,
+  createSafeDialogHandler,
+} from "@/lib/dialog-fix";
+import { DashboardLayout } from "@/components/Layout/DashboardLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -86,7 +90,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+} from "@/components/ui/breadcrumb";
 import {
   Settings as SettingsIcon,
   Building,
@@ -103,8 +107,8 @@ import {
   Download,
   Edit,
   Plus,
-  X
-} from 'lucide-react';
+  X,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -112,24 +116,52 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { UserManagement } from '@/components/Settings/UserManagement';
+} from "@/components/ui/dialog";
+import { UserManagement } from "@/components/Settings/UserManagement";
 
 export function Settings() {
-  const [activeTab, setActiveTab] = useState('company');
+  const [activeTab, setActiveTab] = useState("company");
+
+  // Create safe dialog handlers
+  const safeSetShowTemplateModal = createSafeOnOpenChange((open: boolean) =>
+    setShowTemplateModal(open),
+  );
+  const safeSetShowNewAccountModal = createSafeOnOpenChange((open: boolean) =>
+    setShowNewAccountModal(open),
+  );
   const [error, setError] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
-  const [currentTemplate, setCurrentTemplate] = useState<'budget' | 'invoice' | null>(null);
-  const [templateContent, setTemplateContent] = useState('');
+  const [currentTemplate, setCurrentTemplate] = useState<
+    "budget" | "invoice" | null
+  >(null);
+  const [templateContent, setTemplateContent] = useState("");
   const [showNewAccountModal, setShowNewAccountModal] = useState(false);
   const [accounts, setAccounts] = useState([
-    { id: '1', bank: 'Banco do Brasil', account: '1234-5', balance: 45280.50, type: 'Conta Corrente' },
-    { id: '2', bank: 'Caixa Econômica', account: '6789-0', balance: 12750.30, type: 'Poupança' },
-    { id: '3', bank: 'Itaú', account: '9876-1', balance: 8900.00, type: 'Conta Corrente' }
+    {
+      id: "1",
+      bank: "Banco do Brasil",
+      account: "1234-5",
+      balance: 45280.5,
+      type: "Conta Corrente",
+    },
+    {
+      id: "2",
+      bank: "Caixa Econômica",
+      account: "6789-0",
+      balance: 12750.3,
+      type: "Poupança",
+    },
+    {
+      id: "3",
+      bank: "Itaú",
+      account: "9876-1",
+      balance: 8900.0,
+      type: "Conta Corrente",
+    },
   ]);
   const [editingAccount, setEditingAccount] = useState<any>(null);
 
@@ -141,7 +173,9 @@ export function Settings() {
           <Card>
             <CardContent className="p-6">
               <div className="text-center">
-                <h3 className="text-lg font-semibold text-red-600 mb-2">Erro nas Configurações</h3>
+                <h3 className="text-lg font-semibold text-red-600 mb-2">
+                  Erro nas Configurações
+                </h3>
                 <p className="text-muted-foreground mb-4">{error}</p>
                 <Button onClick={() => setError(null)}>Tentar Novamente</Button>
               </div>
@@ -157,53 +191,47 @@ export function Settings() {
     try {
       // Simular upload de arquivos
       if (logoFile) {
-        console.log('Uploading logo:', logoFile.name);
+        console.log("Uploading logo:", logoFile.name);
         // Aqui seria feito o upload real para o servidor
       }
       if (faviconFile) {
-        console.log('Uploading favicon:', faviconFile.name);
+        console.log("Uploading favicon:", faviconFile.name);
         // Aqui seria feito o upload real para o servidor
       }
 
-      alert(`✅ Configurações da empresa salvas com sucesso!${logoFile ? '\n🇫Logo atualizado!' : ''}${faviconFile ? '\n🌐Favicon atualizado!' : ''}`);
+      alert(
+        `✅ Configurações da empresa salvas com sucesso!${logoFile ? "\n🇫Logo atualizado!" : ""}${faviconFile ? "\n🌐Favicon atualizado!" : ""}`,
+      );
 
       // Resetar arquivos após o sucesso
       setLogoFile(null);
       setFaviconFile(null);
     } catch (error) {
-      setError('Erro ao salvar configurações da empresa');
+      setError("Erro ao salvar configurações da empresa");
     }
   };
 
   const handleSaveEmail = () => {
     try {
-      alert('✅ Configurações de email salvas com sucesso!');
+      alert("✅ Configurações de email salvas com sucesso!");
     } catch (error) {
-      setError('Erro ao salvar configurações de email');
-    }
-  };
-
-  const handleSaveAppearance = () => {
-    try {
-      alert('✅ Tema aplicado com sucesso!');
-    } catch (error) {
-      setError('Erro ao aplicar tema');
+      setError("Erro ao salvar configurações de email");
     }
   };
 
   const handleSaveNotifications = () => {
     try {
-      alert('✅ Preferências de notificações salvas!');
+      alert("✅ Preferências de notificações salvas!");
     } catch (error) {
-      setError('Erro ao salvar preferências de notificações');
+      setError("Erro ao salvar preferências de notificações");
     }
   };
 
   const handleSaveSecurity = () => {
     try {
-      alert('✅ Configurações de segurança salvas!');
+      alert("✅ Configurações de segurança salvas!");
     } catch (error) {
-      setError('Erro ao salvar configurações de segurança');
+      setError("Erro ao salvar configurações de segurança");
     }
   };
 
@@ -211,15 +239,20 @@ export function Settings() {
     const file = event.target.files?.[0];
     if (file) {
       // Verificar tipo de arquivo
-      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+      const allowedTypes = [
+        "image/png",
+        "image/jpeg",
+        "image/jpg",
+        "image/svg+xml",
+      ];
       if (!allowedTypes.includes(file.type)) {
-        setError('Tipo de arquivo não suportado. Use PNG, JPEG ou SVG.');
+        setError("Tipo de arquivo não suportado. Use PNG, JPEG ou SVG.");
         return;
       }
 
       // Verificar tamanho (máximo 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        setError('Arquivo muito grande. Tamanho máximo: 5MB.');
+        setError("Arquivo muito grande. Tamanho máximo: 5MB.");
         return;
       }
 
@@ -240,15 +273,20 @@ export function Settings() {
     const file = event.target.files?.[0];
     if (file) {
       // Verificar tipo de arquivo
-      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+      const allowedTypes = [
+        "image/png",
+        "image/jpeg",
+        "image/jpg",
+        "image/svg+xml",
+      ];
       if (!allowedTypes.includes(file.type)) {
-        setError('Tipo de arquivo não suportado. Use PNG, JPEG ou SVG.');
+        setError("Tipo de arquivo não suportado. Use PNG, JPEG ou SVG.");
         return;
       }
 
       // Verificar tamanho (máximo 1MB para favicon)
       if (file.size > 1024 * 1024) {
-        setError('Arquivo muito grande para favicon. Tamanho máximo: 1MB.');
+        setError("Arquivo muito grande para favicon. Tamanho máximo: 1MB.");
         return;
       }
 
@@ -266,11 +304,11 @@ export function Settings() {
   };
 
   const handleUploadLogo = () => {
-    document.getElementById('logo-upload')?.click();
+    document.getElementById("logo-upload")?.click();
   };
 
   const handleUploadFavicon = () => {
-    document.getElementById('favicon-upload')?.click();
+    document.getElementById("favicon-upload")?.click();
   };
 
   return (
@@ -296,7 +334,7 @@ export function Settings() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 md:grid-cols-8">
+          <TabsList className="grid w-full grid-cols-4 md:grid-cols-7">
             <TabsTrigger value="company" className="flex items-center">
               <Building className="h-4 w-4 mr-1" />
               <span className="hidden sm:inline">Empresa</span>
@@ -309,10 +347,7 @@ export function Settings() {
               <Mail className="h-4 w-4 mr-1" />
               <span className="hidden sm:inline">Email</span>
             </TabsTrigger>
-            <TabsTrigger value="appearance" className="flex items-center">
-              <Palette className="h-4 w-4 mr-1" />
-              <span className="hidden sm:inline">Visual</span>
-            </TabsTrigger>
+
             <TabsTrigger value="notifications" className="flex items-center">
               <Bell className="h-4 w-4 mr-1" />
               <span className="hidden sm:inline">Notificações</span>
@@ -345,15 +380,25 @@ export function Settings() {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="company-name">Nome da Empresa</Label>
-                      <Input id="company-name" defaultValue="Escritório Silva & Associados" />
+                      <Input
+                        id="company-name"
+                        defaultValue="Escritório Silva & Associados"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="company-cnpj">CNPJ</Label>
-                      <Input id="company-cnpj" defaultValue="12.345.678/0001-90" />
+                      <Input
+                        id="company-cnpj"
+                        defaultValue="12.345.678/0001-90"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="company-email">Email</Label>
-                      <Input id="company-email" type="email" defaultValue="contato@silva.adv.br" />
+                      <Input
+                        id="company-email"
+                        type="email"
+                        defaultValue="contato@silva.adv.br"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="company-phone">Telefone</Label>
@@ -363,7 +408,10 @@ export function Settings() {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="company-address">Endereço</Label>
-                      <Input id="company-address" defaultValue="Av. Paulista, 1000, Bela Vista" />
+                      <Input
+                        id="company-address"
+                        defaultValue="Av. Paulista, 1000, Bela Vista"
+                      />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -391,7 +439,10 @@ export function Settings() {
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="company-website">Website</Label>
-                    <Input id="company-website" placeholder="https://www.silva.adv.br" />
+                    <Input
+                      id="company-website"
+                      placeholder="https://www.silva.adv.br"
+                    />
                   </div>
                   <div>
                     <Label htmlFor="company-description">Descrição</Label>
@@ -411,7 +462,11 @@ export function Settings() {
                       <div className="mt-2 flex items-center space-x-4">
                         <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
                           {logoPreview ? (
-                            <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain" />
+                            <img
+                              src={logoPreview}
+                              alt="Logo preview"
+                              className="w-full h-full object-contain"
+                            />
                           ) : (
                             <Building className="h-8 w-8 text-muted-foreground" />
                           )}
@@ -419,11 +474,12 @@ export function Settings() {
                         <div className="flex flex-col space-y-2">
                           <Button variant="outline" onClick={handleUploadLogo}>
                             <Upload className="h-4 w-4 mr-2" />
-                            {logoFile ? 'Trocar Logo' : 'Upload Logo'}
+                            {logoFile ? "Trocar Logo" : "Upload Logo"}
                           </Button>
                           {logoFile && (
                             <div className="text-xs text-muted-foreground">
-                              {logoFile.name} ({(logoFile.size / 1024).toFixed(1)}KB)
+                              {logoFile.name} (
+                              {(logoFile.size / 1024).toFixed(1)}KB)
                             </div>
                           )}
                         </div>
@@ -444,19 +500,27 @@ export function Settings() {
                       <div className="mt-2 flex items-center space-x-4">
                         <div className="w-8 h-8 bg-muted rounded flex items-center justify-center overflow-hidden">
                           {faviconPreview ? (
-                            <img src={faviconPreview} alt="Favicon preview" className="w-full h-full object-contain" />
+                            <img
+                              src={faviconPreview}
+                              alt="Favicon preview"
+                              className="w-full h-full object-contain"
+                            />
                           ) : (
                             <SettingsIcon className="h-4 w-4 text-muted-foreground" />
                           )}
                         </div>
                         <div className="flex flex-col space-y-2">
-                          <Button variant="outline" onClick={handleUploadFavicon}>
+                          <Button
+                            variant="outline"
+                            onClick={handleUploadFavicon}
+                          >
                             <Upload className="h-4 w-4 mr-2" />
-                            {faviconFile ? 'Trocar Favicon' : 'Upload Favicon'}
+                            {faviconFile ? "Trocar Favicon" : "Upload Favicon"}
                           </Button>
                           {faviconFile && (
                             <div className="text-xs text-muted-foreground">
-                              {faviconFile.name} ({(faviconFile.size / 1024).toFixed(1)}KB)
+                              {faviconFile.name} (
+                              {(faviconFile.size / 1024).toFixed(1)}KB)
                             </div>
                           )}
                         </div>
@@ -496,62 +560,113 @@ export function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Mail className="h-5 w-5 mr-2" />
-                  Configurações de Email
+                  Configurações de Email - Resend API
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-center">
+                      <Mail className="h-5 w-5 text-blue-600 mr-2" />
+                      <div>
+                        <h4 className="font-medium text-blue-900">
+                          Integração Resend API
+                        </h4>
+                        <p className="text-sm text-blue-700">
+                          Serviço moderno de envio de emails transacionais
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   <div>
-                    <Label htmlFor="email-provider">Provedor de Email</Label>
-                    <Select defaultValue="smtp">
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="smtp">SMTP</SelectItem>
-                        <SelectItem value="brevo">Brevo</SelectItem>
-                        <SelectItem value="mailgun">Mailgun</SelectItem>
-                        <SelectItem value="sendgrid">SendGrid</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="resend-api-key">
+                      Chave da API Resend *
+                    </Label>
+                    <Input
+                      id="resend-api-key"
+                      type="password"
+                      placeholder="re_xxxxxxxxxx"
+                      defaultValue="re_BLdUxfAX_Au4vh5xLAPcthy8bmCgXCcXr"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Sua chave de API do Resend. Mantenha segura e não
+                      compartilhe.
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="smtp-host">Host SMTP</Label>
-                      <Input id="smtp-host" placeholder="smtp.gmail.com" />
+                      <Label htmlFor="from-email">Email Remetente *</Label>
+                      <Input
+                        id="from-email"
+                        type="email"
+                        placeholder="contato@seudominio.com"
+                        defaultValue="contato@silva.adv.br"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Deve ser um domínio verificado no Resend
+                      </p>
                     </div>
                     <div>
-                      <Label htmlFor="smtp-port">Porta</Label>
-                      <Input id="smtp-port" type="number" placeholder="587" />
+                      <Label htmlFor="from-name">Nome do Remetente</Label>
+                      <Input
+                        id="from-name"
+                        placeholder="Escritório Silva & Associados"
+                        defaultValue="Escritório Silva & Associados"
+                      />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="smtp-username">Usuário</Label>
-                      <Input id="smtp-username" placeholder="seu-email@gmail.com" />
+                      <Label htmlFor="reply-to">Email de Resposta</Label>
+                      <Input
+                        id="reply-to"
+                        type="email"
+                        placeholder="respostas@silva.adv.br"
+                        defaultValue="contato@silva.adv.br"
+                      />
                     </div>
                     <div>
-                      <Label htmlFor="smtp-password">Senha</Label>
-                      <Input id="smtp-password" type="password" placeholder="••••••••" />
+                      <Label htmlFor="email-subject-prefix">
+                        Prefixo do Assunto
+                      </Label>
+                      <Input
+                        id="email-subject-prefix"
+                        placeholder="[Silva & Associados]"
+                        defaultValue="[Silva & Associados]"
+                      />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="from-email">Email de Envio</Label>
-                      <Input id="from-email" defaultValue="contato@silva.adv.br" />
-                    </div>
-                    <div>
-                      <Label htmlFor="from-name">Nome de Envio</Label>
-                      <Input id="from-name" defaultValue="Escritório Silva & Associados" />
-                    </div>
+                  <div className="flex items-center space-x-2 p-3 border rounded-lg">
+                    <Switch id="email-enabled" defaultChecked />
+                    <Label htmlFor="email-enabled">
+                      Ativar envio de emails
+                    </Label>
                   </div>
+
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      alert(
+                        "🧪 Enviando email de teste para verificar configuração...\n\n✅ Email de teste enviado com sucesso!\nVerifique sua caixa de entrada.",
+                      );
+                    }}
+                  >
+                    <Mail className="h-4 w-4 mr-2" />
+                    Testar Configuração
+                  </Button>
                 </div>
 
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium">Templates de Email</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Personalize os templates para orçamentos e faturas. Use as
+                    variáveis disponíveis para inserir dados dinâmicos.
+                  </p>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label>Template de Orçamento</Label>
@@ -559,8 +674,68 @@ export function Settings() {
                         variant="outline"
                         className="w-full mt-2"
                         onClick={() => {
-                          setCurrentTemplate('budget');
-                          setTemplateContent('Modelo de template de orçamento...\n\nEmpresa: [NOME_EMPRESA]\nData: [DATA]\nCliente: [NOME_CLIENTE]\n\nDetalhes do orçamento:\n[DESCRICAO_SERVICOS]\n\nValor total: [VALOR_TOTAL]\n\nAtenciosamente,\n[ASSINATURA]');
+                          setCurrentTemplate("budget");
+                          setTemplateContent(`<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento - [NUMERO_ORCAMENTO]</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #3B82F6; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
+        .footer { background: #374151; color: white; padding: 15px; text-align: center; border-radius: 0 0 8px 8px; }
+        .amount { font-size: 24px; font-weight: bold; color: #059669; }
+        .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .table th, .table td { border: 1px solid #e5e7eb; padding: 12px; text-align: left; }
+        .table th { background: #f3f4f6; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 ORÇAMENTO</h1>
+        <p>Nº [NUMERO_ORCAMENTO]</p>
+    </div>
+
+    <div class="content">
+        <p>Prezado(a) <strong>[NOME_CLIENTE]</strong>,</p>
+
+        <p>Segue em anexo o orçamento solicitado para os serviços jurídicos:</p>
+
+        <table class="table">
+            <tr>
+                <th>Empresa:</th>
+                <td>[NOME_EMPRESA]</td>
+            </tr>
+            <tr>
+                <th>Data:</th>
+                <td>[DATA]</td>
+            </tr>
+            <tr>
+                <th>Validade:</th>
+                <td>[DATA_VALIDADE]</td>
+            </tr>
+        </table>
+
+        <h3>Descrição dos Serviços:</h3>
+        <div>[DESCRICAO_SERVICOS]</div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <div class="amount">Valor Total: [VALOR_TOTAL]</div>
+        </div>
+
+        <p>Para aceitar este orçamento, entre em contato conosco através dos canais abaixo.</p>
+
+        <p>Atenciosamente,<br>
+        <strong>[ASSINATURA]</strong></p>
+    </div>
+
+    <div class="footer">
+        <p>📧 contato@silva.adv.br | 📞 (11) 3333-4444</p>
+    </div>
+</body>
+</html>`);
                           setShowTemplateModal(true);
                         }}
                       >
@@ -574,8 +749,83 @@ export function Settings() {
                         variant="outline"
                         className="w-full mt-2"
                         onClick={() => {
-                          setCurrentTemplate('invoice');
-                          setTemplateContent('Modelo de template de fatura...\n\nEmpresa: [NOME_EMPRESA]\nFatura Nº: [NUMERO_FATURA]\nData de emissão: [DATA_EMISSAO]\nVencimento: [DATA_VENCIMENTO]\n\nCliente: [NOME_CLIENTE]\nCNPJ/CPF: [DOCUMENTO_CLIENTE]\n\nDescrição dos serviços:\n[DESCRICAO_SERVICOS]\n\nValor total: [VALOR_TOTAL]\nForma de pagamento: [FORMA_PAGAMENTO]\n\nAtenciosamente,\n[ASSINATURA]');
+                          setCurrentTemplate("invoice");
+                          setTemplateContent(`<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fatura - [NUMERO_FATURA]</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #059669; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
+        .footer { background: #374151; color: white; padding: 15px; text-align: center; border-radius: 0 0 8px 8px; }
+        .amount { font-size: 24px; font-weight: bold; color: #dc2626; }
+        .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .table th, .table td { border: 1px solid #e5e7eb; padding: 12px; text-align: left; }
+        .table th { background: #f3f4f6; }
+        .alert { background: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 6px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📄 FATURA</h1>
+        <p>Nº [NUMERO_FATURA]</p>
+    </div>
+
+    <div class="content">
+        <p>Prezado(a) <strong>[NOME_CLIENTE]</strong>,</p>
+
+        <p>Segue fatura referente aos serviços prestados:</p>
+
+        <table class="table">
+            <tr>
+                <th>Empresa:</th>
+                <td>[NOME_EMPRESA]</td>
+            </tr>
+            <tr>
+                <th>Data de Emissão:</th>
+                <td>[DATA_EMISSAO]</td>
+            </tr>
+            <tr>
+                <th>Vencimento:</th>
+                <td><strong>[DATA_VENCIMENTO]</strong></td>
+            </tr>
+            <tr>
+                <th>Cliente:</th>
+                <td>[NOME_CLIENTE]</td>
+            </tr>
+            <tr>
+                <th>CPF/CNPJ:</th>
+                <td>[DOCUMENTO_CLIENTE]</td>
+            </tr>
+        </table>
+
+        <h3>Descrição dos Serviços:</h3>
+        <div>[DESCRICAO_SERVICOS]</div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <div class="amount">Valor Total: [VALOR_TOTAL]</div>
+        </div>
+
+        <div class="alert">
+            <strong>⚠️ Forma de Pagamento:</strong> [FORMA_PAGAMENTO]<br>
+            <strong>📅 Vencimento:</strong> [DATA_VENCIMENTO]
+        </div>
+
+        <p>Para efetuar o pagamento, utilize os dados bancários em anexo ou entre em contato conosco.</p>
+
+        <p>Atenciosamente,<br>
+        <strong>[ASSINATURA]</strong></p>
+    </div>
+
+    <div class="footer">
+        <p>📧 contato@silva.adv.br | 📞 (11) 3333-4444</p>
+        <p>PIX: contato@silva.adv.br</p>
+    </div>
+</body>
+</html>`);
                           setShowTemplateModal(true);
                         }}
                       >
@@ -596,78 +846,6 @@ export function Settings() {
             </Card>
           </TabsContent>
 
-          {/* Appearance Settings */}
-          <TabsContent value="appearance">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Palette className="h-5 w-5 mr-2" />
-                  Personalização Visual
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="theme">Tema</Label>
-                    <Select defaultValue="light">
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="light">Claro</SelectItem>
-                        <SelectItem value="dark">Escuro</SelectItem>
-                        <SelectItem value="auto">Automático</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="primary-color">Cor Primária</Label>
-                      <div className="flex items-center space-x-2 mt-2">
-                        <div className="w-8 h-8 bg-blue-600 rounded border" />
-                        <Input id="primary-color" value="#3B82F6" />
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="secondary-color">Cor Secundária</Label>
-                      <div className="flex items-center space-x-2 mt-2">
-                        <div className="w-8 h-8 bg-green-600 rounded border" />
-                        <Input id="secondary-color" value="#10B981" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="font-family">Família de Fonte</Label>
-                    <Select defaultValue="inter">
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="inter">Inter</SelectItem>
-                        <SelectItem value="roboto">Roboto</SelectItem>
-                        <SelectItem value="system">Sistema</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Switch id="sidebar-collapsed" />
-                    <Label htmlFor="sidebar-collapsed">Sidebar Recolhida por Padrão</Label>
-                  </div>
-                </div>
-
-                <div className="flex justify-end">
-                  <Button onClick={handleSaveAppearance}>
-                    <Save className="h-4 w-4 mr-2" />
-                    Aplicar Tema
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
           {/* Notifications */}
           <TabsContent value="notifications">
             <Card>
@@ -681,16 +859,10 @@ export function Settings() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label>Notificações por Email</Label>
-                      <p className="text-sm text-muted-foreground">Receber notificações por email</p>
-                    </div>
-                    <Switch defaultChecked />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
                       <Label>Notificações Push</Label>
-                      <p className="text-sm text-muted-foreground">Notificações no navegador</p>
+                      <p className="text-sm text-muted-foreground">
+                        Notificações no navegador
+                      </p>
                     </div>
                     <Switch defaultChecked />
                   </div>
@@ -717,11 +889,15 @@ export function Settings() {
                     <Label>Lembretes de Faturas</Label>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm">3 dias antes do vencimento</span>
+                        <span className="text-sm">
+                          3 dias antes do vencimento
+                        </span>
                         <Switch defaultChecked />
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm">1 dia depois do vencimento</span>
+                        <span className="text-sm">
+                          1 dia depois do vencimento
+                        </span>
                         <Switch defaultChecked />
                       </div>
                       <div className="flex items-center justify-between">
@@ -758,11 +934,25 @@ export function Settings() {
                     <div>
                       <Label>Status Disponíveis</Label>
                       <div className="mt-2 space-y-2">
-                        {['Ativo', 'Inativo', 'Pendente', 'Em Análise', 'Suspenso', 'Cancelado'].map((status) => (
-                          <div key={status} className="flex items-center justify-between p-2 border rounded">
+                        {[
+                          "Ativo",
+                          "Inativo",
+                          "Pendente",
+                          "Em Análise",
+                          "Suspenso",
+                          "Cancelado",
+                        ].map((status) => (
+                          <div
+                            key={status}
+                            className="flex items-center justify-between p-2 border rounded"
+                          >
                             <span className="text-sm">{status}</span>
                             <div className="flex items-center space-x-2">
-                              <Switch defaultChecked={status === 'Ativo' || status === 'Inativo'} />
+                              <Switch
+                                defaultChecked={
+                                  status === "Ativo" || status === "Inativo"
+                                }
+                              />
                               <Button variant="ghost" size="sm">
                                 <Edit className="h-3 w-3" />
                               </Button>
@@ -772,7 +962,9 @@ export function Settings() {
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="new-inss-status">Adicionar Novo Status</Label>
+                      <Label htmlFor="new-inss-status">
+                        Adicionar Novo Status
+                      </Label>
                       <div className="mt-2 flex space-x-2">
                         <Input placeholder="Nome do status" />
                         <Button>Adicionar</Button>
@@ -793,16 +985,19 @@ export function Settings() {
                       <Label>Áreas do Direito</Label>
                       <div className="mt-2 space-y-2">
                         {[
-                          'Direito Civil',
-                          'Direito Trabalhista',
-                          'Direito Previdenciário',
-                          'Direito Empresarial',
-                          'Direito Família',
-                          'Direito Criminal',
-                          'Direito Tributário',
-                          'Direito Consumidor'
+                          "Direito Civil",
+                          "Direito Trabalhista",
+                          "Direito Previdenciário",
+                          "Direito Empresarial",
+                          "Direito Família",
+                          "Direito Criminal",
+                          "Direito Tributário",
+                          "Direito Consumidor",
                         ].map((area) => (
-                          <div key={area} className="flex items-center justify-between p-2 border rounded">
+                          <div
+                            key={area}
+                            className="flex items-center justify-between p-2 border rounded"
+                          >
                             <span className="text-sm">{area}</span>
                             <div className="flex items-center space-x-2">
                               <Switch defaultChecked />
@@ -818,16 +1013,19 @@ export function Settings() {
                       <Label>Tipos de Processo</Label>
                       <div className="mt-2 space-y-2">
                         {[
-                          'Consultoria',
-                          'Ação Judicial',
-                          'Recurso',
-                          'Execução',
-                          'Mediação',
-                          'Arbitragem',
-                          'Acordo Extrajudicial',
-                          'Petição Inicial'
+                          "Consultoria",
+                          "Ação Judicial",
+                          "Recurso",
+                          "Execução",
+                          "Mediação",
+                          "Arbitragem",
+                          "Acordo Extrajudicial",
+                          "Petição Inicial",
                         ].map((tipo) => (
-                          <div key={tipo} className="flex items-center justify-between p-2 border rounded">
+                          <div
+                            key={tipo}
+                            className="flex items-center justify-between p-2 border rounded"
+                          >
                             <span className="text-sm">{tipo}</span>
                             <div className="flex items-center space-x-2">
                               <Switch defaultChecked />
@@ -851,14 +1049,17 @@ export function Settings() {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
-                      'Contrato de Honorários',
-                      'Procuração Judicial',
-                      'Acordo de Mediação',
-                      'Termo de Confidencialidade',
-                      'Contrato de Consultoria',
-                      'Distrato'
+                      "Contrato de Honorários",
+                      "Procuração Judicial",
+                      "Acordo de Mediação",
+                      "Termo de Confidencialidade",
+                      "Contrato de Consultoria",
+                      "Distrato",
                     ].map((template) => (
-                      <div key={template} className="p-4 border rounded-lg space-y-2">
+                      <div
+                        key={template}
+                        className="p-4 border rounded-lg space-y-2"
+                      >
                         <div className="flex items-center justify-between">
                           <h4 className="font-medium">{template}</h4>
                           <Button variant="outline" size="sm">
@@ -898,21 +1099,35 @@ export function Settings() {
                         <div className="flex justify-between items-center">
                           <Label htmlFor="prazo-apelacao">Apelação</Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-apelacao" defaultValue="15" className="w-16" />
+                            <Input
+                              id="prazo-apelacao"
+                              defaultValue="15"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
                           <Label htmlFor="prazo-agravo">Agravo</Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-agravo" defaultValue="15" className="w-16" />
+                            <Input
+                              id="prazo-agravo"
+                              defaultValue="15"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
-                          <Label htmlFor="prazo-especial">Recurso Especial</Label>
+                          <Label htmlFor="prazo-especial">
+                            Recurso Especial
+                          </Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-especial" defaultValue="15" className="w-16" />
+                            <Input
+                              id="prazo-especial"
+                              defaultValue="15"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
@@ -925,21 +1140,33 @@ export function Settings() {
                         <div className="flex justify-between items-center">
                           <Label htmlFor="prazo-contestacao">Contestação</Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-contestacao" defaultValue="15" className="w-16" />
+                            <Input
+                              id="prazo-contestacao"
+                              defaultValue="15"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
                           <Label htmlFor="prazo-impugnacao">Impugnação</Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-impugnacao" defaultValue="15" className="w-16" />
+                            <Input
+                              id="prazo-impugnacao"
+                              defaultValue="15"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
                           <Label htmlFor="prazo-manifesto">Manifesto</Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-manifesto" defaultValue="10" className="w-16" />
+                            <Input
+                              id="prazo-manifesto"
+                              defaultValue="10"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
@@ -961,60 +1188,6 @@ export function Settings() {
           {/* Financial Settings */}
           <TabsContent value="financial">
             <div className="space-y-6">
-              {/* Contas Bancárias */}
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="flex items-center">
-                    <DollarSign className="h-5 w-5 mr-2" />
-                    Contas Bancárias
-                  </CardTitle>
-                  <Button onClick={() => {
-                    setEditingAccount(null);
-                    setShowNewAccountModal(true);
-                  }}>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Nova Conta
-                  </Button>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {accounts.map((conta) => (
-                      <div key={conta.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center space-x-4">
-                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <DollarSign className="h-5 w-5 text-blue-600" />
-                          </div>
-                          <div>
-                            <div className="font-medium">{conta.bank}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {conta.type} • {conta.account}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <div className="text-right">
-                            <div className="font-semibold">
-                              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(conta.balance)}
-                            </div>
-                            <div className="text-sm text-green-600">+2.5% mês</div>
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setEditingAccount(conta);
-                              setShowNewAccountModal(true);
-                            }}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Formas de Pagamento */}
               <Card>
                 <CardHeader>
@@ -1026,14 +1199,29 @@ export function Settings() {
                       <Label>Métodos Aceitos</Label>
                       <div className="mt-2 space-y-2">
                         {[
-                          { method: 'PIX', icon: '🏦', enabled: true },
-                          { method: 'Cartão de Crédito', icon: '💳', enabled: true },
-                          { method: 'Cartão de Débito', icon: '💳', enabled: true },
-                          { method: 'Transferência Bancária', icon: '🏧', enabled: true },
-                          { method: 'Boleto', icon: '📄', enabled: false },
-                          { method: 'Dinheiro', icon: '💰', enabled: true }
+                          { method: "PIX", icon: "🏦", enabled: true },
+                          {
+                            method: "Cartão de Crédito",
+                            icon: "💳",
+                            enabled: true,
+                          },
+                          {
+                            method: "Cartão de Débito",
+                            icon: "💳",
+                            enabled: true,
+                          },
+                          {
+                            method: "Transferência Bancária",
+                            icon: "🏧",
+                            enabled: true,
+                          },
+                          { method: "Boleto", icon: "📄", enabled: false },
+                          { method: "Dinheiro", icon: "💰", enabled: true },
                         ].map((payment) => (
-                          <div key={payment.method} className="flex items-center justify-between p-3 border rounded">
+                          <div
+                            key={payment.method}
+                            className="flex items-center justify-between p-3 border rounded"
+                          >
                             <div className="flex items-center space-x-3">
                               <span className="text-lg">{payment.icon}</span>
                               <span className="text-sm">{payment.method}</span>
@@ -1043,205 +1231,20 @@ export function Settings() {
                         ))}
                       </div>
                     </div>
-
-                    <div>
-                      <Label>Configurações de Cobrança</Label>
-                      <div className="mt-2 space-y-4">
-                        <div>
-                          <Label htmlFor="prazo-pagamento">Prazo de Pagamento (dias)</Label>
-                          <Input id="prazo-pagamento" defaultValue="30" />
-                        </div>
-                        <div>
-                          <Label htmlFor="juros-mora">Juros de Mora (%)</Label>
-                          <Input id="juros-mora" defaultValue="1.0" />
-                        </div>
-                        <div>
-                          <Label htmlFor="multa-atraso">Multa por Atraso (%)</Label>
-                          <Input id="multa-atraso" defaultValue="2.0" />
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Switch id="cobranca-automatica" />
-                          <Label htmlFor="cobranca-automatica">Cobrança Automática</Label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Impostos e Taxas */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Impostos e Taxas</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <h3 className="font-medium">Regime Tributário</h3>
-                      <Select defaultValue="simples">
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="simples">Simples Nacional</SelectItem>
-                          <SelectItem value="presumido">Lucro Presumido</SelectItem>
-                          <SelectItem value="real">Lucro Real</SelectItem>
-                          <SelectItem value="mei">MEI</SelectItem>
-                        </SelectContent>
-                      </Select>
-
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="aliquota-simples">Alíquota Simples (%)</Label>
-                          <Input id="aliquota-simples" defaultValue="6.0" className="w-20" />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="aliquota-iss">ISS (%)</Label>
-                          <Input id="aliquota-iss" defaultValue="2.0" className="w-20" />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="aliquota-ir">IR Fonte (%)</Label>
-                          <Input id="aliquota-ir" defaultValue="1.5" className="w-20" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <h3 className="font-medium">Taxas de Transação</h3>
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="taxa-pix">Taxa PIX (%)</Label>
-                          <Input id="taxa-pix" defaultValue="0.0" className="w-20" />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="taxa-cartao">Taxa Cartão (%)</Label>
-                          <Input id="taxa-cartao" defaultValue="3.5" className="w-20" />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="taxa-boleto">Taxa Boleto (R$)</Label>
-                          <Input id="taxa-boleto" defaultValue="2.50" className="w-20" />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor="taxa-ted">Taxa TED (R$)</Label>
-                          <Input id="taxa-ted" defaultValue="15.00" className="w-20" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Categorias Contábeis */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Categorias Contábeis</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label>Receitas</Label>
-                      <div className="mt-2 space-y-2">
-                        {[
-                          'Honorários Advocatícios',
-                          'Consultorias Jurídicas',
-                          'Acordos e Mediações',
-                          'Custas Reembolsadas',
-                          'Outros Serviços'
-                        ].map((categoria) => (
-                          <div key={categoria} className="flex items-center justify-between p-2 border rounded">
-                            <span className="text-sm">{categoria}</span>
-                            <div className="flex items-center space-x-2">
-                              <Badge variant="outline">Ativo</Badge>
-                              <Button variant="ghost" size="sm">
-                                <Edit className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>Despesas</Label>
-                      <div className="mt-2 space-y-2">
-                        {[
-                          'Salários e Encargos',
-                          'Aluguel e Condomínio',
-                          'Contas Básicas',
-                          'Material de Escritório',
-                          'Marketing e Publicidade'
-                        ].map((categoria) => (
-                          <div key={categoria} className="flex items-center justify-between p-2 border rounded">
-                            <span className="text-sm">{categoria}</span>
-                            <div className="flex items-center space-x-2">
-                              <Badge variant="outline">Ativo</Badge>
-                              <Button variant="ghost" size="sm">
-                                <Edit className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Integração Contábil */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Integração Contábil</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="p-4 border rounded-lg text-center">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
-                          <DollarSign className="h-6 w-6 text-blue-600" />
-                        </div>
-                        <h4 className="font-medium">ContaAzul</h4>
-                        <p className="text-sm text-muted-foreground mb-3">Sistema contábil integrado</p>
-                        <Button variant="outline" size="sm" onClick={() => alert('🔌 Conectando com ContaAzul...')}>Conectar</Button>
-                      </div>
-
-                      <div className="p-4 border rounded-lg text-center">
-                        <div className="w-12 h-12 bg-green-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
-                          <DollarSign className="h-6 w-6 text-green-600" />
-                        </div>
-                        <h4 className="font-medium">Omie</h4>
-                        <p className="text-sm text-muted-foreground mb-3">ERP para escritórios</p>
-                        <Button variant="outline" size="sm" onClick={() => alert('🔌 Conectando com Omie...')}>Conectar</Button>
-                      </div>
-
-                      <div className="p-4 border rounded-lg text-center">
-                        <div className="w-12 h-12 bg-purple-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
-                          <DollarSign className="h-6 w-6 text-purple-600" />
-                        </div>
-                        <h4 className="font-medium">Sage</h4>
-                        <p className="text-sm text-muted-foreground mb-3">Solução empresarial</p>
-                        <Button variant="outline" size="sm" onClick={() => alert('🔌 Conectando com Sage...')}>Conectar</Button>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center space-x-2 p-3 bg-muted/50 rounded-lg">
-                      <Switch />
-                      <Label>Sincronização Automática</Label>
-                      <span className="text-sm text-muted-foreground ml-auto">
-                        Sincronizar dados financeiros automaticamente
-                      </span>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
 
               <div className="flex justify-end">
-                <Button onClick={() => {
-                  try {
-                    alert('✅ Configurações financeiras salvas com sucesso!');
-                  } catch (error) {
-                    setError('Erro ao salvar configurações financeiras');
-                  }
-                }}>
+                <Button
+                  onClick={() => {
+                    try {
+                      alert("✅ Configurações financeiras salvas com sucesso!");
+                    } catch (error) {
+                      setError("Erro ao salvar configurações financeiras");
+                    }
+                  }}
+                >
                   <Save className="h-4 w-4 mr-2" />
                   Salvar Configurações Financeiras
                 </Button>
@@ -1268,8 +1271,14 @@ export function Settings() {
                         <Input id="min-length" type="number" defaultValue="8" />
                       </div>
                       <div>
-                        <Label htmlFor="password-expiry">Expiração (dias)</Label>
-                        <Input id="password-expiry" type="number" defaultValue="90" />
+                        <Label htmlFor="password-expiry">
+                          Expiração (dias)
+                        </Label>
+                        <Input
+                          id="password-expiry"
+                          type="number"
+                          defaultValue="90"
+                        />
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -1292,12 +1301,22 @@ export function Settings() {
                     <h3 className="text-lg font-medium">Sessões</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="session-timeout">Timeout (minutos)</Label>
-                        <Input id="session-timeout" type="number" defaultValue="60" />
+                        <Label htmlFor="session-timeout">
+                          Timeout (minutos)
+                        </Label>
+                        <Input
+                          id="session-timeout"
+                          type="number"
+                          defaultValue="60"
+                        />
                       </div>
                       <div>
                         <Label htmlFor="max-sessions">Máximo de Sessões</Label>
-                        <Input id="max-sessions" type="number" defaultValue="3" />
+                        <Input
+                          id="max-sessions"
+                          type="number"
+                          defaultValue="3"
+                        />
                       </div>
                     </div>
                   </div>
@@ -1306,7 +1325,11 @@ export function Settings() {
                     <h3 className="text-lg font-medium">Log de Auditoria</h3>
                     <div>
                       <Label htmlFor="audit-retention">Retenção (dias)</Label>
-                      <Input id="audit-retention" type="number" defaultValue="365" />
+                      <Input
+                        id="audit-retention"
+                        type="number"
+                        defaultValue="365"
+                      />
                     </div>
                     <div className="flex items-center space-x-2">
                       <Switch defaultChecked />
@@ -1315,25 +1338,25 @@ export function Settings() {
                   </div>
 
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Autenticação de Dois Fatores</h3>
-                    <div className="flex items-center space-x-2 p-3 border rounded-lg">
-                      <Switch />
-                      <Label>Ativar autenticação de dois fatores (2FA)</Label>
-                    </div>
-                    <Button variant="outline" onClick={() => alert('📱 Configurando 2FA via QR Code...')}>
-                      <Shield className="h-4 w-4 mr-2" />
-                      Configurar 2FA
-                    </Button>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Backup e Recuperação</h3>
+                    <h3 className="text-lg font-medium">
+                      Backup e Recuperação
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Button variant="outline" onClick={() => alert('💾 Gerando backup completo do sistema...')}>
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          alert("💾 Gerando backup completo do sistema...")
+                        }
+                      >
                         <Download className="h-4 w-4 mr-2" />
                         Gerar Backup
                       </Button>
-                      <Button variant="outline" onClick={() => alert('🔄 Abrindo assistente de restauração...')}>
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          alert("�� Abrindo assistente de restauração...")
+                        }
+                      >
                         <Upload className="h-4 w-4 mr-2" />
                         Restaurar Backup
                       </Button>
@@ -1344,23 +1367,47 @@ export function Settings() {
                     <h3 className="text-lg font-medium">Sessões Ativas</h3>
                     <div className="space-y-2">
                       {[
-                        { device: 'Chrome - Windows', location: 'São Paulo, BR', lastActive: 'Agora', current: true },
-                        { device: 'Safari - iPhone', location: 'São Paulo, BR', lastActive: '2 horas atrás', current: false },
-                        { device: 'Firefox - Linux', location: 'Rio de Janeiro, BR', lastActive: '1 dia atrás', current: false }
+                        {
+                          device: "Chrome - Windows",
+                          location: "São Paulo, BR",
+                          lastActive: "Agora",
+                          current: true,
+                        },
+                        {
+                          device: "Safari - iPhone",
+                          location: "São Paulo, BR",
+                          lastActive: "2 horas atrás",
+                          current: false,
+                        },
+                        {
+                          device: "Firefox - Linux",
+                          location: "Rio de Janeiro, BR",
+                          lastActive: "1 dia atrás",
+                          current: false,
+                        },
                       ].map((session, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-3 border rounded-lg"
+                        >
                           <div>
                             <div className="font-medium">{session.device}</div>
                             <div className="text-sm text-muted-foreground">
                               {session.location} • {session.lastActive}
-                              {session.current && <Badge variant="outline" className="ml-2">Atual</Badge>}
+                              {session.current && (
+                                <Badge variant="outline" className="ml-2">
+                                  Atual
+                                </Badge>
+                              )}
                             </div>
                           </div>
                           {!session.current && (
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => alert('🔒 Sessão encerrada com sucesso!')}
+                              onClick={() =>
+                                alert("🔒 Sessão encerrada com sucesso!")
+                              }
                             >
                               Encerrar
                             </Button>
@@ -1370,7 +1417,9 @@ export function Settings() {
                     </div>
                     <Button
                       variant="outline"
-                      onClick={() => alert('🔒 Todas as outras sessões foram encerradas!')}
+                      onClick={() =>
+                        alert("🔒 Todas as outras sessões foram encerradas!")
+                      }
                     >
                       Encerrar Todas as Outras Sessões
                     </Button>
@@ -1379,7 +1428,9 @@ export function Settings() {
                   <div className="flex justify-end space-x-2">
                     <Button
                       variant="outline"
-                      onClick={() => alert('📊 Exportando logs de auditoria...')}
+                      onClick={() =>
+                        alert("📊 Exportando logs de auditoria...")
+                      }
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Exportar Logs
@@ -1395,97 +1446,268 @@ export function Settings() {
           </TabsContent>
         </Tabs>
 
-        {/* Template Editor Modal */}
-        <Dialog open={showTemplateModal} onOpenChange={setShowTemplateModal}>
-          <DialogContent className="max-w-4xl max-h-[80vh]">
+        {/* Template Editor Modal with Real-time Preview */}
+        <Dialog
+          open={showTemplateModal}
+          onOpenChange={safeSetShowTemplateModal}
+        >
+          <DialogContent className="max-w-7xl max-h-[90vh] overflow-hidden">
             <DialogHeader>
               <DialogTitle className="flex items-center">
                 <Edit className="h-5 w-5 mr-2" />
-                Editar Template de {currentTemplate === 'budget' ? 'Orçamento' : 'Fatura'}
+                Editor de Template -{" "}
+                {currentTemplate === "budget" ? "Orçamento" : "Fatura"}
               </DialogTitle>
               <DialogDescription>
-                Personalize o template de {currentTemplate === 'budget' ? 'orçamento' : 'fatura'}. Use as variáveis entre colchetes como [NOME_EMPRESA], [VALOR_TOTAL], etc.
+                Edite o template HTML e veja o preview em tempo real. Use as
+                variáveis disponíveis para personalizar.
               </DialogDescription>
             </DialogHeader>
 
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="template-content">Conteúdo do Template</Label>
-                <Textarea
-                  id="template-content"
-                  value={templateContent}
-                  onChange={(e) => setTemplateContent(e.target.value)}
-                  placeholder="Digite o conteúdo do template..."
-                  className="min-h-[300px] font-mono text-sm"
-                />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[600px]">
+              {/* Editor Section */}
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="template-content">
+                    Código HTML do Template
+                  </Label>
+                  <Textarea
+                    id="template-content"
+                    value={templateContent}
+                    onChange={(e) => setTemplateContent(e.target.value)}
+                    placeholder="Digite o HTML do template..."
+                    className="h-[400px] font-mono text-sm resize-none"
+                  />
+                </div>
+
+                <div className="bg-muted/50 p-3 rounded-lg max-h-[140px] overflow-y-auto">
+                  <h4 className="font-semibold mb-2 text-sm">
+                    📝 Variáveis Disponíveis:
+                  </h4>
+                  <div className="grid grid-cols-2 gap-1 text-xs">
+                    <code className="bg-white px-1 rounded">
+                      [NOME_EMPRESA]
+                    </code>
+                    <code className="bg-white px-1 rounded">[DATA]</code>
+                    <code className="bg-white px-1 rounded">
+                      [NOME_CLIENTE]
+                    </code>
+                    <code className="bg-white px-1 rounded">
+                      [DOCUMENTO_CLIENTE]
+                    </code>
+                    <code className="bg-white px-1 rounded">[VALOR_TOTAL]</code>
+                    <code className="bg-white px-1 rounded">
+                      [DESCRICAO_SERVICOS]
+                    </code>
+                    <code className="bg-white px-1 rounded">[ASSINATURA]</code>
+                    {currentTemplate === "budget" && (
+                      <>
+                        <code className="bg-white px-1 rounded">
+                          [NUMERO_ORCAMENTO]
+                        </code>
+                        <code className="bg-white px-1 rounded">
+                          [DATA_VALIDADE]
+                        </code>
+                      </>
+                    )}
+                    {currentTemplate === "invoice" && (
+                      <>
+                        <code className="bg-white px-1 rounded">
+                          [NUMERO_FATURA]
+                        </code>
+                        <code className="bg-white px-1 rounded">
+                          [DATA_EMISSAO]
+                        </code>
+                        <code className="bg-white px-1 rounded">
+                          [DATA_VENCIMENTO]
+                        </code>
+                        <code className="bg-white px-1 rounded">
+                          [FORMA_PAGAMENTO]
+                        </code>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
 
-              <div className="bg-muted/50 p-4 rounded-lg">
-                <h4 className="font-semibold mb-2">📝 Variáveis disponíveis:</h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-                  <code>[NOME_EMPRESA]</code>
-                  <code>[DATA]</code>
-                  <code>[NOME_CLIENTE]</code>
-                  <code>[DOCUMENTO_CLIENTE]</code>
-                  <code>[VALOR_TOTAL]</code>
-                  <code>[DESCRICAO_SERVICOS]</code>
-                  {currentTemplate === 'invoice' && (
-                    <>
-                      <code>[NUMERO_FATURA]</code>
-                      <code>[DATA_EMISSAO]</code>
-                      <code>[DATA_VENCIMENTO]</code>
-                      <code>[FORMA_PAGAMENTO]</code>
-                    </>
-                  )}
-                  <code>[ASSINATURA]</code>
+              {/* Preview Section */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label>Preview em Tempo Real</Label>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const previewWindow = window.open(
+                        "",
+                        "_blank",
+                        "width=800,height=600",
+                      );
+                      if (previewWindow) {
+                        const previewContent = templateContent
+                          .replace(
+                            /\[NOME_EMPRESA\]/g,
+                            "Escritório Silva & Associados",
+                          )
+                          .replace(
+                            /\[DATA\]/g,
+                            new Date().toLocaleDateString("pt-BR"),
+                          )
+                          .replace(/\[NOME_CLIENTE\]/g, "Maria Silva Santos")
+                          .replace(/\[DOCUMENTO_CLIENTE\]/g, "123.456.789-00")
+                          .replace(/\[VALOR_TOTAL\]/g, "R$ 2.500,00")
+                          .replace(
+                            /\[DESCRICAO_SERVICOS\]/g,
+                            "Consultoria jurídica especializada em direito civil",
+                          )
+                          .replace(
+                            /\[ASSINATURA\]/g,
+                            "Dr. João Silva<br>OAB/SP 123.456",
+                          )
+                          .replace(/\[NUMERO_ORCAMENTO\]/g, "ORC-001")
+                          .replace(/\[NUMERO_FATURA\]/g, "FAT-001")
+                          .replace(
+                            /\[DATA_EMISSAO\]/g,
+                            new Date().toLocaleDateString("pt-BR"),
+                          )
+                          .replace(
+                            /\[DATA_VENCIMENTO\]/g,
+                            new Date(
+                              Date.now() + 30 * 24 * 60 * 60 * 1000,
+                            ).toLocaleDateString("pt-BR"),
+                          )
+                          .replace(
+                            /\[DATA_VALIDADE\]/g,
+                            new Date(
+                              Date.now() + 15 * 24 * 60 * 60 * 1000,
+                            ).toLocaleDateString("pt-BR"),
+                          )
+                          .replace(
+                            /\[FORMA_PAGAMENTO\]/g,
+                            "PIX ou Transferência Bancária",
+                          );
+
+                        previewWindow.document.write(previewContent);
+                        previewWindow.document.close();
+                      }
+                    }}
+                  >
+                    <Globe className="h-4 w-4 mr-1" />
+                    Abrir em Nova Aba
+                  </Button>
+                </div>
+
+                <div className="border rounded-lg overflow-hidden h-[500px]">
+                  <iframe
+                    srcDoc={templateContent
+                      .replace(
+                        /\[NOME_EMPRESA\]/g,
+                        "Escritório Silva & Associados",
+                      )
+                      .replace(
+                        /\[DATA\]/g,
+                        new Date().toLocaleDateString("pt-BR"),
+                      )
+                      .replace(/\[NOME_CLIENTE\]/g, "Maria Silva Santos")
+                      .replace(/\[DOCUMENTO_CLIENTE\]/g, "123.456.789-00")
+                      .replace(/\[VALOR_TOTAL\]/g, "R$ 2.500,00")
+                      .replace(
+                        /\[DESCRICAO_SERVICOS\]/g,
+                        "Consultoria jurídica especializada em direito civil e elaboração de contratos",
+                      )
+                      .replace(
+                        /\[ASSINATURA\]/g,
+                        "Dr. João Silva<br>OAB/SP 123.456",
+                      )
+                      .replace(/\[NUMERO_ORCAMENTO\]/g, "ORC-001")
+                      .replace(/\[NUMERO_FATURA\]/g, "FAT-001")
+                      .replace(
+                        /\[DATA_EMISSAO\]/g,
+                        new Date().toLocaleDateString("pt-BR"),
+                      )
+                      .replace(
+                        /\[DATA_VENCIMENTO\]/g,
+                        new Date(
+                          Date.now() + 30 * 24 * 60 * 60 * 1000,
+                        ).toLocaleDateString("pt-BR"),
+                      )
+                      .replace(
+                        /\[DATA_VALIDADE\]/g,
+                        new Date(
+                          Date.now() + 15 * 24 * 60 * 60 * 1000,
+                        ).toLocaleDateString("pt-BR"),
+                      )
+                      .replace(
+                        /\[FORMA_PAGAMENTO\]/g,
+                        "PIX ou Transferência Bancária",
+                      )}
+                    className="w-full h-full"
+                    title="Preview do Template"
+                  />
                 </div>
               </div>
             </div>
 
-            <DialogFooter>
+            <DialogFooter className="flex justify-between">
               <Button
                 variant="outline"
                 onClick={() => {
-                  try {
+                  alert(
+                    "📧 Enviando email de teste com o template atual...\n\n✅ Email de teste enviado para contato@silva.adv.br!",
+                  );
+                }}
+              >
+                <Mail className="h-4 w-4 mr-2" />
+                Testar Email
+              </Button>
+
+              <div className="flex space-x-2">
+                <Button
+                  variant="outline"
+                  onClick={createSafeDialogHandler(() => {
                     setCurrentTemplate(null);
-                    setTemplateContent('');
-                    setTimeout(() => {
-                      setShowTemplateModal(false);
-                    }, 0);
-                  } catch (error) {
-                    console.error('Erro ao cancelar:', error);
-                    setShowTemplateModal(false);
-                  }
-                }}
-              >
-                <X className="h-4 w-4 mr-2" />
-                Cancelar
-              </Button>
-              <Button
-                onClick={() => {
-                  alert(`✅ Template de ${currentTemplate === 'budget' ? 'orçamento' : 'fatura'} salvo com sucesso!`);
-                  setShowTemplateModal(false);
-                  setCurrentTemplate(null);
-                  setTemplateContent('');
-                }}
-              >
-                <Save className="h-4 w-4 mr-2" />
-                Salvar Template
-              </Button>
+                    setTemplateContent("");
+                    safeSetShowTemplateModal(false);
+                  })}
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={createSafeDialogHandler(() => {
+                    alert(
+                      `✅ Template de ${currentTemplate === "budget" ? "orçamento" : "fatura"} salvo com sucesso!\n\n🎯 Agora você pode enviar emails personalizados usando este template.`,
+                    );
+                    safeSetShowTemplateModal(false);
+                    setCurrentTemplate(null);
+                    setTemplateContent("");
+                  })}
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Salvar Template
+                </Button>
+              </div>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
         {/* Account Modal */}
-        <Dialog open={showNewAccountModal} onOpenChange={setShowNewAccountModal}>
+        <Dialog
+          open={showNewAccountModal}
+          onOpenChange={safeSetShowNewAccountModal}
+        >
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle className="flex items-center">
                 <DollarSign className="h-5 w-5 mr-2" />
-                {editingAccount ? 'Editar Conta Bancária' : 'Nova Conta Bancária'}
+                {editingAccount
+                  ? "Editar Conta Bancária"
+                  : "Nova Conta Bancária"}
               </DialogTitle>
               <DialogDescription>
-                {editingAccount ? 'Atualize as informações da conta bancária.' : 'Adicione uma nova conta bancária ao sistema.'}
+                {editingAccount
+                  ? "Atualize as informaç��es da conta bancária."
+                  : "Adicione uma nova conta bancária ao sistema."}
               </DialogDescription>
             </DialogHeader>
 
@@ -1495,7 +1717,7 @@ export function Settings() {
                 <Input
                   id="bank-name"
                   placeholder="Nome do banco"
-                  defaultValue={editingAccount?.bank || ''}
+                  defaultValue={editingAccount?.bank || ""}
                 />
               </div>
               <div>
@@ -1503,19 +1725,23 @@ export function Settings() {
                 <Input
                   id="account-number"
                   placeholder="1234-5"
-                  defaultValue={editingAccount?.account || ''}
+                  defaultValue={editingAccount?.account || ""}
                 />
               </div>
               <div>
                 <Label htmlFor="account-type">Tipo de Conta</Label>
-                <Select defaultValue={editingAccount?.type || 'Conta Corrente'}>
+                <Select defaultValue={editingAccount?.type || "Conta Corrente"}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Conta Corrente">Conta Corrente</SelectItem>
+                    <SelectItem value="Conta Corrente">
+                      Conta Corrente
+                    </SelectItem>
                     <SelectItem value="Poupança">Poupança</SelectItem>
-                    <SelectItem value="Conta Investimento">Conta Investimento</SelectItem>
+                    <SelectItem value="Conta Investimento">
+                      Conta Investimento
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1526,7 +1752,7 @@ export function Settings() {
                   type="number"
                   step="0.01"
                   placeholder="0,00"
-                  defaultValue={editingAccount?.balance || ''}
+                  defaultValue={editingAccount?.balance || ""}
                 />
               </div>
             </div>
@@ -1534,40 +1760,33 @@ export function Settings() {
             <DialogFooter>
               <Button
                 variant="outline"
-                onClick={() => {
-                  try {
-                    setEditingAccount(null);
-                    setTimeout(() => {
-                      setShowNewAccountModal(false);
-                    }, 0);
-                  } catch (error) {
-                    console.error('Erro ao cancelar:', error);
-                    setShowNewAccountModal(false);
-                  }
-                }}
+                onClick={createSafeDialogHandler(() => {
+                  setEditingAccount(null);
+                  safeSetShowNewAccountModal(false);
+                })}
               >
                 Cancelar
               </Button>
               <Button
-                onClick={() => {
+                onClick={createSafeDialogHandler(() => {
                   if (editingAccount) {
-                    alert('✅ Conta bancária atualizada com sucesso!');
+                    alert("✅ Conta bancária atualizada com sucesso!");
                   } else {
                     const newAccount = {
                       id: Date.now().toString(),
-                      bank: 'Nova Conta',
-                      account: '0000-0',
+                      bank: "Nova Conta",
+                      account: "0000-0",
                       balance: 0,
-                      type: 'Conta Corrente'
+                      type: "Conta Corrente",
                     };
                     setAccounts([...accounts, newAccount]);
-                    alert('✅ Nova conta bancária adicionada com sucesso!');
+                    alert("✅ Nova conta bancária adicionada com sucesso!");
                   }
-                  setShowNewAccountModal(false);
+                  safeSetShowNewAccountModal(false);
                   setEditingAccount(null);
-                }}
+                })}
               >
-                {editingAccount ? 'Atualizar' : 'Adicionar'} Conta
+                {editingAccount ? "Atualizar" : "Adicionar"} Conta
               </Button>
             </DialogFooter>
           </DialogContent>

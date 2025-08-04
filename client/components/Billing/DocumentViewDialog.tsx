@@ -30,9 +30,9 @@ import {
   Mail,
   Phone,
 } from 'lucide-react';
-import { Estimate, Invoice, Envoice } from '@/types/billing';
+import { Estimate, Invoice } from '@/types/billing';
 
-type Document = Estimate | Invoice | Envoice;
+type Document = Estimate | Invoice;
 
 interface DocumentViewDialogProps {
   open: boolean;
@@ -72,7 +72,7 @@ export function DocumentViewDialog({
     const typeMap = {
       estimate: 'Orçamento',
       invoice: 'Fatura',
-      envoice: 'Envoice',
+
     };
     return typeMap[type as keyof typeof typeMap] || type;
   };

@@ -44,7 +44,8 @@ import {
   Copy,
   Clock,
   BarChart3,
-  Edit
+  Edit,
+  Trash2
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -478,24 +479,181 @@ export function CashFlow() {
     }
   };
 
-  const copyLastTransaction = () => {
+  const exportMonthlyReport = () => {
     try {
-      if (transactions.length > 0) {
-        const lastTransaction = transactions[transactions.length - 1];
-        const copiedTransaction = {
-          ...lastTransaction,
-          id: '', // Clear ID so it creates a new transaction
-          description: `${lastTransaction.description} (Cópia)`,
-          date: new Date().toISOString().split('T')[0] + 'T00:00:00Z',
-        };
-        setEditingTransaction(copiedTransaction);
-        setShowTransactionForm(true);
-      } else {
-        alert('Nenhuma transação disponível para copiar');
-      }
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth();
+      const currentYear = currentDate.getFullYear();
+
+      const monthlyTransactions = transactions.filter(transaction => {
+        const transactionDate = new Date(transaction.date);
+        return transactionDate.getMonth() === currentMonth && transactionDate.getFullYear() === currentYear;
+      });
+
+      const monthlyIncome = monthlyTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+      const monthlyExpense = monthlyTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+      const monthlyBalance = monthlyIncome - monthlyExpense;
+
+      const headers = ['Data', 'Tipo', 'Descrição', 'Categoria', 'Valor'];
+      const csvData = monthlyTransactions.map(transaction => [
+        new Date(transaction.date).toLocaleDateString('pt-BR'),
+        transaction.type === 'income' ? 'Receita' : 'Despesa',
+        transaction.description,
+        transaction.category,
+        `R$ ${transaction.amount.toFixed(2).replace('.', ',')}`
+      ]);
+
+      csvData.push([]);
+      csvData.push(['RESUMO MENSAL']);
+      csvData.push(['Total Receitas', '', '', '', `R$ ${monthlyIncome.toFixed(2).replace('.', ',')}`]);
+      csvData.push(['Total Despesas', '', '', '', `R$ ${monthlyExpense.toFixed(2).replace('.', ',')}`]);
+      csvData.push(['Saldo do Mês', '', '', '', `R$ ${monthlyBalance.toFixed(2).replace('.', ',')}`]);
+
+      const csvContent = [headers, ...csvData]
+        .map(row => row.map(field => `"${field || ''}"`).join(';'))
+        .join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `relatorio-mensal-${currentMonth + 1}-${currentYear}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      alert('✅ Relatório mensal exportado com sucesso!');
     } catch (error) {
-      console.error('Erro ao copiar última transação:', error);
-      alert('Erro ao copiar última transação. Tente novamente.');
+      console.error('Erro ao exportar relatório mensal:', error);
+      alert('❌ Erro ao exportar relatório mensal. Tente novamente.');
+    }
+  };
+
+  const exportCategoriesReport = () => {
+    try {
+      const categoryTotals = {};
+
+      transactions.forEach(transaction => {
+        const categoryName = transaction.category;
+        const key = `${transaction.type}-${categoryName}`;
+        if (!categoryTotals[key]) {
+          categoryTotals[key] = { type: transaction.type, category: categoryName, total: 0, count: 0 };
+        }
+        categoryTotals[key].total += transaction.amount;
+        categoryTotals[key].count += 1;
+      });
+
+      const headers = ['Tipo', 'Categoria', 'Quantidade de Transações', 'Valor Total', 'Valor Médio'];
+      const csvData = Object.values(categoryTotals).map((category: any) => [
+        category.type === 'income' ? 'Receita' : 'Despesa',
+        category.category,
+        category.count,
+        `R$ ${category.total.toFixed(2).replace('.', ',')}`,
+        `R$ ${(category.total / category.count).toFixed(2).replace('.', ',')}`
+      ]);
+
+      const csvContent = [headers, ...csvData]
+        .map(row => row.map(field => `"${field}"`).join(';'))
+        .join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `analise-categorias-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      alert('✅ Relatório por categorias exportado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao exportar relatório por categorias:', error);
+      alert('❌ Erro ao exportar relatório por categorias. Tente novamente.');
+    }
+  };
+
+  const exportCashFlowReport = () => {
+    try {
+      const monthlyData = {};
+
+      transactions.forEach(transaction => {
+        const date = new Date(transaction.date);
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+        if (!monthlyData[monthKey]) {
+          monthlyData[monthKey] = { income: 0, expense: 0 };
+        }
+
+        if (transaction.type === 'income') {
+          monthlyData[monthKey].income += transaction.amount;
+        } else {
+          monthlyData[monthKey].expense += transaction.amount;
+        }
+      });
+
+      const headers = ['Mês/Ano', 'Total Receitas', 'Total Despesas', 'Saldo do Mês', 'Saldo Acumulado'];
+      let accumulatedBalance = 0;
+
+      const csvData = Object.entries(monthlyData)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([month, data]: [string, any]) => {
+          const monthBalance = data.income - data.expense;
+          accumulatedBalance += monthBalance;
+
+          return [
+            month,
+            `R$ ${data.income.toFixed(2).replace('.', ',')}`,
+            `R$ ${data.expense.toFixed(2).replace('.', ',')}`,
+            `R$ ${monthBalance.toFixed(2).replace('.', ',')}`,
+            `R$ ${accumulatedBalance.toFixed(2).replace('.', ',')}`
+          ];
+        });
+
+      const csvContent = [headers, ...csvData]
+        .map(row => row.map(field => `"${field}"`).join(';'))
+        .join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `fluxo-caixa-mensal-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      alert('✅ Relatório de fluxo de caixa exportado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao exportar relatório de fluxo de caixa:', error);
+      alert('❌ Erro ao exportar relatório de fluxo de caixa. Tente novamente.');
+    }
+  };
+
+  const deleteAllTransactions = () => {
+    const confirmMessage = "Tem certeza que deseja apagar todas as transações? Essa ação não pode ser desfeita!";
+
+    if (window.confirm(confirmMessage)) {
+      setTransactions([]);
+      alert('✅ Todas as transações foram apagadas com sucesso!');
+    }
+  };
+
+  const copyLastTransaction = () => {
+    if (transactions.length > 0) {
+      const lastTransaction = transactions[transactions.length - 1];
+      const copiedTransaction = {
+        ...lastTransaction,
+        id: '', // Clear ID so it creates a new transaction
+        description: `${lastTransaction.description} (Cópia)`,
+        date: new Date().toISOString().split('T')[0] + 'T00:00:00Z',
+      };
+      setEditingTransaction(copiedTransaction);
+      setShowTransactionForm(true);
+    } else {
+      alert('Nenhuma transação disponível para copiar');
     }
   };
 
@@ -552,6 +710,15 @@ export function CashFlow() {
             <Button variant="outline" onClick={exportToCSV}>
               <Download className="h-4 w-4 mr-2" />
               Exportar CSV
+            </Button>
+            <Button
+              variant="outline"
+              onClick={deleteAllTransactions}
+              className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+              disabled={transactions.length === 0}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Apagar Todas
             </Button>
           </div>
         </div>
@@ -668,7 +835,7 @@ export function CashFlow() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">🏦 Saldo</CardTitle>
+              <CardTitle className="text-sm font-medium">���� Saldo</CardTitle>
               <Calculator className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -1166,15 +1333,15 @@ export function CashFlow() {
                       <Download className="h-4 w-4 mr-2" />
                       CSV Completo
                     </Button>
-                    <Button variant="outline" onClick={() => alert('📊 Exportando relatório mensal...')}>
+                    <Button variant="outline" onClick={exportMonthlyReport}>
                       <Calendar className="h-4 w-4 mr-2" />
                       Relatório Mensal
                     </Button>
-                    <Button variant="outline" onClick={() => alert('📈 Exportando análise de categorias...')}>
+                    <Button variant="outline" onClick={exportCategoriesReport}>
                       <BarChart3 className="h-4 w-4 mr-2" />
                       Por Categorias
                     </Button>
-                    <Button variant="outline" onClick={() => alert('💰 Exportando fluxo de caixa...')}>
+                    <Button variant="outline" onClick={exportCashFlowReport}>
                       <TrendingUp className="h-4 w-4 mr-2" />
                       Fluxo de Caixa
                     </Button>
@@ -1385,12 +1552,7 @@ export function CashFlow() {
         {/* Transaction Form Modal */}
         <TransactionForm
           open={showTransactionForm}
-          onOpenChange={(open) => {
-            setShowTransactionForm(open);
-            if (!open) {
-              setForceRecurring(false);
-            }
-          }}
+          onOpenChange={setShowTransactionForm}
           transaction={editingTransaction}
           onSubmit={handleSubmitTransaction}
           isEditing={!!editingTransaction}

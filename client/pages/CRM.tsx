@@ -1,8 +1,12 @@
-import React, { useState, useMemo } from 'react';
-import { DashboardLayout } from '@/components/Layout/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import React, { useState, useMemo } from "react";
+import {
+  createSafeOnOpenChange,
+  createSafeDialogHandler,
+} from "@/lib/dialog-fix";
+import { DashboardLayout } from "@/components/Layout/DashboardLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,114 +14,263 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Users, Plus, Search, Filter, Target, BarChart3, TrendingUp } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/breadcrumb";
+import {
+  Users,
+  Plus,
+  Search,
+  Filter,
+  Target,
+  BarChart3,
+  TrendingUp,
+  Grid3X3,
+  List,
+  Edit2,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ClientForm } from '@/components/CRM/ClientForm';
-import { ClientsTable } from '@/components/CRM/ClientsTable';
-import { Pipeline } from '@/components/CRM/Pipeline';
-import { AdvancedFilters } from '@/components/CRM/AdvancedFilters';
-import { DealForm } from '@/components/CRM/DealForm';
-import { ClientViewDialog } from '@/components/CRM/ClientViewDialog';
-import { Client, Deal, PipelineStage, DealStage } from '@/types/crm';
+} from "@/components/ui/select";
+import { ClientForm } from "@/components/CRM/ClientForm";
+import { ClientsTable } from "@/components/CRM/ClientsTable";
+import { Pipeline } from "@/components/CRM/Pipeline";
+import { AdvancedFilters } from "@/components/CRM/AdvancedFilters";
+import { DealForm } from "@/components/CRM/DealForm";
+import { ClientViewDialog } from "@/components/CRM/ClientViewDialog";
+import { Client, Deal, PipelineStage, DealStage } from "@/types/crm";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal, Eye, Edit, Trash2 } from "lucide-react";
 
 // Mock data - in real app would come from API
 const mockClients: Client[] = [
   {
-    id: '1',
-    name: 'Maria Silva Santos',
-    organization: 'Silva & Associates',
-    email: 'maria@silva.com.br',
-    mobile: '(11) 99999-1234',
-    country: 'BR',
-    state: 'São Paulo',
-    address: 'Rua Augusta, 123, Cerqueira César',
-    city: 'São Paulo',
-    zipCode: '01305-000',
+    id: "1",
+    name: "Maria Silva Santos",
+    organization: "Silva & Associates",
+    email: "maria@silva.com.br",
+    mobile: "(11) 99999-1234",
+    country: "BR",
+    state: "São Paulo",
+    address: "Rua Augusta, 123, Cerqueira César",
+    city: "São Paulo",
+    zipCode: "01305-000",
     budget: 15000,
-    currency: 'BRL',
-    level: 'Premium',
-    tags: ['Direito Civil', 'Prioritário'],
-    description: 'Cliente premium com múltiplos casos',
-    cpf: '123.456.789-00',
-    rg: '12.345.678-9',
-    professionalTitle: 'Empresária',
-    maritalStatus: 'married',
-    birthDate: '1980-05-15',
-    inssStatus: 'active',
+    currency: "BRL",
+    level: "Premium",
+    tags: ["Direito Civil", "Prioritário"],
+    description: "Cliente premium com múltiplos casos",
+    cpf: "123.456.789-00",
+    rg: "12.345.678-9",
+    professionalTitle: "Empresária",
+    maritalStatus: "married",
+    birthDate: "1980-05-15",
+    inssStatus: "active",
     amountPaid: 8000,
-    referredBy: 'João Advogado',
-    createdAt: '2024-01-01T10:00:00Z',
-    updatedAt: '2024-01-15T14:30:00Z',
-    status: 'active',
+    referredBy: "João Advogado",
+    createdAt: "2024-01-01T10:00:00Z",
+    updatedAt: "2024-01-15T14:30:00Z",
+    status: "active",
   },
   {
-    id: '2',
-    name: 'João Carlos Oliveira',
-    email: 'joao@email.com',
-    mobile: '(11) 88888-5678',
-    country: 'BR',
-    state: 'Rio de Janeiro',
-    address: 'Av. Copacabana, 456',
-    city: 'Rio de Janeiro',
-    zipCode: '22070-000',
+    id: "2",
+    name: "João Carlos Oliveira",
+    email: "joao@email.com",
+    mobile: "(11) 88888-5678",
+    country: "BR",
+    state: "Rio de Janeiro",
+    address: "Av. Copacabana, 456",
+    city: "Rio de Janeiro",
+    zipCode: "22070-000",
     budget: 8500,
-    currency: 'BRL',
-    tags: ['Trabalhista'],
-    description: 'Caso trabalhista - demissão sem justa causa',
-    cpf: '987.654.321-00',
-    maritalStatus: 'single',
-    birthDate: '1985-09-20',
-    inssStatus: 'inactive',
-    createdAt: '2024-01-05T09:15:00Z',
-    updatedAt: '2024-01-10T16:45:00Z',
-    status: 'active',
+    currency: "BRL",
+    tags: ["Trabalhista"],
+    description: "Caso trabalhista - demissão sem justa causa",
+    cpf: "987.654.321-00",
+    maritalStatus: "single",
+    birthDate: "1985-09-20",
+    inssStatus: "inactive",
+    createdAt: "2024-01-05T09:15:00Z",
+    updatedAt: "2024-01-10T16:45:00Z",
+    status: "active",
   },
 ];
 
 const mockDeals: Deal[] = [
   {
-    id: '1',
-    title: 'Consultoria Jurídica Empresarial',
-    contactName: 'Ana Costa',
-    organization: 'TechStart LTDA',
-    email: 'ana@techstart.com',
-    mobile: '(11) 77777-9999',
-    address: 'Rua da Inovação, 789, Vila Olímpia, São Paulo - SP',
+    id: "1",
+    title: "Consultoria Jurídica Empresarial",
+    contactName: "Ana Costa",
+    organization: "TechStart LTDA",
+    email: "ana@techstart.com",
+    mobile: "(11) 77777-9999",
+    address: "Rua da Inovação, 789, Vila Olímpia, São Paulo - SP",
     budget: 25000,
-    currency: 'BRL',
-    stage: 'proposal',
-    tags: ['Direito Empresarial', 'Startup'],
-    description: 'Necessita de assessoria jurídica para expansão da empresa',
-    createdAt: '2024-01-10T10:00:00Z',
-    updatedAt: '2024-01-15T14:30:00Z',
+    currency: "BRL",
+    stage: "proposal",
+    tags: ["Direito Empresarial", "Startup"],
+    description: "Necessita de assessoria jurídica para expansão da empresa",
+    createdAt: "2024-01-10T10:00:00Z",
+    updatedAt: "2024-01-15T14:30:00Z",
   },
   {
-    id: '2',
-    title: 'Ação Previdenciária',
-    contactName: 'Roberto Silva',
-    email: 'roberto@email.com',
-    mobile: '(11) 66666-8888',
-    address: 'Rua das Flores, 321, Centro, São Paulo - SP',
+    id: "2",
+    title: "Ação Previdenciária",
+    contactName: "Roberto Silva",
+    email: "roberto@email.com",
+    mobile: "(11) 66666-8888",
+    address: "Rua das Flores, 321, Centro, São Paulo - SP",
     budget: 12000,
-    currency: 'BRL',
-    stage: 'contacted',
-    tags: ['Previdenciário'],
-    description: 'Aposentadoria negada pelo INSS',
-    createdAt: '2024-01-12T11:30:00Z',
-    updatedAt: '2024-01-16T09:15:00Z',
+    currency: "BRL",
+    stage: "contacted",
+    tags: ["Previdenciário"],
+    description: "Aposentadoria negada pelo INSS",
+    createdAt: "2024-01-12T11:30:00Z",
+    updatedAt: "2024-01-16T09:15:00Z",
   },
 ];
 
+interface PipelineListViewProps {
+  deals: Deal[];
+  stages: PipelineStage[];
+  onEditDeal: (deal: Deal) => void;
+  onDeleteDeal: (dealId: string) => void;
+  onMoveDeal: (dealId: string, newStage: DealStage) => void;
+}
+
+function PipelineListView({
+  deals,
+  stages,
+  onEditDeal,
+  onDeleteDeal,
+  onMoveDeal,
+}: PipelineListViewProps) {
+  const getStageInfo = (stageId: string) => {
+    const stage = stages.find((s) => s.id === stageId);
+    return stage || { name: stageId, color: "gray" };
+  };
+
+  const getStageColor = (color: string) => {
+    const colors = {
+      blue: "bg-blue-100 text-blue-800",
+      yellow: "bg-yellow-100 text-yellow-800",
+      purple: "bg-purple-100 text-purple-800",
+      orange: "bg-orange-100 text-orange-800",
+      green: "bg-green-100 text-green-800",
+      red: "bg-red-100 text-red-800",
+      gray: "bg-gray-100 text-gray-800",
+    };
+    return colors[color] || colors.gray;
+  };
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(value);
+  };
+
+  return (
+    <div className="space-y-3">
+      {deals.map((deal) => {
+        const stageInfo = getStageInfo(deal.stage);
+        return (
+          <Card key={deal.id} className="hover:shadow-md transition-shadow">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4 flex-1">
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback>
+                      {deal.title.substring(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <h3 className="font-semibold text-sm truncate">
+                        {deal.title}
+                      </h3>
+                      <Badge className={getStageColor(stageInfo.color)}>
+                        {stageInfo.name}
+                      </Badge>
+                    </div>
+
+                    <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                      <span>{deal.clientName}</span>
+                      <span>•</span>
+                      <span>{formatCurrency(deal.value)}</span>
+                      <span>•</span>
+                      <span>
+                        Criado:{" "}
+                        {new Date(deal.createdAt).toLocaleDateString("pt-BR")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <div className="text-right">
+                    <div className="text-sm font-medium">
+                      {deal.probability}%
+                    </div>
+                    <div className="text-xs text-muted-foreground">Prob.</div>
+                  </div>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => onEditDeal(deal)}>
+                        <Edit className="h-4 w-4 mr-2" />
+                        Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => onDeleteDeal(deal.id)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Excluir
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
+
+      {deals.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground">
+          Nenhum deal encontrado no pipeline.
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function CRM() {
-  const [activeTab, setActiveTab] = useState('clients');
+  const [activeTab, setActiveTab] = useState("clients");
   const [showClientForm, setShowClientForm] = useState(false);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [showDealForm, setShowDealForm] = useState(false);
@@ -125,25 +278,44 @@ export function CRM() {
   const [editingClient, setEditingClient] = useState<Client | undefined>();
   const [editingDeal, setEditingDeal] = useState<Deal | undefined>();
   const [viewingClient, setViewingClient] = useState<Client | null>(null);
-  const [dealInitialStage, setDealInitialStage] = useState<DealStage | undefined>();
+  const [dealInitialStage, setDealInitialStage] = useState<
+    DealStage | undefined
+  >();
   const [clients, setClients] = useState<Client[]>(mockClients);
   const [deals, setDeals] = useState<Deal[]>(mockDeals);
   const [selectedClients, setSelectedClients] = useState<string[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [advancedFilters, setAdvancedFilters] = useState<any>(null);
+  const [pipelineViewMode, setPipelineViewMode] = useState<"kanban" | "list">(
+    "kanban",
+  );
+  const [editingStages, setEditingStages] = useState(false);
+  const [tempStageNames, setTempStageNames] = useState<{
+    [key: string]: string;
+  }>({});
+
+  // Create safe dialog handler
+  const safeSetEditingStages = createSafeOnOpenChange((open: boolean) =>
+    setEditingStages(open),
+  );
 
   // Filter clients based on search, status, and advanced filters
   const filteredClients = useMemo(() => {
     return clients.filter((client) => {
-      const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           (client.organization?.toLowerCase().includes(searchTerm.toLowerCase()));
-      const matchesStatus = statusFilter === 'all' || client.status === statusFilter;
+      const matchesSearch =
+        client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        client.organization?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus =
+        statusFilter === "all" || client.status === statusFilter;
 
       // Apply advanced filters if they exist
       if (advancedFilters) {
-        if (advancedFilters.levels.length > 0 && !advancedFilters.levels.includes(client.level || '')) {
+        if (
+          advancedFilters.levels.length > 0 &&
+          !advancedFilters.levels.includes(client.level || "")
+        ) {
           return false;
         }
         if (advancedFilters.locations.length > 0) {
@@ -153,16 +325,24 @@ export function CRM() {
           }
         }
         if (advancedFilters.hasOrganization) {
-          if (advancedFilters.hasOrganization === 'with_org' && !client.organization) {
+          if (
+            advancedFilters.hasOrganization === "with_org" &&
+            !client.organization
+          ) {
             return false;
           }
-          if (advancedFilters.hasOrganization === 'without_org' && client.organization) {
+          if (
+            advancedFilters.hasOrganization === "without_org" &&
+            client.organization
+          ) {
             return false;
           }
         }
         if (advancedFilters.tags.length > 0) {
           const hasMatchingTag = advancedFilters.tags.some((tag: string) =>
-            client.tags.some(clientTag => clientTag.toLowerCase().includes(tag.toLowerCase()))
+            client.tags.some((clientTag) =>
+              clientTag.toLowerCase().includes(tag.toLowerCase()),
+            ),
           );
           if (!hasMatchingTag) {
             return false;
@@ -174,59 +354,32 @@ export function CRM() {
     });
   }, [clients, searchTerm, statusFilter, advancedFilters]);
 
+  // Initial pipeline stages configuration
+  const [pipelineStagesConfig, setPipelineStagesConfig] = useState([
+    { id: "opportunity", name: "Oportunidade", color: "blue" },
+    { id: "contacted", name: "Em Contato", color: "yellow" },
+    { id: "advanced", name: "Conversas Avançadas", color: "purple" },
+    { id: "proposal", name: "Com Proposta", color: "orange" },
+    { id: "won", name: "Cliente Bem Sucedido", color: "green" },
+    { id: "lost", name: "Cliente Perdido", color: "red" },
+    { id: "general", name: "Geral", color: "gray" },
+  ]);
+
   // Pipeline stages with deals
-  const pipelineStages: PipelineStage[] = [
-    {
-      id: 'opportunity',
-      name: 'Oportunidade',
-      color: 'blue',
-      deals: deals.filter(deal => deal.stage === 'opportunity'),
-    },
-    {
-      id: 'contacted',
-      name: 'Em Contato',
-      color: 'yellow',
-      deals: deals.filter(deal => deal.stage === 'contacted'),
-    },
-    {
-      id: 'advanced',
-      name: 'Conversas Avançadas',
-      color: 'purple',
-      deals: deals.filter(deal => deal.stage === 'advanced'),
-    },
-    {
-      id: 'proposal',
-      name: 'Com Proposta',
-      color: 'orange',
-      deals: deals.filter(deal => deal.stage === 'proposal'),
-    },
-    {
-      id: 'won',
-      name: 'Cliente Bem Sucedido',
-      color: 'green',
-      deals: deals.filter(deal => deal.stage === 'won'),
-    },
-    {
-      id: 'lost',
-      name: 'Cliente Perdido',
-      color: 'red',
-      deals: deals.filter(deal => deal.stage === 'lost'),
-    },
-    {
-      id: 'general',
-      name: 'Geral',
-      color: 'gray',
-      deals: deals.filter(deal => deal.stage === 'general'),
-    },
-  ];
+  const pipelineStages: PipelineStage[] = pipelineStagesConfig.map((stage) => ({
+    ...stage,
+    deals: deals.filter((deal) => deal.stage === stage.id),
+  }));
 
   const handleSubmitClient = (data: any) => {
     if (editingClient) {
-      setClients(clients.map(client =>
-        client.id === editingClient.id
-          ? { ...client, ...data, updatedAt: new Date().toISOString() }
-          : client
-      ));
+      setClients(
+        clients.map((client) =>
+          client.id === editingClient.id
+            ? { ...client, ...data, updatedAt: new Date().toISOString() }
+            : client,
+        ),
+      );
       setEditingClient(undefined);
     } else {
       const newClient: Client = {
@@ -234,7 +387,7 @@ export function CRM() {
         id: Date.now().toString(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        status: 'active' as const,
+        status: "active" as const,
       };
       setClients([...clients, newClient]);
     }
@@ -242,15 +395,17 @@ export function CRM() {
   };
 
   const handleSelectClient = (clientId: string) => {
-    setSelectedClients(prev =>
+    setSelectedClients((prev) =>
       prev.includes(clientId)
-        ? prev.filter(id => id !== clientId)
-        : [...prev, clientId]
+        ? prev.filter((id) => id !== clientId)
+        : [...prev, clientId],
     );
   };
 
   const handleSelectAllClients = (checked: boolean) => {
-    setSelectedClients(checked ? filteredClients.map(client => client.id) : []);
+    setSelectedClients(
+      checked ? filteredClients.map((client) => client.id) : [],
+    );
   };
 
   const handleEditClient = (client: Client) => {
@@ -259,8 +414,8 @@ export function CRM() {
   };
 
   const handleDeleteClient = (clientId: string) => {
-    setClients(clients.filter(client => client.id !== clientId));
-    setSelectedClients(selectedClients.filter(id => id !== clientId));
+    setClients(clients.filter((client) => client.id !== clientId));
+    setSelectedClients(selectedClients.filter((id) => id !== clientId));
   };
 
   const handleViewClient = (client: Client) => {
@@ -287,15 +442,17 @@ export function CRM() {
   };
 
   const handleDeleteDeal = (dealId: string) => {
-    setDeals(deals.filter(deal => deal.id !== dealId));
+    setDeals(deals.filter((deal) => deal.id !== dealId));
   };
 
   const handleMoveDeal = (dealId: string, newStage: DealStage) => {
-    setDeals(deals.map(deal =>
-      deal.id === dealId
-        ? { ...deal, stage: newStage, updatedAt: new Date().toISOString() }
-        : deal
-    ));
+    setDeals(
+      deals.map((deal) =>
+        deal.id === dealId
+          ? { ...deal, stage: newStage, updatedAt: new Date().toISOString() }
+          : deal,
+      ),
+    );
   };
 
   const handleApplyAdvancedFilters = (filters: any) => {
@@ -308,11 +465,13 @@ export function CRM() {
 
   const handleSubmitDeal = (data: any) => {
     if (editingDeal) {
-      setDeals(deals.map(deal =>
-        deal.id === editingDeal.id
-          ? { ...deal, ...data, updatedAt: new Date().toISOString() }
-          : deal
-      ));
+      setDeals(
+        deals.map((deal) =>
+          deal.id === editingDeal.id
+            ? { ...deal, ...data, updatedAt: new Date().toISOString() }
+            : deal,
+        ),
+      );
       setEditingDeal(undefined);
     } else {
       const newDeal: Deal = {
@@ -329,9 +488,12 @@ export function CRM() {
 
   // Calculate metrics
   const totalClients = clients.length;
-  const activeClients = clients.filter(c => c.status === 'active').length;
-  const totalRevenuePotential = deals.reduce((sum, deal) => sum + deal.budget, 0);
-  const wonDeals = deals.filter(d => d.stage === 'won').length;
+  const activeClients = clients.filter((c) => c.status === "active").length;
+  const totalRevenuePotential = deals.reduce(
+    (sum, deal) => sum + deal.budget,
+    0,
+  );
+  const wonDeals = deals.filter((d) => d.stage === "won").length;
 
   return (
     <DashboardLayout>
@@ -367,7 +529,9 @@ export function CRM() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total de Clientes</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total de Clientes
+              </CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -380,14 +544,16 @@ export function CRM() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pipeline Total</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Pipeline Total
+              </CardTitle>
               <Target className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {new Intl.NumberFormat('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL'
+                {new Intl.NumberFormat("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
                 }).format(totalRevenuePotential)}
               </div>
               <p className="text-xs text-muted-foreground">
@@ -398,12 +564,17 @@ export function CRM() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Taxa de Conversão</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Taxa de Conversão
+              </CardTitle>
               <BarChart3 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {deals.length > 0 ? Math.round((wonDeals / deals.length) * 100) : 0}%
+                {deals.length > 0
+                  ? Math.round((wonDeals / deals.length) * 100)
+                  : 0}
+                %
               </div>
               <p className="text-xs text-muted-foreground">
                 {wonDeals} negócios fechados
@@ -413,21 +584,23 @@ export function CRM() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Receita Fechada</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Receita Fechada
+              </CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {new Intl.NumberFormat('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL'
+                {new Intl.NumberFormat("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
                 }).format(
-                  deals.filter(d => d.stage === 'won').reduce((sum, deal) => sum + deal.budget, 0)
+                  deals
+                    .filter((d) => d.stage === "won")
+                    .reduce((sum, deal) => sum + deal.budget, 0),
                 )}
               </div>
-              <p className="text-xs text-muted-foreground">
-                Este mês
-              </p>
+              <p className="text-xs text-muted-foreground">Este mês</p>
             </CardContent>
           </Card>
         </div>
@@ -464,7 +637,10 @@ export function CRM() {
                   <SelectItem value="pending">Pendente</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" onClick={() => setShowAdvancedFilters(true)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowAdvancedFilters(true)}
+              >
                 <Filter className="h-4 w-4 mr-2" />
                 Mais Filtros
                 {advancedFilters && (
@@ -474,7 +650,11 @@ export function CRM() {
                 )}
               </Button>
               {advancedFilters && (
-                <Button variant="ghost" size="sm" onClick={clearAdvancedFilters}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearAdvancedFilters}
+                >
                   Limpar Filtros
                 </Button>
               )}
@@ -505,19 +685,73 @@ export function CRM() {
           <TabsContent value="pipeline" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Target className="h-5 w-5 mr-2" />
-                  Pipeline de Vendas
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center">
+                    <Target className="h-5 w-5 mr-2" />
+                    Pipeline de Vendas
+                  </CardTitle>
+                  <div className="flex items-center space-x-2">
+                    {/* View Mode Toggle */}
+                    <div className="flex border rounded-lg p-1">
+                      <Button
+                        variant={
+                          pipelineViewMode === "kanban" ? "default" : "ghost"
+                        }
+                        size="sm"
+                        onClick={() => setPipelineViewMode("kanban")}
+                      >
+                        <Grid3X3 className="h-4 w-4 mr-1" />
+                        Kanban
+                      </Button>
+                      <Button
+                        variant={
+                          pipelineViewMode === "list" ? "default" : "ghost"
+                        }
+                        size="sm"
+                        onClick={() => setPipelineViewMode("list")}
+                      >
+                        <List className="h-4 w-4 mr-1" />
+                        Lista
+                      </Button>
+                    </div>
+
+                    {/* Edit Stages Button */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setEditingStages(true);
+                        const initialNames = {};
+                        pipelineStagesConfig.forEach((stage) => {
+                          initialNames[stage.id] = stage.name;
+                        });
+                        setTempStageNames(initialNames);
+                      }}
+                    >
+                      <Edit2 className="h-4 w-4 mr-1" />
+                      Editar Nomes
+                    </Button>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
-                <Pipeline
-                  stages={pipelineStages}
-                  onAddDeal={handleAddDeal}
-                  onEditDeal={handleEditDeal}
-                  onDeleteDeal={handleDeleteDeal}
-                  onMoveDeal={handleMoveDeal}
-                />
+                {pipelineViewMode === "kanban" ? (
+                  <Pipeline
+                    stages={pipelineStages}
+                    onAddDeal={handleAddDeal}
+                    onEditDeal={handleEditDeal}
+                    onDeleteDeal={handleDeleteDeal}
+                    onMoveDeal={handleMoveDeal}
+                  />
+                ) : (
+                  <PipelineListView
+                    deals={deals}
+                    stages={pipelineStages}
+                    onEditDeal={handleEditDeal}
+                    onDeleteDeal={handleDeleteDeal}
+                    onMoveDeal={handleMoveDeal}
+                  />
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -556,6 +790,68 @@ export function CRM() {
           client={viewingClient}
           onEdit={handleEditFromView}
         />
+
+        {/* Stage Names Editing Dialog */}
+        <Dialog open={editingStages} onOpenChange={safeSetEditingStages}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Editar Nomes dos Stages</DialogTitle>
+              <DialogDescription>
+                Personalize os nomes dos stages do pipeline de vendas.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              {pipelineStagesConfig.map((stage) => (
+                <div key={stage.id}>
+                  <label className="text-sm font-medium">
+                    {stage.name} (Atual)
+                  </label>
+                  <Input
+                    value={tempStageNames[stage.id] || stage.name}
+                    onChange={(e) =>
+                      setTempStageNames({
+                        ...tempStageNames,
+                        [stage.id]: e.target.value,
+                      })
+                    }
+                    placeholder={stage.name}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-end space-x-2 mt-6">
+              <Button
+                variant="outline"
+                onClick={createSafeDialogHandler(() => {
+                  safeSetEditingStages(false);
+                  setTempStageNames({});
+                })}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={createSafeDialogHandler(() => {
+                  console.log("Salvando stages:", tempStageNames);
+                  setPipelineStagesConfig((prev) => {
+                    const newConfig = prev.map((stage) => ({
+                      ...stage,
+                      name: tempStageNames[stage.id] || stage.name,
+                    }));
+                    console.log("Nova configuração:", newConfig);
+                    return newConfig;
+                  });
+                  safeSetEditingStages(false);
+                  setTempStageNames({});
+                  alert("Nomes dos stages atualizados com sucesso!");
+                })}
+              >
+                Salvar Alterações
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );

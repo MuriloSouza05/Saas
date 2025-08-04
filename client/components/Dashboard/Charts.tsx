@@ -48,9 +48,9 @@ const expensesByCategory = [
 const casesByStatus = [
   { status: 'Em Andamento', count: 15, color: '#10B981' },
   { status: 'Em Análise', count: 8, color: '#F59E0B' },
-  { status: 'Aguardando Cliente', count: 5, color: '#F97316' },
+  { status: 'Aguardando', count: 5, color: '#F97316' },
   { status: 'Revisão', count: 3, color: '#8B5CF6' },
-  { status: 'Concluído', count: 12, color: '#6B7280' },
+  { status: 'Concluído', count: 12, color: '#059669' },
 ];
 
 const clientsGrowth = [
@@ -83,9 +83,9 @@ export function DashboardCharts({ className }: ChartsProps) {
           <p className="font-medium">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} style={{ color: entry.color }} className="text-sm">
-              {entry.name}: {entry.name.includes('Receitas') || entry.name.includes('Despesas') || entry.name.includes('Saldo') 
-                ? formatCurrency(entry.value) 
-                : entry.value}
+              {entry.name}: {entry.name.includes('Receitas') || entry.name.includes('Despesas') || entry.name.includes('Saldo')
+                ? formatCurrency(entry.value)
+                : `${entry.value} ${entry.name === 'Casos' ? 'casos' : ''}`}
             </p>
           ))}
         </div>
@@ -264,12 +264,20 @@ export function DashboardCharts({ className }: ChartsProps) {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={casesByStatus} layout="horizontal">
+            <BarChart data={casesByStatus}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-              <XAxis type="number" stroke="#6B7280" />
-              <YAxis dataKey="status" type="category" stroke="#6B7280" width={100} />
+              <XAxis
+                dataKey="status"
+                stroke="#6B7280"
+                angle={-45}
+                textAnchor="end"
+                height={80}
+                interval={0}
+                fontSize={12}
+              />
+              <YAxis stroke="#6B7280" />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="count" name="Casos">
+              <Bar dataKey="count" name="Casos" radius={[4, 4, 0, 0]}>
                 {casesByStatus.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}

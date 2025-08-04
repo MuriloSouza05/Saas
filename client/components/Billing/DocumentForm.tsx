@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import React, { useState, useEffect } from "react";
+import {
+  createSafeOnOpenChange,
+  createSafeDialogHandler,
+} from "@/lib/dialog-fix";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -16,17 +20,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -34,25 +38,25 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Plus, Trash2, Calculator } from 'lucide-react';
-import { BillingItem, BaseDocument, CompanyDetails } from '@/types/billing';
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Trash2, Calculator } from "lucide-react";
+import { BillingItem, BaseDocument, CompanyDetails } from "@/types/billing";
 
 const documentSchema = z.object({
-  date: z.string().min(1, 'Data é obrigatória'),
-  dueDate: z.string().min(1, 'Data de vencimento é obrigatória'),
-  senderId: z.string().min(1, 'Remetente é obrigatório'),
-  receiverId: z.string().min(1, 'Destinat��rio é obrigatório'),
-  title: z.string().min(1, 'Título é obrigatório'),
+  date: z.string().min(1, "Data é obrigatória"),
+  dueDate: z.string().min(1, "Data de vencimento é obrigatória"),
+  senderId: z.string().min(1, "Remetente é obrigatório"),
+  receiverId: z.string().min(1, "Destinat��rio é obrigatório"),
+  title: z.string().min(1, "Título é obrigatório"),
   description: z.string().optional(),
-  currency: z.enum(['BRL', 'USD', 'EUR']),
-  discount: z.number().min(0, 'Desconto deve ser positivo'),
-  discountType: z.enum(['percentage', 'fixed']),
-  fee: z.number().min(0, 'Taxa deve ser positiva'),
-  feeType: z.enum(['percentage', 'fixed']),
-  tax: z.number().min(0, 'Imposto deve ser positivo'),
-  taxType: z.enum(['percentage', 'fixed']),
+  currency: z.enum(["BRL", "USD", "EUR"]),
+  discount: z.number().min(0, "Desconto deve ser positivo"),
+  discountType: z.enum(["percentage", "fixed"]),
+  fee: z.number().min(0, "Taxa deve ser positiva"),
+  feeType: z.enum(["percentage", "fixed"]),
+  tax: z.number().min(0, "Imposto deve ser positivo"),
+  taxType: z.enum(["percentage", "fixed"]),
   notes: z.string().optional(),
 });
 
@@ -64,112 +68,117 @@ interface DocumentFormProps {
   document?: BaseDocument;
   onSubmit: (data: DocumentFormData & { items: BillingItem[] }) => void;
   isEditing?: boolean;
-  type: 'estimate' | 'invoice' | 'envoice';
+  type: "estimate" | "invoice";
 }
 
 const mockCompanies = [
   {
-    id: '1',
-    name: 'Escritório Silva & Associados',
-    document: '12.345.678/0001-90',
-    email: 'contato@silva.adv.br',
-    phone: '(11) 3333-4444',
-    address: 'Av. Paulista, 1000, Bela Vista',
-    city: 'São Paulo',
-    state: 'SP',
-    zipCode: '01310-100',
-    country: 'Brasil',
+    id: "1",
+    name: "Escritório Silva & Associados",
+    document: "12.345.678/0001-90",
+    email: "contato@silva.adv.br",
+    phone: "(11) 3333-4444",
+    address: "Av. Paulista, 1000, Bela Vista",
+    city: "São Paulo",
+    state: "SP",
+    zipCode: "01310-100",
+    country: "Brasil",
   },
 ];
 
 const mockClients = [
   {
-    id: '1',
-    name: 'Maria Silva Santos',
-    document: '123.456.789-00',
-    email: 'maria@email.com',
-    phone: '(11) 99999-1234',
-    address: 'Rua Augusta, 123, Cerqueira César',
-    city: 'São Paulo',
-    state: 'SP',
-    zipCode: '01305-000',
-    country: 'Brasil',
+    id: "1",
+    name: "Maria Silva Santos",
+    document: "123.456.789-00",
+    email: "maria@email.com",
+    phone: "(11) 99999-1234",
+    address: "Rua Augusta, 123, Cerqueira César",
+    city: "São Paulo",
+    state: "SP",
+    zipCode: "01305-000",
+    country: "Brasil",
   },
   {
-    id: '2',
-    name: 'João Carlos Oliveira',
-    document: '987.654.321-00',
-    email: 'joao@email.com',
-    phone: '(11) 88888-5678',
-    address: 'Av. Copacabana, 456',
-    city: 'Rio de Janeiro',
-    state: 'RJ',
-    zipCode: '22070-000',
-    country: 'Brasil',
+    id: "2",
+    name: "João Carlos Oliveira",
+    document: "987.654.321-00",
+    email: "joao@email.com",
+    phone: "(11) 88888-5678",
+    address: "Av. Copacabana, 456",
+    city: "Rio de Janeiro",
+    state: "RJ",
+    zipCode: "22070-000",
+    country: "Brasil",
   },
 ];
 
 const serviceItems = [
-  'Consulta jurídica',
-  'Elaboração de contrato',
-  'Petição inicial',
-  'Recurso processual',
-  'Acompanhamento processual',
-  'Audiência judicial',
-  'Parecer jurídico',
-  'Análise de documentos',
+  "Consulta jurídica",
+  "Elaboração de contrato",
+  "Petição inicial",
+  "Recurso processual",
+  "Acompanhamento processual",
+  "Audiência judicial",
+  "Parecer jurídico",
+  "Análise de documentos",
 ];
 
-export function DocumentForm({ 
-  open, 
-  onOpenChange, 
-  document: doc, 
-  onSubmit, 
-  isEditing = false, 
-  type 
+export function DocumentForm({
+  open,
+  onOpenChange,
+  document: doc,
+  onSubmit,
+  isEditing = false,
+  type,
 }: DocumentFormProps) {
+  // Create safe onOpenChange handler
+  const safeOnOpenChange = createSafeOnOpenChange(onOpenChange);
   const [items, setItems] = useState<BillingItem[]>(doc?.items || []);
   const [newItem, setNewItem] = useState({
-    description: '',
+    description: "",
     quantity: 1,
     rate: 0,
     tax: 0,
-    taxType: 'percentage' as const,
+    taxType: "percentage" as const,
   });
 
   const form = useForm<DocumentFormData>({
     resolver: zodResolver(documentSchema),
     defaultValues: {
-      date: doc?.date ? doc.date.split('T')[0] : new Date().toISOString().split('T')[0],
-      dueDate: doc?.dueDate ? doc.dueDate.split('T')[0] : '',
-      senderId: doc?.senderId || '1',
-      receiverId: doc?.receiverId || '',
-      title: doc?.title || '',
-      description: doc?.description || '',
-      currency: doc?.currency || 'BRL',
+      date: doc?.date
+        ? doc.date.split("T")[0]
+        : new Date().toISOString().split("T")[0],
+      dueDate: doc?.dueDate ? doc.dueDate.split("T")[0] : "",
+      senderId: doc?.senderId || "1",
+      receiverId: doc?.receiverId || "",
+      title: doc?.title || "",
+      description: doc?.description || "",
+      currency: doc?.currency || "BRL",
       discount: doc?.discount || 0,
-      discountType: doc?.discountType || 'fixed',
+      discountType: doc?.discountType || "fixed",
       fee: doc?.fee || 0,
-      feeType: doc?.feeType || 'fixed',
+      feeType: doc?.feeType || "fixed",
       tax: doc?.tax || 0,
-      taxType: doc?.taxType || 'percentage',
-      notes: doc?.notes || '',
+      taxType: doc?.taxType || "percentage",
+      notes: doc?.notes || "",
     },
   });
 
   // Calculate totals
   const calculations = React.useMemo(() => {
     const subtotal = items.reduce((sum, item) => sum + item.amount, 0);
-    const discount = form.watch('discount') || 0;
-    const discountType = form.watch('discountType');
-    const fee = form.watch('fee') || 0;
-    const feeType = form.watch('feeType');
-    const tax = form.watch('tax') || 0;
-    const taxType = form.watch('taxType');
+    const discount = form.watch("discount") || 0;
+    const discountType = form.watch("discountType");
+    const fee = form.watch("fee") || 0;
+    const feeType = form.watch("feeType");
+    const tax = form.watch("tax") || 0;
+    const taxType = form.watch("taxType");
 
-    const discountAmount = discountType === 'percentage' ? (subtotal * discount) / 100 : discount;
-    const feeAmount = feeType === 'percentage' ? (subtotal * fee) / 100 : fee;
-    const taxAmount = taxType === 'percentage' ? (subtotal * tax) / 100 : tax;
+    const discountAmount =
+      discountType === "percentage" ? (subtotal * discount) / 100 : discount;
+    const feeAmount = feeType === "percentage" ? (subtotal * fee) / 100 : fee;
+    const taxAmount = taxType === "percentage" ? (subtotal * tax) / 100 : tax;
 
     const total = subtotal - discountAmount + feeAmount + taxAmount;
 
@@ -180,13 +189,24 @@ export function DocumentForm({
       taxAmount,
       total,
     };
-  }, [items, form.watch('discount'), form.watch('discountType'), form.watch('fee'), form.watch('feeType'), form.watch('tax'), form.watch('taxType')]);
+  }, [
+    items,
+    form.watch("discount"),
+    form.watch("discountType"),
+    form.watch("fee"),
+    form.watch("feeType"),
+    form.watch("tax"),
+    form.watch("taxType"),
+  ]);
 
   const addItem = () => {
     if (newItem.description.trim() && newItem.rate > 0) {
       const amount = newItem.quantity * newItem.rate;
-      const taxAmount = newItem.taxType === 'percentage' ? (amount * newItem.tax) / 100 : newItem.tax;
-      
+      const taxAmount =
+        newItem.taxType === "percentage"
+          ? (amount * newItem.tax) / 100
+          : newItem.tax;
+
       const item: BillingItem = {
         id: Date.now().toString(),
         description: newItem.description,
@@ -196,109 +216,127 @@ export function DocumentForm({
         tax: newItem.tax,
         taxType: newItem.taxType,
       };
-      
+
       setItems([...items, item]);
       setNewItem({
-        description: '',
+        description: "",
         quantity: 1,
         rate: 0,
         tax: 0,
-        taxType: 'percentage',
+        taxType: "percentage",
       });
     }
   };
 
   const removeItem = (itemId: string) => {
-    setItems(items.filter(item => item.id !== itemId));
+    setItems(items.filter((item) => item.id !== itemId));
   };
 
   const updateItemQuantity = (itemId: string, quantity: number) => {
-    setItems(items.map(item => 
-      item.id === itemId 
-        ? { 
-            ...item, 
-            quantity, 
-            amount: quantity * item.rate + (item.taxType === 'percentage' ? (quantity * item.rate * (item.tax || 0)) / 100 : (item.tax || 0))
-          }
-        : item
-    ));
+    setItems(
+      items.map((item) =>
+        item.id === itemId
+          ? {
+              ...item,
+              quantity,
+              amount:
+                quantity * item.rate +
+                (item.taxType === "percentage"
+                  ? (quantity * item.rate * (item.tax || 0)) / 100
+                  : item.tax || 0),
+            }
+          : item,
+      ),
+    );
   };
 
   // Atualizar formulário quando document mudar
   useEffect(() => {
-    if (document) {
+    if (!open) return;
+
+    if (doc) {
       form.reset({
-        date: document.date ? document.date.split('T')[0] : new Date().toISOString().split('T')[0],
-        dueDate: document.dueDate ? document.dueDate.split('T')[0] : '',
-        senderId: document.senderId || '1',
-        receiverId: document.receiverId || '',
-        title: document.title || '',
-        description: document.description || '',
-        currency: document.currency || 'BRL',
-        discount: document.discount || 0,
-        discountType: document.discountType || 'fixed',
-        fee: document.fee || 0,
-        feeType: document.feeType || 'fixed',
-        tax: document.tax || 0,
-        taxType: document.taxType || 'percentage',
-        notes: document.notes || '',
+        date: doc.date
+          ? doc.date.split("T")[0]
+          : new Date().toISOString().split("T")[0],
+        dueDate: doc.dueDate ? doc.dueDate.split("T")[0] : "",
+        senderId: doc.senderId || "1",
+        receiverId: doc.receiverId || "",
+        title: doc.title || "",
+        description: doc.description || "",
+        currency: doc.currency || "BRL",
+        discount: doc.discount || 0,
+        discountType: doc.discountType || "fixed",
+        fee: doc.fee || 0,
+        feeType: doc.feeType || "fixed",
+        tax: doc.tax || 0,
+        taxType: doc.taxType || "percentage",
+        notes: doc.notes || "",
       });
-      setItems(document.items || []);
+      setItems(doc.items || []);
     } else {
       setItems([]);
     }
-  }, [document, form]);
+  }, [doc, open]);
 
-  const handleSubmit = (data: DocumentFormData) => {
+  const handleSubmit = createSafeDialogHandler((data: DocumentFormData) => {
     onSubmit({ ...data, items });
-    handleClose();
-  };
+    safeOnOpenChange(false);
+  });
 
-  const handleClose = () => {
-    onOpenChange(false);
-    form.reset();
+  const handleClose = createSafeDialogHandler(() => {
     setItems([]);
     setNewItem({
-      description: '',
+      description: "",
       quantity: 1,
       rate: 0,
       tax: 0,
-      taxType: 'percentage',
+      taxType: "percentage",
     });
-  };
+    safeOnOpenChange(false);
+  });
 
   const formatCurrency = (value: number) => {
-    const currency = form.watch('currency') || 'BRL';
-    return new Intl.NumberFormat('pt-BR', { 
-      style: 'currency', 
-      currency 
+    const currency = form.watch("currency") || "BRL";
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency,
     }).format(value);
   };
 
   const getDocumentTitle = () => {
     switch (type) {
-      case 'estimate': return isEditing ? 'Editar Orçamento' : 'Novo Orçamento';
-      case 'invoice': return isEditing ? 'Editar Fatura' : 'Nova Fatura';
-      case 'envoice': return isEditing ? 'Editar Envoice' : 'Nova Envoice';
-      default: return 'Documento';
+      case "estimate":
+        return isEditing ? "Editar Orçamento" : "Novo Orçamento";
+      case "invoice":
+        return isEditing ? "Editar Fatura" : "Nova Fatura";
+
+      default:
+        return "Documento";
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={safeOnOpenChange}>
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{getDocumentTitle()}</DialogTitle>
           <DialogDescription>
-            Preencha as informações do documento de cobrança. Campos marcados com * são obrigatórios.
+            Preencha as informações do documento de cobrança. Campos marcados
+            com * são obrigatórios.
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit((data) => handleSubmit(data))}
+            className="space-y-6"
+          >
             {/* Document Info */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Informações do Documento</h3>
+              <h3 className="text-lg font-semibold">
+                Informações do Documento
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
@@ -334,7 +372,10 @@ export function DocumentForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Moeda *</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Selecione a moeda" />
@@ -355,7 +396,9 @@ export function DocumentForm({
 
             {/* Sender and Receiver */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Remetente e Destinatário</h3>
+              <h3 className="text-lg font-semibold">
+                Remetente e Destinatário
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -363,7 +406,10 @@ export function DocumentForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Remetente *</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Selecione o remetente" />
@@ -388,7 +434,10 @@ export function DocumentForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Destinatário *</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Selecione o destinatário" />
@@ -418,7 +467,10 @@ export function DocumentForm({
                   <FormItem>
                     <FormLabel>Título *</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: Serviços Jurídicos - Janeiro 2024" {...field} />
+                      <Input
+                        placeholder="Ex: Serviços Jurídicos - Janeiro 2024"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -432,7 +484,10 @@ export function DocumentForm({
                   <FormItem>
                     <FormLabel>Descrição</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Descrição adicional do documento..." {...field} />
+                      <Textarea
+                        placeholder="Descrição adicional do documento..."
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -443,13 +498,15 @@ export function DocumentForm({
             {/* Items */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Itens</h3>
-              
+
               {/* Add new item */}
               <div className="grid grid-cols-12 gap-2 p-4 border rounded-lg bg-muted/50">
                 <div className="col-span-5">
-                  <Select 
-                    value={newItem.description} 
-                    onValueChange={(value) => setNewItem({ ...newItem, description: value })}
+                  <Select
+                    value={newItem.description}
+                    onValueChange={(value) =>
+                      setNewItem({ ...newItem, description: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione um serviço" />
@@ -468,7 +525,12 @@ export function DocumentForm({
                     type="number"
                     placeholder="Qtd"
                     value={newItem.quantity}
-                    onChange={(e) => setNewItem({ ...newItem, quantity: parseInt(e.target.value) || 1 })}
+                    onChange={(e) =>
+                      setNewItem({
+                        ...newItem,
+                        quantity: parseInt(e.target.value) || 1,
+                      })
+                    }
                   />
                 </div>
                 <div className="col-span-2">
@@ -476,7 +538,12 @@ export function DocumentForm({
                     type="number"
                     placeholder="Valor"
                     value={newItem.rate}
-                    onChange={(e) => setNewItem({ ...newItem, rate: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setNewItem({
+                        ...newItem,
+                        rate: parseFloat(e.target.value) || 0,
+                      })
+                    }
                   />
                 </div>
                 <div className="col-span-2">
@@ -484,7 +551,12 @@ export function DocumentForm({
                     type="number"
                     placeholder="Taxa %"
                     value={newItem.tax}
-                    onChange={(e) => setNewItem({ ...newItem, tax: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setNewItem({
+                        ...newItem,
+                        tax: parseFloat(e.target.value) || 0,
+                      })
+                    }
                   />
                 </div>
                 <div className="col-span-1">
@@ -513,16 +585,23 @@ export function DocumentForm({
                         <Input
                           type="number"
                           value={item.quantity}
-                          onChange={(e) => updateItemQuantity(item.id, parseInt(e.target.value) || 1)}
+                          onChange={(e) =>
+                            updateItemQuantity(
+                              item.id,
+                              parseInt(e.target.value) || 1,
+                            )
+                          }
                           className="w-full"
                         />
                       </TableCell>
                       <TableCell>{formatCurrency(item.rate)}</TableCell>
-                      <TableCell className="font-medium">{formatCurrency(item.amount)}</TableCell>
+                      <TableCell className="font-medium">
+                        {formatCurrency(item.amount)}
+                      </TableCell>
                       <TableCell>
-                        <Button 
-                          type="button" 
-                          variant="ghost" 
+                        <Button
+                          type="button"
+                          variant="ghost"
                           size="sm"
                           onClick={() => removeItem(item.id)}
                         >
@@ -533,7 +612,10 @@ export function DocumentForm({
                   ))}
                   {items.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                      <TableCell
+                        colSpan={5}
+                        className="text-center py-8 text-muted-foreground"
+                      >
                         Nenhum item adicionado
                       </TableCell>
                     </TableRow>
@@ -554,18 +636,23 @@ export function DocumentForm({
                       <FormLabel>Desconto</FormLabel>
                       <div className="flex space-x-2">
                         <FormControl>
-                          <Input 
-                            type="number" 
+                          <Input
+                            type="number"
                             placeholder="0"
                             {...field}
-                            onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                            onChange={(e) =>
+                              field.onChange(parseFloat(e.target.value) || 0)
+                            }
                           />
                         </FormControl>
                         <FormField
                           control={form.control}
                           name="discountType"
                           render={({ field }) => (
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
                               <SelectTrigger className="w-24">
                                 <SelectValue />
                               </SelectTrigger>
@@ -590,18 +677,23 @@ export function DocumentForm({
                       <FormLabel>Taxa</FormLabel>
                       <div className="flex space-x-2">
                         <FormControl>
-                          <Input 
-                            type="number" 
+                          <Input
+                            type="number"
                             placeholder="0"
                             {...field}
-                            onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                            onChange={(e) =>
+                              field.onChange(parseFloat(e.target.value) || 0)
+                            }
                           />
                         </FormControl>
                         <FormField
                           control={form.control}
                           name="feeType"
                           render={({ field }) => (
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
                               <SelectTrigger className="w-24">
                                 <SelectValue />
                               </SelectTrigger>
@@ -626,18 +718,23 @@ export function DocumentForm({
                       <FormLabel>Imposto</FormLabel>
                       <div className="flex space-x-2">
                         <FormControl>
-                          <Input 
-                            type="number" 
+                          <Input
+                            type="number"
                             placeholder="0"
                             {...field}
-                            onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                            onChange={(e) =>
+                              field.onChange(parseFloat(e.target.value) || 0)
+                            }
                           />
                         </FormControl>
                         <FormField
                           control={form.control}
                           name="taxType"
                           render={({ field }) => (
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
                               <SelectTrigger className="w-24">
                                 <SelectValue />
                               </SelectTrigger>
@@ -663,7 +760,9 @@ export function DocumentForm({
                 </div>
                 <div className="flex justify-between">
                   <span>Desconto:</span>
-                  <span className="text-red-600">-{formatCurrency(calculations.discountAmount)}</span>
+                  <span className="text-red-600">
+                    -{formatCurrency(calculations.discountAmount)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Taxa:</span>
@@ -688,7 +787,10 @@ export function DocumentForm({
                 <FormItem>
                   <FormLabel>Observações</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Informações adicionais..." {...field} />
+                    <Textarea
+                      placeholder="Informações adicionais..."
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -696,20 +798,12 @@ export function DocumentForm({
             />
 
             <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => {
-                try {
-                  setTimeout(() => {
-                    handleClose();
-                  }, 0);
-                } catch (error) {
-                  console.error('Erro ao cancelar:', error);
-                  handleClose();
-                }
-              }}>
+              <Button type="button" variant="outline" onClick={handleClose}>
                 Cancelar
               </Button>
               <Button type="submit">
-                {isEditing ? 'Atualizar' : 'Criar'} {type === 'estimate' ? 'Orçamento' : type === 'invoice' ? 'Fatura' : 'Envoice'}
+                {isEditing ? "Atualizar" : "Criar"}{" "}
+                {type === "estimate" ? "Orçamento" : "Fatura"}
               </Button>
             </div>
           </form>

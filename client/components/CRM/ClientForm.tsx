@@ -34,14 +34,14 @@ import { Client } from '@/types/crm';
 const clientSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
   organization: z.string().optional(),
-  email: z.string().email('Email inválido'),
+  email: z.string().email('Email inválido').optional().or(z.literal('')),
   mobile: z.string().min(1, 'Telefone é obrigatório'),
   country: z.string().min(1, 'País é obrigatório'),
   state: z.string().min(1, 'Estado é obrigatório'),
-  address: z.string().min(1, 'Endere��o é obrigatório'),
+  address: z.string().optional(),
   city: z.string().min(1, 'Cidade é obrigatória'),
-  zipCode: z.string().min(1, 'CEP é obrigatório'),
-  budget: z.number().min(0, 'Orçamento deve ser positivo'),
+  zipCode: z.string().optional(),
+  budget: z.number().min(0, 'Orçamento deve ser positivo').optional(),
   currency: z.enum(['BRL', 'USD', 'EUR']),
   level: z.string().optional(),
   description: z.string().optional(),
@@ -55,6 +55,7 @@ const clientSchema = z.object({
   inssStatus: z.string().optional(),
   amountPaid: z.number().optional(),
   referredBy: z.string().optional(),
+  registeredBy: z.string().optional(),
 });
 
 type ClientFormData = z.infer<typeof clientSchema>;
@@ -123,6 +124,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
       inssStatus: client?.inssStatus || '',
       amountPaid: client?.amountPaid || 0,
       referredBy: client?.referredBy || '',
+      registeredBy: client?.registeredBy || 'Dr. Advogado',
     },
   });
 
@@ -153,6 +155,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
         inssStatus: client.inssStatus || '',
         amountPaid: client.amountPaid || 0,
         referredBy: client.referredBy || '',
+        registeredBy: client.registeredBy || 'Dr. Advogado',
       });
     }
   }, [client, form]);
@@ -226,7 +229,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email *</FormLabel>
+                      <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input type="email" placeholder="email@exemplo.com" {...field} />
                       </FormControl>
@@ -293,7 +296,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                   name="address"
                   render={({ field }) => (
                     <FormItem className="md:col-span-2">
-                      <FormLabel>Endereço *</FormLabel>
+                      <FormLabel>Endereço</FormLabel>
                       <FormControl>
                         <Input placeholder="Rua, número, bairro" {...field} />
                       </FormControl>
@@ -321,7 +324,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                   name="zipCode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>CEP *</FormLabel>
+                      <FormLabel>CEP</FormLabel>
                       <FormControl>
                         <Input placeholder="00000-000" {...field} />
                       </FormControl>
@@ -335,7 +338,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                   name="budget"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Orçamento *</FormLabel>
+                      <FormLabel>Orçamento</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
@@ -539,6 +542,20 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                       <FormLabel>Indicado Por</FormLabel>
                       <FormControl>
                         <Input placeholder="Nome do indicador" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="registeredBy"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Colaborador que Cadastrou</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nome do colaborador" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
