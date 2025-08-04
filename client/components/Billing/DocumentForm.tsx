@@ -299,7 +299,7 @@ export function DocumentForm({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit((data) => handleSubmit(data))} className="space-y-6">
             {/* Document Info */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Informações do Documento</h3>
