@@ -100,14 +100,14 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
     }
   };
 
-  const handleClose = () => {
+  const handleClose = createSafeDialogHandler(() => {
     // Reset form and state
     form.reset();
     setAvatarUrl('/placeholder.svg');
     setAvatarFile(null);
     setIsLoading(false);
-    onOpenChange(false);
-  };
+    safeOnOpenChange(false);
+  });
 
   const handleSubmit = async (data: ProfileFormData) => {
     setIsLoading(true);
