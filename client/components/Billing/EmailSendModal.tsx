@@ -178,12 +178,20 @@ export function EmailSendModal({
   };
 
   const generateSubject = () => {
+    if (!documents || documents.length === 0) {
+      return '[Silva & Associados] Documento';
+    }
+
     const doc = documents[0];
+    if (!doc || !doc.type) {
+      return '[Silva & Associados] Documento';
+    }
+
     const isInvoice = doc.type === 'invoice';
     const prefix = '[Silva & Associados]';
-    
+
     if (documents.length === 1) {
-      return `${prefix} ${isInvoice ? 'Fatura' : 'Orçamento'} ${doc.number} - ${doc.title}`;
+      return `${prefix} ${isInvoice ? 'Fatura' : 'Orçamento'} ${doc.number || ''} - ${doc.title || ''}`;
     } else {
       return `${prefix} ${documents.length} documento${documents.length > 1 ? 's' : ''} - ${isInvoice ? 'Faturas' : 'Orçamentos'}`;
     }
