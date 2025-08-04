@@ -715,7 +715,7 @@ export function CRM() {
         />
 
         {/* Stage Names Editing Dialog */}
-        <Dialog open={editingStages} onOpenChange={setEditingStages}>
+        <Dialog open={editingStages} onOpenChange={safeSetEditingStages}>
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle>Editar Nomes dos Stages</DialogTitle>
