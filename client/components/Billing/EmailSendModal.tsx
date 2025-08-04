@@ -150,16 +150,18 @@ export function EmailSendModal({
     setSending(true);
     try {
       // Simulate Resend API call
+      const firstDoc = documents && documents[0] ? documents[0] : null;
+
       const emailPayload = {
         from: `${emailData.fromName} <${emailData.fromEmail}>`,
         to: emailData.to.split(',').map(email => email.trim()),
         cc: emailData.cc ? emailData.cc.split(',').map(email => email.trim()) : undefined,
         bcc: emailData.bcc ? emailData.bcc.split(',').map(email => email.trim()) : undefined,
         subject: emailData.subject,
-        html: getTemplateContent(documents[0]),
+        html: firstDoc ? getTemplateContent(firstDoc) : '<p>No document content available</p>',
         reply_to: emailData.replyTo,
-        attachments: emailData.attachPdf ? [{
-          filename: `${documents[0].type}_${documents[0].number}.pdf`,
+        attachments: emailData.attachPdf && firstDoc ? [{
+          filename: `${firstDoc.type || 'document'}_${firstDoc.number || 'unknown'}.pdf`,
           content: 'base64-content-here'
         }] : undefined
       };
