@@ -38,6 +38,8 @@ export function EmailSendModal({
   documents,
   onSendEmail
 }: EmailSendModalProps) {
+  // Create safe onOpenChange handler
+  const safeOnOpenChange = createSafeOnOpenChange(onOpenChange);
   const [emailData, setEmailData] = useState({
     to: '',
     cc: '',
