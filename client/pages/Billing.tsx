@@ -818,6 +818,39 @@ export function Billing() {
     }).format(value);
   };
 
+  const handleSendEmail = async (emailData: any) => {
+    try {
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer re_BLdUxfAX_Au4vh5xLAPcthy8bmCgXCcXr',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro na API: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Email enviado com sucesso:', result);
+
+      return result;
+    } catch (error) {
+      console.error('Erro ao enviar email:', error);
+      throw error;
+    }
+  };
+
+  const handleOpenEmailModal = () => {
+    if (selectedDocs.length === 0) {
+      alert('⚠️ Selecione pelo menos um documento para enviar por email.');
+      return;
+    }
+    setShowEmailModal(true);
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6 p-6">
