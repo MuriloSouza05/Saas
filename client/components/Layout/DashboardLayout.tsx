@@ -26,18 +26,18 @@
  * Este layout garante consistência visual em todo o sistema.
  */
 
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   LayoutDashboard,
   Users,
@@ -54,20 +54,20 @@ import {
   ChevronLeft,
   ChevronRight,
   Scale,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { UserProfileDialog } from './UserProfileDialog';
-import { NotificationsPanel } from './NotificationsPanel';
-import { useDialogBodyFix } from '@/hooks/use-dialog-body-fix';
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { UserProfileDialog } from "./UserProfileDialog";
+import { NotificationsPanel } from "./NotificationsPanel";
+import { useDialogBodyFix } from "@/hooks/use-dialog-body-fix";
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'CRM', href: '/crm', icon: Users },
-  { name: 'Projetos', href: '/projetos', icon: FolderKanban },
-  { name: 'Tarefas', href: '/tarefas', icon: CheckSquare },
-  { name: 'Cobrança', href: '/cobranca', icon: FileText },
-  { name: 'Fluxo de Caixa', href: '/fluxo-caixa', icon: TrendingUp },
-  { name: 'Configurações', href: '/configuracoes', icon: Settings },
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "CRM", href: "/crm", icon: Users },
+  { name: "Projetos", href: "/projetos", icon: FolderKanban },
+  { name: "Tarefas", href: "/tarefas", icon: CheckSquare },
+  { name: "Cobrança", href: "/cobranca", icon: FileText },
+  { name: "Fluxo de Caixa", href: "/fluxo-caixa", icon: TrendingUp },
+  { name: "Configurações", href: "/configuracoes", icon: Settings },
 ];
 
 interface DashboardLayoutProps {
@@ -77,7 +77,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showProfileDialog, setShowProfileDialog] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -88,26 +88,29 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     e.preventDefault();
     if (searchTerm.trim()) {
       // Navigate to search results - you could create a dedicated search page
-      console.log('Searching for:', searchTerm);
+      console.log("Searching for:", searchTerm);
       // For now, we'll navigate to the most relevant module based on search term
-      if (searchTerm.toLowerCase().includes('cliente')) {
-        navigate('/crm');
-      } else if (searchTerm.toLowerCase().includes('projeto')) {
-        navigate('/projetos');
-      } else if (searchTerm.toLowerCase().includes('fatura') || searchTerm.toLowerCase().includes('cobrança')) {
-        navigate('/cobranca');
+      if (searchTerm.toLowerCase().includes("cliente")) {
+        navigate("/crm");
+      } else if (searchTerm.toLowerCase().includes("projeto")) {
+        navigate("/projetos");
+      } else if (
+        searchTerm.toLowerCase().includes("fatura") ||
+        searchTerm.toLowerCase().includes("cobrança")
+      ) {
+        navigate("/cobranca");
       } else {
         // General search - could navigate to a search results page
-        navigate('/');
+        navigate("/");
       }
     }
   };
 
   const handleLogout = () => {
     // Add logout logic here
-    console.log('User logged out');
+    console.log("User logged out");
     // For demo purposes, just show an alert
-    alert('Logout realizado com sucesso!');
+    alert("Logout realizado com sucesso!");
     // In a real app, you would clear auth tokens and redirect to login
   };
 
@@ -116,24 +119,30 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   const handleSettings = () => {
-    navigate('/configuracoes');
+    navigate("/configuracoes");
   };
 
   return (
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
-      <div className={cn(
-        "sidebar-nav transition-all duration-300",
-        sidebarCollapsed ? "w-16" : "w-64"
-      )}>
+      <div
+        className={cn(
+          "sidebar-nav transition-all duration-300",
+          sidebarCollapsed ? "w-16" : "w-64",
+        )}
+      >
         {/* Logo/Brand */}
         <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
           {!sidebarCollapsed && (
             <div className="flex items-center space-x-2">
               <Scale className="h-8 w-8 text-sidebar-primary" />
               <div className="flex flex-col">
-                <span className="text-lg font-bold text-sidebar-foreground">LegalSaaS</span>
-                <span className="text-xs text-sidebar-foreground/70">Sistema Advocacia</span>
+                <span className="text-lg font-bold text-sidebar-foreground">
+                  LegalSaaS
+                </span>
+                <span className="text-xs text-sidebar-foreground/70">
+                  Sistema Advocacia
+                </span>
               </div>
             </div>
           )}
@@ -155,7 +164,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   isActive
                     ? "bg-sidebar-accent text-sidebar-accent-foreground"
                     : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                  sidebarCollapsed && "justify-center"
+                  sidebarCollapsed && "justify-center",
                 )}
                 title={sidebarCollapsed ? item.name : undefined}
               >
@@ -214,7 +223,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               {/* User Menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Button
+                    variant="ghost"
+                    className="relative h-8 w-8 rounded-full"
+                  >
                     <Avatar className="h-8 w-8">
                       <AvatarImage src="/placeholder.svg" alt="Usuário" />
                       <AvatarFallback>AD</AvatarFallback>
@@ -251,9 +263,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto bg-muted/30">
-          {children}
-        </main>
+        <main className="flex-1 overflow-auto bg-muted/30">{children}</main>
       </div>
 
       {/* Profile Dialog */}

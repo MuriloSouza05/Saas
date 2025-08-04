@@ -62,24 +62,27 @@
  * Versão: 2.0
  */
 
-import React, { useState } from 'react';
-import { createSafeOnOpenChange, createSafeDialogHandler } from '@/lib/dialog-fix';
-import { DashboardLayout } from '@/components/Layout/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
+import React, { useState } from "react";
+import {
+  createSafeOnOpenChange,
+  createSafeDialogHandler,
+} from "@/lib/dialog-fix";
+import { DashboardLayout } from "@/components/Layout/DashboardLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -87,7 +90,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+} from "@/components/ui/breadcrumb";
 import {
   Settings as SettingsIcon,
   Building,
@@ -104,8 +107,8 @@ import {
   Download,
   Edit,
   Plus,
-  X
-} from 'lucide-react';
+  X,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -113,28 +116,52 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { UserManagement } from '@/components/Settings/UserManagement';
+} from "@/components/ui/dialog";
+import { UserManagement } from "@/components/Settings/UserManagement";
 
 export function Settings() {
-  const [activeTab, setActiveTab] = useState('company');
+  const [activeTab, setActiveTab] = useState("company");
 
   // Create safe dialog handlers
-  const safeSetShowTemplateModal = createSafeOnOpenChange((open: boolean) => setShowTemplateModal(open));
-  const safeSetShowNewAccountModal = createSafeOnOpenChange((open: boolean) => setShowNewAccountModal(open));
+  const safeSetShowTemplateModal = createSafeOnOpenChange((open: boolean) =>
+    setShowTemplateModal(open),
+  );
+  const safeSetShowNewAccountModal = createSafeOnOpenChange((open: boolean) =>
+    setShowNewAccountModal(open),
+  );
   const [error, setError] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
-  const [currentTemplate, setCurrentTemplate] = useState<'budget' | 'invoice' | null>(null);
-  const [templateContent, setTemplateContent] = useState('');
+  const [currentTemplate, setCurrentTemplate] = useState<
+    "budget" | "invoice" | null
+  >(null);
+  const [templateContent, setTemplateContent] = useState("");
   const [showNewAccountModal, setShowNewAccountModal] = useState(false);
   const [accounts, setAccounts] = useState([
-    { id: '1', bank: 'Banco do Brasil', account: '1234-5', balance: 45280.50, type: 'Conta Corrente' },
-    { id: '2', bank: 'Caixa Econômica', account: '6789-0', balance: 12750.30, type: 'Poupança' },
-    { id: '3', bank: 'Itaú', account: '9876-1', balance: 8900.00, type: 'Conta Corrente' }
+    {
+      id: "1",
+      bank: "Banco do Brasil",
+      account: "1234-5",
+      balance: 45280.5,
+      type: "Conta Corrente",
+    },
+    {
+      id: "2",
+      bank: "Caixa Econômica",
+      account: "6789-0",
+      balance: 12750.3,
+      type: "Poupança",
+    },
+    {
+      id: "3",
+      bank: "Itaú",
+      account: "9876-1",
+      balance: 8900.0,
+      type: "Conta Corrente",
+    },
   ]);
   const [editingAccount, setEditingAccount] = useState<any>(null);
 
@@ -146,7 +173,9 @@ export function Settings() {
           <Card>
             <CardContent className="p-6">
               <div className="text-center">
-                <h3 className="text-lg font-semibold text-red-600 mb-2">Erro nas Configurações</h3>
+                <h3 className="text-lg font-semibold text-red-600 mb-2">
+                  Erro nas Configurações
+                </h3>
                 <p className="text-muted-foreground mb-4">{error}</p>
                 <Button onClick={() => setError(null)}>Tentar Novamente</Button>
               </div>
@@ -162,47 +191,47 @@ export function Settings() {
     try {
       // Simular upload de arquivos
       if (logoFile) {
-        console.log('Uploading logo:', logoFile.name);
+        console.log("Uploading logo:", logoFile.name);
         // Aqui seria feito o upload real para o servidor
       }
       if (faviconFile) {
-        console.log('Uploading favicon:', faviconFile.name);
+        console.log("Uploading favicon:", faviconFile.name);
         // Aqui seria feito o upload real para o servidor
       }
 
-      alert(`✅ Configurações da empresa salvas com sucesso!${logoFile ? '\n🇫Logo atualizado!' : ''}${faviconFile ? '\n🌐Favicon atualizado!' : ''}`);
+      alert(
+        `✅ Configurações da empresa salvas com sucesso!${logoFile ? "\n🇫Logo atualizado!" : ""}${faviconFile ? "\n🌐Favicon atualizado!" : ""}`,
+      );
 
       // Resetar arquivos após o sucesso
       setLogoFile(null);
       setFaviconFile(null);
     } catch (error) {
-      setError('Erro ao salvar configurações da empresa');
+      setError("Erro ao salvar configurações da empresa");
     }
   };
 
   const handleSaveEmail = () => {
     try {
-      alert('✅ Configurações de email salvas com sucesso!');
+      alert("✅ Configurações de email salvas com sucesso!");
     } catch (error) {
-      setError('Erro ao salvar configurações de email');
+      setError("Erro ao salvar configurações de email");
     }
   };
 
-
-
   const handleSaveNotifications = () => {
     try {
-      alert('✅ Preferências de notificações salvas!');
+      alert("✅ Preferências de notificações salvas!");
     } catch (error) {
-      setError('Erro ao salvar preferências de notificações');
+      setError("Erro ao salvar preferências de notificações");
     }
   };
 
   const handleSaveSecurity = () => {
     try {
-      alert('✅ Configurações de segurança salvas!');
+      alert("✅ Configurações de segurança salvas!");
     } catch (error) {
-      setError('Erro ao salvar configurações de segurança');
+      setError("Erro ao salvar configurações de segurança");
     }
   };
 
@@ -210,15 +239,20 @@ export function Settings() {
     const file = event.target.files?.[0];
     if (file) {
       // Verificar tipo de arquivo
-      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+      const allowedTypes = [
+        "image/png",
+        "image/jpeg",
+        "image/jpg",
+        "image/svg+xml",
+      ];
       if (!allowedTypes.includes(file.type)) {
-        setError('Tipo de arquivo não suportado. Use PNG, JPEG ou SVG.');
+        setError("Tipo de arquivo não suportado. Use PNG, JPEG ou SVG.");
         return;
       }
 
       // Verificar tamanho (máximo 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        setError('Arquivo muito grande. Tamanho máximo: 5MB.');
+        setError("Arquivo muito grande. Tamanho máximo: 5MB.");
         return;
       }
 
@@ -239,15 +273,20 @@ export function Settings() {
     const file = event.target.files?.[0];
     if (file) {
       // Verificar tipo de arquivo
-      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+      const allowedTypes = [
+        "image/png",
+        "image/jpeg",
+        "image/jpg",
+        "image/svg+xml",
+      ];
       if (!allowedTypes.includes(file.type)) {
-        setError('Tipo de arquivo não suportado. Use PNG, JPEG ou SVG.');
+        setError("Tipo de arquivo não suportado. Use PNG, JPEG ou SVG.");
         return;
       }
 
       // Verificar tamanho (máximo 1MB para favicon)
       if (file.size > 1024 * 1024) {
-        setError('Arquivo muito grande para favicon. Tamanho máximo: 1MB.');
+        setError("Arquivo muito grande para favicon. Tamanho máximo: 1MB.");
         return;
       }
 
@@ -265,11 +304,11 @@ export function Settings() {
   };
 
   const handleUploadLogo = () => {
-    document.getElementById('logo-upload')?.click();
+    document.getElementById("logo-upload")?.click();
   };
 
   const handleUploadFavicon = () => {
-    document.getElementById('favicon-upload')?.click();
+    document.getElementById("favicon-upload")?.click();
   };
 
   return (
@@ -341,15 +380,25 @@ export function Settings() {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="company-name">Nome da Empresa</Label>
-                      <Input id="company-name" defaultValue="Escritório Silva & Associados" />
+                      <Input
+                        id="company-name"
+                        defaultValue="Escritório Silva & Associados"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="company-cnpj">CNPJ</Label>
-                      <Input id="company-cnpj" defaultValue="12.345.678/0001-90" />
+                      <Input
+                        id="company-cnpj"
+                        defaultValue="12.345.678/0001-90"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="company-email">Email</Label>
-                      <Input id="company-email" type="email" defaultValue="contato@silva.adv.br" />
+                      <Input
+                        id="company-email"
+                        type="email"
+                        defaultValue="contato@silva.adv.br"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="company-phone">Telefone</Label>
@@ -359,7 +408,10 @@ export function Settings() {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="company-address">Endereço</Label>
-                      <Input id="company-address" defaultValue="Av. Paulista, 1000, Bela Vista" />
+                      <Input
+                        id="company-address"
+                        defaultValue="Av. Paulista, 1000, Bela Vista"
+                      />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -387,7 +439,10 @@ export function Settings() {
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="company-website">Website</Label>
-                    <Input id="company-website" placeholder="https://www.silva.adv.br" />
+                    <Input
+                      id="company-website"
+                      placeholder="https://www.silva.adv.br"
+                    />
                   </div>
                   <div>
                     <Label htmlFor="company-description">Descrição</Label>
@@ -407,7 +462,11 @@ export function Settings() {
                       <div className="mt-2 flex items-center space-x-4">
                         <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
                           {logoPreview ? (
-                            <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain" />
+                            <img
+                              src={logoPreview}
+                              alt="Logo preview"
+                              className="w-full h-full object-contain"
+                            />
                           ) : (
                             <Building className="h-8 w-8 text-muted-foreground" />
                           )}
@@ -415,11 +474,12 @@ export function Settings() {
                         <div className="flex flex-col space-y-2">
                           <Button variant="outline" onClick={handleUploadLogo}>
                             <Upload className="h-4 w-4 mr-2" />
-                            {logoFile ? 'Trocar Logo' : 'Upload Logo'}
+                            {logoFile ? "Trocar Logo" : "Upload Logo"}
                           </Button>
                           {logoFile && (
                             <div className="text-xs text-muted-foreground">
-                              {logoFile.name} ({(logoFile.size / 1024).toFixed(1)}KB)
+                              {logoFile.name} (
+                              {(logoFile.size / 1024).toFixed(1)}KB)
                             </div>
                           )}
                         </div>
@@ -440,19 +500,27 @@ export function Settings() {
                       <div className="mt-2 flex items-center space-x-4">
                         <div className="w-8 h-8 bg-muted rounded flex items-center justify-center overflow-hidden">
                           {faviconPreview ? (
-                            <img src={faviconPreview} alt="Favicon preview" className="w-full h-full object-contain" />
+                            <img
+                              src={faviconPreview}
+                              alt="Favicon preview"
+                              className="w-full h-full object-contain"
+                            />
                           ) : (
                             <SettingsIcon className="h-4 w-4 text-muted-foreground" />
                           )}
                         </div>
                         <div className="flex flex-col space-y-2">
-                          <Button variant="outline" onClick={handleUploadFavicon}>
+                          <Button
+                            variant="outline"
+                            onClick={handleUploadFavicon}
+                          >
                             <Upload className="h-4 w-4 mr-2" />
-                            {faviconFile ? 'Trocar Favicon' : 'Upload Favicon'}
+                            {faviconFile ? "Trocar Favicon" : "Upload Favicon"}
                           </Button>
                           {faviconFile && (
                             <div className="text-xs text-muted-foreground">
-                              {faviconFile.name} ({(faviconFile.size / 1024).toFixed(1)}KB)
+                              {faviconFile.name} (
+                              {(faviconFile.size / 1024).toFixed(1)}KB)
                             </div>
                           )}
                         </div>
@@ -501,14 +569,20 @@ export function Settings() {
                     <div className="flex items-center">
                       <Mail className="h-5 w-5 text-blue-600 mr-2" />
                       <div>
-                        <h4 className="font-medium text-blue-900">Integração Resend API</h4>
-                        <p className="text-sm text-blue-700">Serviço moderno de envio de emails transacionais</p>
+                        <h4 className="font-medium text-blue-900">
+                          Integração Resend API
+                        </h4>
+                        <p className="text-sm text-blue-700">
+                          Serviço moderno de envio de emails transacionais
+                        </p>
                       </div>
                     </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="resend-api-key">Chave da API Resend *</Label>
+                    <Label htmlFor="resend-api-key">
+                      Chave da API Resend *
+                    </Label>
                     <Input
                       id="resend-api-key"
                       type="password"
@@ -516,7 +590,8 @@ export function Settings() {
                       defaultValue="re_BLdUxfAX_Au4vh5xLAPcthy8bmCgXCcXr"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      Sua chave de API do Resend. Mantenha segura e não compartilhe.
+                      Sua chave de API do Resend. Mantenha segura e não
+                      compartilhe.
                     </p>
                   </div>
 
@@ -554,7 +629,9 @@ export function Settings() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="email-subject-prefix">Prefixo do Assunto</Label>
+                      <Label htmlFor="email-subject-prefix">
+                        Prefixo do Assunto
+                      </Label>
                       <Input
                         id="email-subject-prefix"
                         placeholder="[Silva & Associados]"
@@ -565,13 +642,17 @@ export function Settings() {
 
                   <div className="flex items-center space-x-2 p-3 border rounded-lg">
                     <Switch id="email-enabled" defaultChecked />
-                    <Label htmlFor="email-enabled">Ativar envio de emails</Label>
+                    <Label htmlFor="email-enabled">
+                      Ativar envio de emails
+                    </Label>
                   </div>
 
                   <Button
                     variant="outline"
                     onClick={() => {
-                      alert('🧪 Enviando email de teste para verificar configuração...\n\n✅ Email de teste enviado com sucesso!\nVerifique sua caixa de entrada.');
+                      alert(
+                        "🧪 Enviando email de teste para verificar configuração...\n\n✅ Email de teste enviado com sucesso!\nVerifique sua caixa de entrada.",
+                      );
                     }}
                   >
                     <Mail className="h-4 w-4 mr-2" />
@@ -582,7 +663,8 @@ export function Settings() {
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium">Templates de Email</h3>
                   <p className="text-sm text-muted-foreground">
-                    Personalize os templates para orçamentos e faturas. Use as variáveis disponíveis para inserir dados dinâmicos.
+                    Personalize os templates para orçamentos e faturas. Use as
+                    variáveis disponíveis para inserir dados dinâmicos.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -592,7 +674,7 @@ export function Settings() {
                         variant="outline"
                         className="w-full mt-2"
                         onClick={() => {
-                          setCurrentTemplate('budget');
+                          setCurrentTemplate("budget");
                           setTemplateContent(`<!DOCTYPE html>
 <html>
 <head>
@@ -667,7 +749,7 @@ export function Settings() {
                         variant="outline"
                         className="w-full mt-2"
                         onClick={() => {
-                          setCurrentTemplate('invoice');
+                          setCurrentTemplate("invoice");
                           setTemplateContent(`<!DOCTYPE html>
 <html>
 <head>
@@ -764,8 +846,6 @@ export function Settings() {
             </Card>
           </TabsContent>
 
-
-
           {/* Notifications */}
           <TabsContent value="notifications">
             <Card>
@@ -780,7 +860,9 @@ export function Settings() {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>Notificações Push</Label>
-                      <p className="text-sm text-muted-foreground">Notificações no navegador</p>
+                      <p className="text-sm text-muted-foreground">
+                        Notificações no navegador
+                      </p>
                     </div>
                     <Switch defaultChecked />
                   </div>
@@ -807,11 +889,15 @@ export function Settings() {
                     <Label>Lembretes de Faturas</Label>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm">3 dias antes do vencimento</span>
+                        <span className="text-sm">
+                          3 dias antes do vencimento
+                        </span>
                         <Switch defaultChecked />
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm">1 dia depois do vencimento</span>
+                        <span className="text-sm">
+                          1 dia depois do vencimento
+                        </span>
                         <Switch defaultChecked />
                       </div>
                       <div className="flex items-center justify-between">
@@ -848,11 +934,25 @@ export function Settings() {
                     <div>
                       <Label>Status Disponíveis</Label>
                       <div className="mt-2 space-y-2">
-                        {['Ativo', 'Inativo', 'Pendente', 'Em Análise', 'Suspenso', 'Cancelado'].map((status) => (
-                          <div key={status} className="flex items-center justify-between p-2 border rounded">
+                        {[
+                          "Ativo",
+                          "Inativo",
+                          "Pendente",
+                          "Em Análise",
+                          "Suspenso",
+                          "Cancelado",
+                        ].map((status) => (
+                          <div
+                            key={status}
+                            className="flex items-center justify-between p-2 border rounded"
+                          >
                             <span className="text-sm">{status}</span>
                             <div className="flex items-center space-x-2">
-                              <Switch defaultChecked={status === 'Ativo' || status === 'Inativo'} />
+                              <Switch
+                                defaultChecked={
+                                  status === "Ativo" || status === "Inativo"
+                                }
+                              />
                               <Button variant="ghost" size="sm">
                                 <Edit className="h-3 w-3" />
                               </Button>
@@ -862,7 +962,9 @@ export function Settings() {
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="new-inss-status">Adicionar Novo Status</Label>
+                      <Label htmlFor="new-inss-status">
+                        Adicionar Novo Status
+                      </Label>
                       <div className="mt-2 flex space-x-2">
                         <Input placeholder="Nome do status" />
                         <Button>Adicionar</Button>
@@ -883,16 +985,19 @@ export function Settings() {
                       <Label>Áreas do Direito</Label>
                       <div className="mt-2 space-y-2">
                         {[
-                          'Direito Civil',
-                          'Direito Trabalhista',
-                          'Direito Previdenciário',
-                          'Direito Empresarial',
-                          'Direito Família',
-                          'Direito Criminal',
-                          'Direito Tributário',
-                          'Direito Consumidor'
+                          "Direito Civil",
+                          "Direito Trabalhista",
+                          "Direito Previdenciário",
+                          "Direito Empresarial",
+                          "Direito Família",
+                          "Direito Criminal",
+                          "Direito Tributário",
+                          "Direito Consumidor",
                         ].map((area) => (
-                          <div key={area} className="flex items-center justify-between p-2 border rounded">
+                          <div
+                            key={area}
+                            className="flex items-center justify-between p-2 border rounded"
+                          >
                             <span className="text-sm">{area}</span>
                             <div className="flex items-center space-x-2">
                               <Switch defaultChecked />
@@ -908,16 +1013,19 @@ export function Settings() {
                       <Label>Tipos de Processo</Label>
                       <div className="mt-2 space-y-2">
                         {[
-                          'Consultoria',
-                          'Ação Judicial',
-                          'Recurso',
-                          'Execução',
-                          'Mediação',
-                          'Arbitragem',
-                          'Acordo Extrajudicial',
-                          'Petição Inicial'
+                          "Consultoria",
+                          "Ação Judicial",
+                          "Recurso",
+                          "Execução",
+                          "Mediação",
+                          "Arbitragem",
+                          "Acordo Extrajudicial",
+                          "Petição Inicial",
                         ].map((tipo) => (
-                          <div key={tipo} className="flex items-center justify-between p-2 border rounded">
+                          <div
+                            key={tipo}
+                            className="flex items-center justify-between p-2 border rounded"
+                          >
                             <span className="text-sm">{tipo}</span>
                             <div className="flex items-center space-x-2">
                               <Switch defaultChecked />
@@ -941,14 +1049,17 @@ export function Settings() {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
-                      'Contrato de Honorários',
-                      'Procuração Judicial',
-                      'Acordo de Mediação',
-                      'Termo de Confidencialidade',
-                      'Contrato de Consultoria',
-                      'Distrato'
+                      "Contrato de Honorários",
+                      "Procuração Judicial",
+                      "Acordo de Mediação",
+                      "Termo de Confidencialidade",
+                      "Contrato de Consultoria",
+                      "Distrato",
                     ].map((template) => (
-                      <div key={template} className="p-4 border rounded-lg space-y-2">
+                      <div
+                        key={template}
+                        className="p-4 border rounded-lg space-y-2"
+                      >
                         <div className="flex items-center justify-between">
                           <h4 className="font-medium">{template}</h4>
                           <Button variant="outline" size="sm">
@@ -988,21 +1099,35 @@ export function Settings() {
                         <div className="flex justify-between items-center">
                           <Label htmlFor="prazo-apelacao">Apelação</Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-apelacao" defaultValue="15" className="w-16" />
+                            <Input
+                              id="prazo-apelacao"
+                              defaultValue="15"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
                           <Label htmlFor="prazo-agravo">Agravo</Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-agravo" defaultValue="15" className="w-16" />
+                            <Input
+                              id="prazo-agravo"
+                              defaultValue="15"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
-                          <Label htmlFor="prazo-especial">Recurso Especial</Label>
+                          <Label htmlFor="prazo-especial">
+                            Recurso Especial
+                          </Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-especial" defaultValue="15" className="w-16" />
+                            <Input
+                              id="prazo-especial"
+                              defaultValue="15"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
@@ -1015,21 +1140,33 @@ export function Settings() {
                         <div className="flex justify-between items-center">
                           <Label htmlFor="prazo-contestacao">Contestação</Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-contestacao" defaultValue="15" className="w-16" />
+                            <Input
+                              id="prazo-contestacao"
+                              defaultValue="15"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
                           <Label htmlFor="prazo-impugnacao">Impugnação</Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-impugnacao" defaultValue="15" className="w-16" />
+                            <Input
+                              id="prazo-impugnacao"
+                              defaultValue="15"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
                           <Label htmlFor="prazo-manifesto">Manifesto</Label>
                           <div className="flex items-center space-x-2">
-                            <Input id="prazo-manifesto" defaultValue="10" className="w-16" />
+                            <Input
+                              id="prazo-manifesto"
+                              defaultValue="10"
+                              className="w-16"
+                            />
                             <span className="text-sm">dias</span>
                           </div>
                         </div>
@@ -1051,7 +1188,6 @@ export function Settings() {
           {/* Financial Settings */}
           <TabsContent value="financial">
             <div className="space-y-6">
-
               {/* Formas de Pagamento */}
               <Card>
                 <CardHeader>
@@ -1063,14 +1199,29 @@ export function Settings() {
                       <Label>Métodos Aceitos</Label>
                       <div className="mt-2 space-y-2">
                         {[
-                          { method: 'PIX', icon: '🏦', enabled: true },
-                          { method: 'Cartão de Crédito', icon: '💳', enabled: true },
-                          { method: 'Cartão de Débito', icon: '💳', enabled: true },
-                          { method: 'Transferência Bancária', icon: '🏧', enabled: true },
-                          { method: 'Boleto', icon: '📄', enabled: false },
-                          { method: 'Dinheiro', icon: '💰', enabled: true }
+                          { method: "PIX", icon: "🏦", enabled: true },
+                          {
+                            method: "Cartão de Crédito",
+                            icon: "💳",
+                            enabled: true,
+                          },
+                          {
+                            method: "Cartão de Débito",
+                            icon: "💳",
+                            enabled: true,
+                          },
+                          {
+                            method: "Transferência Bancária",
+                            icon: "🏧",
+                            enabled: true,
+                          },
+                          { method: "Boleto", icon: "📄", enabled: false },
+                          { method: "Dinheiro", icon: "💰", enabled: true },
                         ].map((payment) => (
-                          <div key={payment.method} className="flex items-center justify-between p-3 border rounded">
+                          <div
+                            key={payment.method}
+                            className="flex items-center justify-between p-3 border rounded"
+                          >
                             <div className="flex items-center space-x-3">
                               <span className="text-lg">{payment.icon}</span>
                               <span className="text-sm">{payment.method}</span>
@@ -1080,24 +1231,20 @@ export function Settings() {
                         ))}
                       </div>
                     </div>
-
-
                   </div>
                 </CardContent>
               </Card>
 
-
-
-
-
               <div className="flex justify-end">
-                <Button onClick={() => {
-                  try {
-                    alert('✅ Configurações financeiras salvas com sucesso!');
-                  } catch (error) {
-                    setError('Erro ao salvar configurações financeiras');
-                  }
-                }}>
+                <Button
+                  onClick={() => {
+                    try {
+                      alert("✅ Configurações financeiras salvas com sucesso!");
+                    } catch (error) {
+                      setError("Erro ao salvar configurações financeiras");
+                    }
+                  }}
+                >
                   <Save className="h-4 w-4 mr-2" />
                   Salvar Configurações Financeiras
                 </Button>
@@ -1124,8 +1271,14 @@ export function Settings() {
                         <Input id="min-length" type="number" defaultValue="8" />
                       </div>
                       <div>
-                        <Label htmlFor="password-expiry">Expiração (dias)</Label>
-                        <Input id="password-expiry" type="number" defaultValue="90" />
+                        <Label htmlFor="password-expiry">
+                          Expiração (dias)
+                        </Label>
+                        <Input
+                          id="password-expiry"
+                          type="number"
+                          defaultValue="90"
+                        />
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -1148,12 +1301,22 @@ export function Settings() {
                     <h3 className="text-lg font-medium">Sessões</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="session-timeout">Timeout (minutos)</Label>
-                        <Input id="session-timeout" type="number" defaultValue="60" />
+                        <Label htmlFor="session-timeout">
+                          Timeout (minutos)
+                        </Label>
+                        <Input
+                          id="session-timeout"
+                          type="number"
+                          defaultValue="60"
+                        />
                       </div>
                       <div>
                         <Label htmlFor="max-sessions">Máximo de Sessões</Label>
-                        <Input id="max-sessions" type="number" defaultValue="3" />
+                        <Input
+                          id="max-sessions"
+                          type="number"
+                          defaultValue="3"
+                        />
                       </div>
                     </div>
                   </div>
@@ -1162,7 +1325,11 @@ export function Settings() {
                     <h3 className="text-lg font-medium">Log de Auditoria</h3>
                     <div>
                       <Label htmlFor="audit-retention">Retenção (dias)</Label>
-                      <Input id="audit-retention" type="number" defaultValue="365" />
+                      <Input
+                        id="audit-retention"
+                        type="number"
+                        defaultValue="365"
+                      />
                     </div>
                     <div className="flex items-center space-x-2">
                       <Switch defaultChecked />
@@ -1170,16 +1337,26 @@ export function Settings() {
                     </div>
                   </div>
 
-
-
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Backup e Recuperação</h3>
+                    <h3 className="text-lg font-medium">
+                      Backup e Recuperação
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Button variant="outline" onClick={() => alert('💾 Gerando backup completo do sistema...')}>
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          alert("💾 Gerando backup completo do sistema...")
+                        }
+                      >
                         <Download className="h-4 w-4 mr-2" />
                         Gerar Backup
                       </Button>
-                      <Button variant="outline" onClick={() => alert('�� Abrindo assistente de restauração...')}>
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          alert("�� Abrindo assistente de restauração...")
+                        }
+                      >
                         <Upload className="h-4 w-4 mr-2" />
                         Restaurar Backup
                       </Button>
@@ -1190,23 +1367,47 @@ export function Settings() {
                     <h3 className="text-lg font-medium">Sessões Ativas</h3>
                     <div className="space-y-2">
                       {[
-                        { device: 'Chrome - Windows', location: 'São Paulo, BR', lastActive: 'Agora', current: true },
-                        { device: 'Safari - iPhone', location: 'São Paulo, BR', lastActive: '2 horas atrás', current: false },
-                        { device: 'Firefox - Linux', location: 'Rio de Janeiro, BR', lastActive: '1 dia atrás', current: false }
+                        {
+                          device: "Chrome - Windows",
+                          location: "São Paulo, BR",
+                          lastActive: "Agora",
+                          current: true,
+                        },
+                        {
+                          device: "Safari - iPhone",
+                          location: "São Paulo, BR",
+                          lastActive: "2 horas atrás",
+                          current: false,
+                        },
+                        {
+                          device: "Firefox - Linux",
+                          location: "Rio de Janeiro, BR",
+                          lastActive: "1 dia atrás",
+                          current: false,
+                        },
                       ].map((session, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-3 border rounded-lg"
+                        >
                           <div>
                             <div className="font-medium">{session.device}</div>
                             <div className="text-sm text-muted-foreground">
                               {session.location} • {session.lastActive}
-                              {session.current && <Badge variant="outline" className="ml-2">Atual</Badge>}
+                              {session.current && (
+                                <Badge variant="outline" className="ml-2">
+                                  Atual
+                                </Badge>
+                              )}
                             </div>
                           </div>
                           {!session.current && (
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => alert('🔒 Sessão encerrada com sucesso!')}
+                              onClick={() =>
+                                alert("🔒 Sessão encerrada com sucesso!")
+                              }
                             >
                               Encerrar
                             </Button>
@@ -1216,7 +1417,9 @@ export function Settings() {
                     </div>
                     <Button
                       variant="outline"
-                      onClick={() => alert('🔒 Todas as outras sessões foram encerradas!')}
+                      onClick={() =>
+                        alert("🔒 Todas as outras sessões foram encerradas!")
+                      }
                     >
                       Encerrar Todas as Outras Sessões
                     </Button>
@@ -1225,7 +1428,9 @@ export function Settings() {
                   <div className="flex justify-end space-x-2">
                     <Button
                       variant="outline"
-                      onClick={() => alert('📊 Exportando logs de auditoria...')}
+                      onClick={() =>
+                        alert("📊 Exportando logs de auditoria...")
+                      }
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Exportar Logs
@@ -1242,15 +1447,20 @@ export function Settings() {
         </Tabs>
 
         {/* Template Editor Modal with Real-time Preview */}
-        <Dialog open={showTemplateModal} onOpenChange={safeSetShowTemplateModal}>
+        <Dialog
+          open={showTemplateModal}
+          onOpenChange={safeSetShowTemplateModal}
+        >
           <DialogContent className="max-w-7xl max-h-[90vh] overflow-hidden">
             <DialogHeader>
               <DialogTitle className="flex items-center">
                 <Edit className="h-5 w-5 mr-2" />
-                Editor de Template - {currentTemplate === 'budget' ? 'Orçamento' : 'Fatura'}
+                Editor de Template -{" "}
+                {currentTemplate === "budget" ? "Orçamento" : "Fatura"}
               </DialogTitle>
               <DialogDescription>
-                Edite o template HTML e veja o preview em tempo real. Use as variáveis disponíveis para personalizar.
+                Edite o template HTML e veja o preview em tempo real. Use as
+                variáveis disponíveis para personalizar.
               </DialogDescription>
             </DialogHeader>
 
@@ -1258,7 +1468,9 @@ export function Settings() {
               {/* Editor Section */}
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="template-content">Código HTML do Template</Label>
+                  <Label htmlFor="template-content">
+                    Código HTML do Template
+                  </Label>
                   <Textarea
                     id="template-content"
                     value={templateContent}
@@ -1269,27 +1481,49 @@ export function Settings() {
                 </div>
 
                 <div className="bg-muted/50 p-3 rounded-lg max-h-[140px] overflow-y-auto">
-                  <h4 className="font-semibold mb-2 text-sm">📝 Variáveis Disponíveis:</h4>
+                  <h4 className="font-semibold mb-2 text-sm">
+                    📝 Variáveis Disponíveis:
+                  </h4>
                   <div className="grid grid-cols-2 gap-1 text-xs">
-                    <code className="bg-white px-1 rounded">[NOME_EMPRESA]</code>
+                    <code className="bg-white px-1 rounded">
+                      [NOME_EMPRESA]
+                    </code>
                     <code className="bg-white px-1 rounded">[DATA]</code>
-                    <code className="bg-white px-1 rounded">[NOME_CLIENTE]</code>
-                    <code className="bg-white px-1 rounded">[DOCUMENTO_CLIENTE]</code>
+                    <code className="bg-white px-1 rounded">
+                      [NOME_CLIENTE]
+                    </code>
+                    <code className="bg-white px-1 rounded">
+                      [DOCUMENTO_CLIENTE]
+                    </code>
                     <code className="bg-white px-1 rounded">[VALOR_TOTAL]</code>
-                    <code className="bg-white px-1 rounded">[DESCRICAO_SERVICOS]</code>
+                    <code className="bg-white px-1 rounded">
+                      [DESCRICAO_SERVICOS]
+                    </code>
                     <code className="bg-white px-1 rounded">[ASSINATURA]</code>
-                    {currentTemplate === 'budget' && (
+                    {currentTemplate === "budget" && (
                       <>
-                        <code className="bg-white px-1 rounded">[NUMERO_ORCAMENTO]</code>
-                        <code className="bg-white px-1 rounded">[DATA_VALIDADE]</code>
+                        <code className="bg-white px-1 rounded">
+                          [NUMERO_ORCAMENTO]
+                        </code>
+                        <code className="bg-white px-1 rounded">
+                          [DATA_VALIDADE]
+                        </code>
                       </>
                     )}
-                    {currentTemplate === 'invoice' && (
+                    {currentTemplate === "invoice" && (
                       <>
-                        <code className="bg-white px-1 rounded">[NUMERO_FATURA]</code>
-                        <code className="bg-white px-1 rounded">[DATA_EMISSAO]</code>
-                        <code className="bg-white px-1 rounded">[DATA_VENCIMENTO]</code>
-                        <code className="bg-white px-1 rounded">[FORMA_PAGAMENTO]</code>
+                        <code className="bg-white px-1 rounded">
+                          [NUMERO_FATURA]
+                        </code>
+                        <code className="bg-white px-1 rounded">
+                          [DATA_EMISSAO]
+                        </code>
+                        <code className="bg-white px-1 rounded">
+                          [DATA_VENCIMENTO]
+                        </code>
+                        <code className="bg-white px-1 rounded">
+                          [FORMA_PAGAMENTO]
+                        </code>
                       </>
                     )}
                   </div>
@@ -1304,22 +1538,54 @@ export function Settings() {
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      const previewWindow = window.open('', '_blank', 'width=800,height=600');
+                      const previewWindow = window.open(
+                        "",
+                        "_blank",
+                        "width=800,height=600",
+                      );
                       if (previewWindow) {
                         const previewContent = templateContent
-                          .replace(/\[NOME_EMPRESA\]/g, 'Escritório Silva & Associados')
-                          .replace(/\[DATA\]/g, new Date().toLocaleDateString('pt-BR'))
-                          .replace(/\[NOME_CLIENTE\]/g, 'Maria Silva Santos')
-                          .replace(/\[DOCUMENTO_CLIENTE\]/g, '123.456.789-00')
-                          .replace(/\[VALOR_TOTAL\]/g, 'R$ 2.500,00')
-                          .replace(/\[DESCRICAO_SERVICOS\]/g, 'Consultoria jurídica especializada em direito civil')
-                          .replace(/\[ASSINATURA\]/g, 'Dr. João Silva<br>OAB/SP 123.456')
-                          .replace(/\[NUMERO_ORCAMENTO\]/g, 'ORC-001')
-                          .replace(/\[NUMERO_FATURA\]/g, 'FAT-001')
-                          .replace(/\[DATA_EMISSAO\]/g, new Date().toLocaleDateString('pt-BR'))
-                          .replace(/\[DATA_VENCIMENTO\]/g, new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR'))
-                          .replace(/\[DATA_VALIDADE\]/g, new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR'))
-                          .replace(/\[FORMA_PAGAMENTO\]/g, 'PIX ou Transferência Bancária');
+                          .replace(
+                            /\[NOME_EMPRESA\]/g,
+                            "Escritório Silva & Associados",
+                          )
+                          .replace(
+                            /\[DATA\]/g,
+                            new Date().toLocaleDateString("pt-BR"),
+                          )
+                          .replace(/\[NOME_CLIENTE\]/g, "Maria Silva Santos")
+                          .replace(/\[DOCUMENTO_CLIENTE\]/g, "123.456.789-00")
+                          .replace(/\[VALOR_TOTAL\]/g, "R$ 2.500,00")
+                          .replace(
+                            /\[DESCRICAO_SERVICOS\]/g,
+                            "Consultoria jurídica especializada em direito civil",
+                          )
+                          .replace(
+                            /\[ASSINATURA\]/g,
+                            "Dr. João Silva<br>OAB/SP 123.456",
+                          )
+                          .replace(/\[NUMERO_ORCAMENTO\]/g, "ORC-001")
+                          .replace(/\[NUMERO_FATURA\]/g, "FAT-001")
+                          .replace(
+                            /\[DATA_EMISSAO\]/g,
+                            new Date().toLocaleDateString("pt-BR"),
+                          )
+                          .replace(
+                            /\[DATA_VENCIMENTO\]/g,
+                            new Date(
+                              Date.now() + 30 * 24 * 60 * 60 * 1000,
+                            ).toLocaleDateString("pt-BR"),
+                          )
+                          .replace(
+                            /\[DATA_VALIDADE\]/g,
+                            new Date(
+                              Date.now() + 15 * 24 * 60 * 60 * 1000,
+                            ).toLocaleDateString("pt-BR"),
+                          )
+                          .replace(
+                            /\[FORMA_PAGAMENTO\]/g,
+                            "PIX ou Transferência Bancária",
+                          );
 
                         previewWindow.document.write(previewContent);
                         previewWindow.document.close();
@@ -1334,20 +1600,47 @@ export function Settings() {
                 <div className="border rounded-lg overflow-hidden h-[500px]">
                   <iframe
                     srcDoc={templateContent
-                      .replace(/\[NOME_EMPRESA\]/g, 'Escritório Silva & Associados')
-                      .replace(/\[DATA\]/g, new Date().toLocaleDateString('pt-BR'))
-                      .replace(/\[NOME_CLIENTE\]/g, 'Maria Silva Santos')
-                      .replace(/\[DOCUMENTO_CLIENTE\]/g, '123.456.789-00')
-                      .replace(/\[VALOR_TOTAL\]/g, 'R$ 2.500,00')
-                      .replace(/\[DESCRICAO_SERVICOS\]/g, 'Consultoria jurídica especializada em direito civil e elaboração de contratos')
-                      .replace(/\[ASSINATURA\]/g, 'Dr. João Silva<br>OAB/SP 123.456')
-                      .replace(/\[NUMERO_ORCAMENTO\]/g, 'ORC-001')
-                      .replace(/\[NUMERO_FATURA\]/g, 'FAT-001')
-                      .replace(/\[DATA_EMISSAO\]/g, new Date().toLocaleDateString('pt-BR'))
-                      .replace(/\[DATA_VENCIMENTO\]/g, new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR'))
-                      .replace(/\[DATA_VALIDADE\]/g, new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR'))
-                      .replace(/\[FORMA_PAGAMENTO\]/g, 'PIX ou Transferência Bancária')
-                    }
+                      .replace(
+                        /\[NOME_EMPRESA\]/g,
+                        "Escritório Silva & Associados",
+                      )
+                      .replace(
+                        /\[DATA\]/g,
+                        new Date().toLocaleDateString("pt-BR"),
+                      )
+                      .replace(/\[NOME_CLIENTE\]/g, "Maria Silva Santos")
+                      .replace(/\[DOCUMENTO_CLIENTE\]/g, "123.456.789-00")
+                      .replace(/\[VALOR_TOTAL\]/g, "R$ 2.500,00")
+                      .replace(
+                        /\[DESCRICAO_SERVICOS\]/g,
+                        "Consultoria jurídica especializada em direito civil e elaboração de contratos",
+                      )
+                      .replace(
+                        /\[ASSINATURA\]/g,
+                        "Dr. João Silva<br>OAB/SP 123.456",
+                      )
+                      .replace(/\[NUMERO_ORCAMENTO\]/g, "ORC-001")
+                      .replace(/\[NUMERO_FATURA\]/g, "FAT-001")
+                      .replace(
+                        /\[DATA_EMISSAO\]/g,
+                        new Date().toLocaleDateString("pt-BR"),
+                      )
+                      .replace(
+                        /\[DATA_VENCIMENTO\]/g,
+                        new Date(
+                          Date.now() + 30 * 24 * 60 * 60 * 1000,
+                        ).toLocaleDateString("pt-BR"),
+                      )
+                      .replace(
+                        /\[DATA_VALIDADE\]/g,
+                        new Date(
+                          Date.now() + 15 * 24 * 60 * 60 * 1000,
+                        ).toLocaleDateString("pt-BR"),
+                      )
+                      .replace(
+                        /\[FORMA_PAGAMENTO\]/g,
+                        "PIX ou Transferência Bancária",
+                      )}
                     className="w-full h-full"
                     title="Preview do Template"
                   />
@@ -1359,7 +1652,9 @@ export function Settings() {
               <Button
                 variant="outline"
                 onClick={() => {
-                  alert('📧 Enviando email de teste com o template atual...\n\n✅ Email de teste enviado para contato@silva.adv.br!');
+                  alert(
+                    "📧 Enviando email de teste com o template atual...\n\n✅ Email de teste enviado para contato@silva.adv.br!",
+                  );
                 }}
               >
                 <Mail className="h-4 w-4 mr-2" />
@@ -1371,7 +1666,7 @@ export function Settings() {
                   variant="outline"
                   onClick={createSafeDialogHandler(() => {
                     setCurrentTemplate(null);
-                    setTemplateContent('');
+                    setTemplateContent("");
                     safeSetShowTemplateModal(false);
                   })}
                 >
@@ -1380,10 +1675,12 @@ export function Settings() {
                 </Button>
                 <Button
                   onClick={createSafeDialogHandler(() => {
-                    alert(`✅ Template de ${currentTemplate === 'budget' ? 'orçamento' : 'fatura'} salvo com sucesso!\n\n🎯 Agora você pode enviar emails personalizados usando este template.`);
+                    alert(
+                      `✅ Template de ${currentTemplate === "budget" ? "orçamento" : "fatura"} salvo com sucesso!\n\n🎯 Agora você pode enviar emails personalizados usando este template.`,
+                    );
                     safeSetShowTemplateModal(false);
                     setCurrentTemplate(null);
-                    setTemplateContent('');
+                    setTemplateContent("");
                   })}
                 >
                   <Save className="h-4 w-4 mr-2" />
@@ -1395,15 +1692,22 @@ export function Settings() {
         </Dialog>
 
         {/* Account Modal */}
-        <Dialog open={showNewAccountModal} onOpenChange={safeSetShowNewAccountModal}>
+        <Dialog
+          open={showNewAccountModal}
+          onOpenChange={safeSetShowNewAccountModal}
+        >
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle className="flex items-center">
                 <DollarSign className="h-5 w-5 mr-2" />
-                {editingAccount ? 'Editar Conta Bancária' : 'Nova Conta Bancária'}
+                {editingAccount
+                  ? "Editar Conta Bancária"
+                  : "Nova Conta Bancária"}
               </DialogTitle>
               <DialogDescription>
-                {editingAccount ? 'Atualize as informaç��es da conta bancária.' : 'Adicione uma nova conta bancária ao sistema.'}
+                {editingAccount
+                  ? "Atualize as informaç��es da conta bancária."
+                  : "Adicione uma nova conta bancária ao sistema."}
               </DialogDescription>
             </DialogHeader>
 
@@ -1413,7 +1717,7 @@ export function Settings() {
                 <Input
                   id="bank-name"
                   placeholder="Nome do banco"
-                  defaultValue={editingAccount?.bank || ''}
+                  defaultValue={editingAccount?.bank || ""}
                 />
               </div>
               <div>
@@ -1421,19 +1725,23 @@ export function Settings() {
                 <Input
                   id="account-number"
                   placeholder="1234-5"
-                  defaultValue={editingAccount?.account || ''}
+                  defaultValue={editingAccount?.account || ""}
                 />
               </div>
               <div>
                 <Label htmlFor="account-type">Tipo de Conta</Label>
-                <Select defaultValue={editingAccount?.type || 'Conta Corrente'}>
+                <Select defaultValue={editingAccount?.type || "Conta Corrente"}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Conta Corrente">Conta Corrente</SelectItem>
+                    <SelectItem value="Conta Corrente">
+                      Conta Corrente
+                    </SelectItem>
                     <SelectItem value="Poupança">Poupança</SelectItem>
-                    <SelectItem value="Conta Investimento">Conta Investimento</SelectItem>
+                    <SelectItem value="Conta Investimento">
+                      Conta Investimento
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1444,7 +1752,7 @@ export function Settings() {
                   type="number"
                   step="0.01"
                   placeholder="0,00"
-                  defaultValue={editingAccount?.balance || ''}
+                  defaultValue={editingAccount?.balance || ""}
                 />
               </div>
             </div>
@@ -1462,23 +1770,23 @@ export function Settings() {
               <Button
                 onClick={createSafeDialogHandler(() => {
                   if (editingAccount) {
-                    alert('✅ Conta bancária atualizada com sucesso!');
+                    alert("✅ Conta bancária atualizada com sucesso!");
                   } else {
                     const newAccount = {
                       id: Date.now().toString(),
-                      bank: 'Nova Conta',
-                      account: '0000-0',
+                      bank: "Nova Conta",
+                      account: "0000-0",
                       balance: 0,
-                      type: 'Conta Corrente'
+                      type: "Conta Corrente",
                     };
                     setAccounts([...accounts, newAccount]);
-                    alert('✅ Nova conta bancária adicionada com sucesso!');
+                    alert("✅ Nova conta bancária adicionada com sucesso!");
                   }
                   safeSetShowNewAccountModal(false);
                   setEditingAccount(null);
                 })}
               >
-                {editingAccount ? 'Atualizar' : 'Adicionar'} Conta
+                {editingAccount ? "Atualizar" : "Adicionar"} Conta
               </Button>
             </DialogFooter>
           </DialogContent>
