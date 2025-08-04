@@ -121,14 +121,16 @@ const serviceItems = [
   'Análise de documentos',
 ];
 
-export function DocumentForm({ 
-  open, 
-  onOpenChange, 
-  document: doc, 
-  onSubmit, 
-  isEditing = false, 
-  type 
+export function DocumentForm({
+  open,
+  onOpenChange,
+  document: doc,
+  onSubmit,
+  isEditing = false,
+  type
 }: DocumentFormProps) {
+  // Create safe onOpenChange handler
+  const safeOnOpenChange = createSafeOnOpenChange(onOpenChange);
   const [items, setItems] = useState<BillingItem[]>(doc?.items || []);
   const [newItem, setNewItem] = useState({
     description: '',
