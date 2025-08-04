@@ -187,6 +187,7 @@ export function Billing() {
   const [selectedDocs, setSelectedDocs] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   // Combine all documents
   const allDocuments = [...estimates, ...invoices];
