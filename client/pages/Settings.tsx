@@ -1242,7 +1242,7 @@ export function Settings() {
         </Tabs>
 
         {/* Template Editor Modal with Real-time Preview */}
-        <Dialog open={showTemplateModal} onOpenChange={setShowTemplateModal}>
+        <Dialog open={showTemplateModal} onOpenChange={safeSetShowTemplateModal}>
           <DialogContent className="max-w-7xl max-h-[90vh] overflow-hidden">
             <DialogHeader>
               <DialogTitle className="flex items-center">
