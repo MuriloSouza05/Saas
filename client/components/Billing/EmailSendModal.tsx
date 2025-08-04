@@ -375,7 +375,7 @@ export function EmailSendModal({
             </Button>
             <Button
               onClick={handleSend}
-              disabled={!emailData.to || sending}
+              disabled={!emailData.to || sending || !documents || documents.length === 0}
             >
               {sending ? (
                 <>
