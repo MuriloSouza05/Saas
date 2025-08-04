@@ -54,6 +54,10 @@ export function EmailSendModal({
 
   // Get template content based on document type
   const getTemplateContent = (document: any) => {
+    if (!document || !document.type) {
+      return '<p>No document available for preview</p>';
+    }
+
     const isInvoice = document.type === 'invoice';
     
     const baseTemplate = `
