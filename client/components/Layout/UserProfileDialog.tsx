@@ -133,7 +133,7 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={safeOnOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Meu Perfil</DialogTitle>
