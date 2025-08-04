@@ -118,6 +118,10 @@ import { UserManagement } from '@/components/Settings/UserManagement';
 
 export function Settings() {
   const [activeTab, setActiveTab] = useState('company');
+
+  // Create safe dialog handlers
+  const safeSetShowTemplateModal = createSafeOnOpenChange((open: boolean) => setShowTemplateModal(open));
+  const safeSetShowNewAccountModal = createSafeOnOpenChange((open: boolean) => setShowNewAccountModal(open));
   const [error, setError] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
