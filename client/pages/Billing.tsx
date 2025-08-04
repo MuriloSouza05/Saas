@@ -663,7 +663,7 @@ export function Billing() {
           <div class="footer">
             <div class="payment-info">
               <strong>💳 Formas de Pagamento Aceitas:</strong><br>
-              PIX, Transferência Bancária, Cartão de Crédito/Débito<br><br>
+              PIX, Transferência Bancária, Cart��o de Crédito/Débito<br><br>
               <strong>🏦 Dados Bancários:</strong><br>
               Banco do Brasil | Agência: 1234-5 | Conta Corrente: 67890-1<br>
               Chave PIX: contato@silva.adv.br
@@ -1046,6 +1046,14 @@ export function Billing() {
           onDownload={handleDownloadDoc}
           onSend={handleSendDoc}
           onDuplicate={handleDuplicateDoc}
+        />
+
+        {/* Email Send Modal */}
+        <EmailSendModal
+          open={showEmailModal}
+          onOpenChange={setShowEmailModal}
+          documents={allDocuments.filter(doc => selectedDocs.includes(doc.id))}
+          onSendEmail={handleSendEmail}
         />
       </div>
     </DashboardLayout>
