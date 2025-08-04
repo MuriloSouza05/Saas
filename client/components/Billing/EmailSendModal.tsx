@@ -204,7 +204,7 @@ export function EmailSendModal({
       setEmailData(prev => ({
         ...prev,
         subject: generateSubject(),
-        to: documents[0].clientEmail || documents[0].email || ''
+        to: documents[0].receiverDetails?.email || documents[0].clientEmail || documents[0].email || ''
       }));
     }
   }, [open, documents]);
