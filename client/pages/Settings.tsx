@@ -1379,12 +1379,12 @@ export function Settings() {
                   Cancelar
                 </Button>
                 <Button
-                  onClick={() => {
+                  onClick={createSafeDialogHandler(() => {
                     alert(`✅ Template de ${currentTemplate === 'budget' ? 'orçamento' : 'fatura'} salvo com sucesso!\n\n🎯 Agora você pode enviar emails personalizados usando este template.`);
-                    setShowTemplateModal(false);
+                    safeSetShowTemplateModal(false);
                     setCurrentTemplate(null);
                     setTemplateContent('');
-                  }}
+                  })}
                 >
                   <Save className="h-4 w-4 mr-2" />
                   Salvar Template
