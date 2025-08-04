@@ -254,12 +254,12 @@ export function DocumentForm({
     }
   }, [doc, open]);
 
-  const handleSubmit = (data: DocumentFormData) => {
+  const handleSubmit = createSafeDialogHandler((data: DocumentFormData) => {
     onSubmit({ ...data, items });
-    onOpenChange(false);
-  };
+    safeOnOpenChange(false);
+  });
 
-  const handleClose = () => {
+  const handleClose = createSafeDialogHandler(() => {
     setItems([]);
     setNewItem({
       description: '',
@@ -268,8 +268,8 @@ export function DocumentForm({
       tax: 0,
       taxType: 'percentage',
     });
-    onOpenChange(false);
-  };
+    safeOnOpenChange(false);
+  });
 
   const formatCurrency = (value: number) => {
     const currency = form.watch('currency') || 'BRL';
