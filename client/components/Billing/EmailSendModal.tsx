@@ -328,25 +328,27 @@ export function EmailSendModal({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-medium">👁️ Preview do Email</h3>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => {
                     const previewWindow = window.open('', '_blank', 'width=800,height=600');
                     if (previewWindow) {
-                      previewWindow.document.write(getTemplateContent(documents[0]));
+                      const content = documents && documents[0] ? getTemplateContent(documents[0]) : '<p>Nenhum documento disponível</p>';
+                      previewWindow.document.write(content);
                       previewWindow.document.close();
                     }
                   }}
+                  disabled={!documents || documents.length === 0}
                 >
                   <Globe className="h-4 w-4 mr-1" />
                   Abrir Preview
                 </Button>
               </div>
-              
+
               <div className="border rounded-lg overflow-hidden h-[400px]">
                 <iframe
-                  srcDoc={getTemplateContent(documents[0])}
+                  srcDoc={documents && documents[0] ? getTemplateContent(documents[0]) : '<div style="padding: 20px; text-align: center; color: #666;">Nenhum documento selecionado para preview</div>'}
                   className="w-full h-full"
                   title="Preview do Email"
                 />
