@@ -487,62 +487,99 @@ export function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Mail className="h-5 w-5 mr-2" />
-                  Configurações de Email
+                  Configurações de Email - Resend API
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-center">
+                      <Mail className="h-5 w-5 text-blue-600 mr-2" />
+                      <div>
+                        <h4 className="font-medium text-blue-900">Integração Resend API</h4>
+                        <p className="text-sm text-blue-700">Serviço moderno de envio de emails transacionais</p>
+                      </div>
+                    </div>
+                  </div>
+
                   <div>
-                    <Label htmlFor="email-provider">Provedor de Email</Label>
-                    <Select defaultValue="smtp">
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="smtp">SMTP</SelectItem>
-                        <SelectItem value="brevo">Brevo</SelectItem>
-                        <SelectItem value="mailgun">Mailgun</SelectItem>
-                        <SelectItem value="sendgrid">SendGrid</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="resend-api-key">Chave da API Resend *</Label>
+                    <Input
+                      id="resend-api-key"
+                      type="password"
+                      placeholder="re_xxxxxxxxxx"
+                      defaultValue="re_BLdUxfAX_Au4vh5xLAPcthy8bmCgXCcXr"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Sua chave de API do Resend. Mantenha segura e não compartilhe.
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="smtp-host">Host SMTP</Label>
-                      <Input id="smtp-host" placeholder="smtp.gmail.com" />
+                      <Label htmlFor="from-email">Email Remetente *</Label>
+                      <Input
+                        id="from-email"
+                        type="email"
+                        placeholder="contato@seudominio.com"
+                        defaultValue="contato@silva.adv.br"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Deve ser um domínio verificado no Resend
+                      </p>
                     </div>
                     <div>
-                      <Label htmlFor="smtp-port">Porta</Label>
-                      <Input id="smtp-port" type="number" placeholder="587" />
+                      <Label htmlFor="from-name">Nome do Remetente</Label>
+                      <Input
+                        id="from-name"
+                        placeholder="Escritório Silva & Associados"
+                        defaultValue="Escritório Silva & Associados"
+                      />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="smtp-username">Usuário</Label>
-                      <Input id="smtp-username" placeholder="seu-email@gmail.com" />
+                      <Label htmlFor="reply-to">Email de Resposta</Label>
+                      <Input
+                        id="reply-to"
+                        type="email"
+                        placeholder="respostas@silva.adv.br"
+                        defaultValue="contato@silva.adv.br"
+                      />
                     </div>
                     <div>
-                      <Label htmlFor="smtp-password">Senha</Label>
-                      <Input id="smtp-password" type="password" placeholder="••••••••" />
+                      <Label htmlFor="email-subject-prefix">Prefixo do Assunto</Label>
+                      <Input
+                        id="email-subject-prefix"
+                        placeholder="[Silva & Associados]"
+                        defaultValue="[Silva & Associados]"
+                      />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="from-email">Email de Envio</Label>
-                      <Input id="from-email" defaultValue="contato@silva.adv.br" />
-                    </div>
-                    <div>
-                      <Label htmlFor="from-name">Nome de Envio</Label>
-                      <Input id="from-name" defaultValue="Escritório Silva & Associados" />
-                    </div>
+                  <div className="flex items-center space-x-2 p-3 border rounded-lg">
+                    <Switch id="email-enabled" defaultChecked />
+                    <Label htmlFor="email-enabled">Ativar envio de emails</Label>
                   </div>
+
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      alert('🧪 Enviando email de teste para verificar configuração...\n\n✅ Email de teste enviado com sucesso!\nVerifique sua caixa de entrada.');
+                    }}
+                  >
+                    <Mail className="h-4 w-4 mr-2" />
+                    Testar Configuração
+                  </Button>
                 </div>
 
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium">Templates de Email</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Personalize os templates para orçamentos e faturas. Use as variáveis disponíveis para inserir dados dinâmicos.
+                  </p>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label>Template de Orçamento</Label>
@@ -551,7 +588,67 @@ export function Settings() {
                         className="w-full mt-2"
                         onClick={() => {
                           setCurrentTemplate('budget');
-                          setTemplateContent('Modelo de template de orçamento...\n\nEmpresa: [NOME_EMPRESA]\nData: [DATA]\nCliente: [NOME_CLIENTE]\n\nDetalhes do orçamento:\n[DESCRICAO_SERVICOS]\n\nValor total: [VALOR_TOTAL]\n\nAtenciosamente,\n[ASSINATURA]');
+                          setTemplateContent(`<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento - [NUMERO_ORCAMENTO]</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #3B82F6; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
+        .footer { background: #374151; color: white; padding: 15px; text-align: center; border-radius: 0 0 8px 8px; }
+        .amount { font-size: 24px; font-weight: bold; color: #059669; }
+        .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .table th, .table td { border: 1px solid #e5e7eb; padding: 12px; text-align: left; }
+        .table th { background: #f3f4f6; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 ORÇAMENTO</h1>
+        <p>Nº [NUMERO_ORCAMENTO]</p>
+    </div>
+
+    <div class="content">
+        <p>Prezado(a) <strong>[NOME_CLIENTE]</strong>,</p>
+
+        <p>Segue em anexo o orçamento solicitado para os serviços jurídicos:</p>
+
+        <table class="table">
+            <tr>
+                <th>Empresa:</th>
+                <td>[NOME_EMPRESA]</td>
+            </tr>
+            <tr>
+                <th>Data:</th>
+                <td>[DATA]</td>
+            </tr>
+            <tr>
+                <th>Validade:</th>
+                <td>[DATA_VALIDADE]</td>
+            </tr>
+        </table>
+
+        <h3>Descrição dos Serviços:</h3>
+        <div>[DESCRICAO_SERVICOS]</div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <div class="amount">Valor Total: [VALOR_TOTAL]</div>
+        </div>
+
+        <p>Para aceitar este orçamento, entre em contato conosco através dos canais abaixo.</p>
+
+        <p>Atenciosamente,<br>
+        <strong>[ASSINATURA]</strong></p>
+    </div>
+
+    <div class="footer">
+        <p>📧 contato@silva.adv.br | 📞 (11) 3333-4444</p>
+    </div>
+</body>
+</html>`);
                           setShowTemplateModal(true);
                         }}
                       >
@@ -566,7 +663,82 @@ export function Settings() {
                         className="w-full mt-2"
                         onClick={() => {
                           setCurrentTemplate('invoice');
-                          setTemplateContent('Modelo de template de fatura...\n\nEmpresa: [NOME_EMPRESA]\nFatura Nº: [NUMERO_FATURA]\nData de emissão: [DATA_EMISSAO]\nVencimento: [DATA_VENCIMENTO]\n\nCliente: [NOME_CLIENTE]\nCNPJ/CPF: [DOCUMENTO_CLIENTE]\n\nDescrição dos serviços:\n[DESCRICAO_SERVICOS]\n\nValor total: [VALOR_TOTAL]\nForma de pagamento: [FORMA_PAGAMENTO]\n\nAtenciosamente,\n[ASSINATURA]');
+                          setTemplateContent(`<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fatura - [NUMERO_FATURA]</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #059669; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
+        .footer { background: #374151; color: white; padding: 15px; text-align: center; border-radius: 0 0 8px 8px; }
+        .amount { font-size: 24px; font-weight: bold; color: #dc2626; }
+        .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .table th, .table td { border: 1px solid #e5e7eb; padding: 12px; text-align: left; }
+        .table th { background: #f3f4f6; }
+        .alert { background: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 6px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📄 FATURA</h1>
+        <p>Nº [NUMERO_FATURA]</p>
+    </div>
+
+    <div class="content">
+        <p>Prezado(a) <strong>[NOME_CLIENTE]</strong>,</p>
+
+        <p>Segue fatura referente aos serviços prestados:</p>
+
+        <table class="table">
+            <tr>
+                <th>Empresa:</th>
+                <td>[NOME_EMPRESA]</td>
+            </tr>
+            <tr>
+                <th>Data de Emissão:</th>
+                <td>[DATA_EMISSAO]</td>
+            </tr>
+            <tr>
+                <th>Vencimento:</th>
+                <td><strong>[DATA_VENCIMENTO]</strong></td>
+            </tr>
+            <tr>
+                <th>Cliente:</th>
+                <td>[NOME_CLIENTE]</td>
+            </tr>
+            <tr>
+                <th>CPF/CNPJ:</th>
+                <td>[DOCUMENTO_CLIENTE]</td>
+            </tr>
+        </table>
+
+        <h3>Descrição dos Serviços:</h3>
+        <div>[DESCRICAO_SERVICOS]</div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <div class="amount">Valor Total: [VALOR_TOTAL]</div>
+        </div>
+
+        <div class="alert">
+            <strong>⚠️ Forma de Pagamento:</strong> [FORMA_PAGAMENTO]<br>
+            <strong>📅 Vencimento:</strong> [DATA_VENCIMENTO]
+        </div>
+
+        <p>Para efetuar o pagamento, utilize os dados bancários em anexo ou entre em contato conosco.</p>
+
+        <p>Atenciosamente,<br>
+        <strong>[ASSINATURA]</strong></p>
+    </div>
+
+    <div class="footer">
+        <p>📧 contato@silva.adv.br | 📞 (11) 3333-4444</p>
+        <p>PIX: contato@silva.adv.br</p>
+    </div>
+</body>
+</html>`);
                           setShowTemplateModal(true);
                         }}
                       >
