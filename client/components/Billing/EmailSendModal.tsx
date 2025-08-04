@@ -198,11 +198,11 @@ export function EmailSendModal({
   };
 
   React.useEffect(() => {
-    if (open && documents.length > 0) {
+    if (open && documents && documents.length > 0 && documents[0]) {
       setEmailData(prev => ({
         ...prev,
         subject: generateSubject(),
-        to: documents[0].clientEmail || ''
+        to: documents[0].clientEmail || documents[0].email || ''
       }));
     }
   }, [open, documents]);
