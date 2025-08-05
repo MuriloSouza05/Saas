@@ -521,7 +521,7 @@ export function UserManagement() {
             <Input placeholder="Descrição" />
             <div className="space-y-3">
               <h4 className="text-sm font-medium">Permissões por Módulo:</h4>
-              {['CRM', 'Projetos', 'Tarefas', 'Cobrança', 'Financeiro', 'Configurações'].map((module) => (
+              {['Dashboard', 'CRM', 'Projetos', 'Tarefas', 'Cobrança', 'Fluxo de Caixa', 'Configurações', 'Gerência'].map((module) => (
                 <div key={module} className="flex items-center justify-between p-3 border rounded">
                   <span className="font-medium">{module}</span>
                   <div className="flex space-x-2">
