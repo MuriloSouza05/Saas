@@ -169,6 +169,49 @@ export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing =
     setContacts(contacts.filter(contact => contact.id !== contactId));
   };
 
+  // FUNCIONALIDADE: Gerenciamento de arquivos do projeto
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+
+    // Verificar limite de arquivos baseado no plano
+    if (projectFiles.length + files.length > MAX_FILES_BY_PLAN) {
+      setFileError(`Limite excedido. Seu plano permite até ${MAX_FILES_BY_PLAN} arquivos por projeto.`);
+      return;
+    }
+
+    // Verificar tipos de arquivo permitidos
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
+    const invalidFiles = files.filter(file => !allowedTypes.includes(file.type));
+
+    if (invalidFiles.length > 0) {
+      setFileError('Apenas arquivos PNG, JPEG e PDF são permitidos.');
+      return;
+    }
+
+    // Verificar tamanho dos arquivos (máximo 10MB por arquivo)
+    const oversizedFiles = files.filter(file => file.size > 10 * 1024 * 1024);
+    if (oversizedFiles.length > 0) {
+      setFileError('Arquivos devem ter no máximo 10MB.');
+      return;
+    }
+
+    setProjectFiles([...projectFiles, ...files]);
+    setFileError(null);
+  };
+
+  const removeFile = (index: number) => {
+    setProjectFiles(projectFiles.filter((_, i) => i !== index));
+    setFileError(null);
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
