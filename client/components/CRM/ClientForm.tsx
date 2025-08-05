@@ -643,6 +643,85 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
               </div>
             </div>
 
+            {/* Upload de Arquivos */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Documentos do Cliente</h3>
+              <div className="border-2 border-dashed border-muted rounded-lg p-6">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground">
+                      Faça upload de documentos do cliente (PNG, JPEG, PDF)
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Máximo: {MAX_FILES_BY_PLAN} arquivos • Até 10MB por arquivo
+                    </p>
+                    {/* COMENTÁRIO IMPLEMENTAÇÃO FUTURA:
+                        Sistema de planos que limitará quantidade de arquivos:
+                        - Plano Básico: 1 arquivo por cliente
+                        - Plano Intermediário: 2 arquivos por cliente
+                        - Plano Premium: arquivos ilimitados por cliente
+
+                        A verificação será feita no backend baseada no plano do usuário:
+                        const userPlan = await getUserPlan(userId);
+                        const maxFiles = getMaxFilesByPlan(userPlan);
+                    */}
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById('client-file-upload')?.click()}
+                    disabled={clientFiles.length >= MAX_FILES_BY_PLAN}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Adicionar Arquivos
+                  </Button>
+
+                  <input
+                    id="client-file-upload"
+                    type="file"
+                    multiple
+                    accept=".png,.jpg,.jpeg,.pdf"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                </div>
+
+                {fileError && (
+                  <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
+                    <p className="text-sm text-destructive">{fileError}</p>
+                  </div>
+                )}
+
+                {clientFiles.length > 0 && (
+                  <div className="mt-4 space-y-2">
+                    <h4 className="text-sm font-medium">Arquivos Selecionados:</h4>
+                    {clientFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 bg-muted rounded">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-8 h-8 bg-primary/10 rounded flex items-center justify-center">
+                            {file.type.includes('pdf') ? '📄' : '🖼️'}
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">{file.name}</p>
+                            <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
+                          </div>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeFile(index)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Descrição */}
             <FormField
               control={form.control}
