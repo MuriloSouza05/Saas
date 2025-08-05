@@ -188,6 +188,35 @@ const mockUsers: User[] = [
   },
 ];
 
+/*
+ * SISTEMA DE PLANOS E PAINEL ADMINISTRATIVO FUTURO
+ * ================================================
+ *
+ * PLANOS IMPLEMENTADOS:
+ *
+ * 1. PLANO BÁSICO: 1 Conta Simples, 1 Conta Composta, 1 Conta Gerencial
+ * 2. PLANO PREMIUM: 2 Contas Simples, 2 Contas Compostas, 1 Conta Gerencial
+ * 3. PLANO EMPRESARIAL: Ilimitadas Contas Simples, Ilimitadas Compostas, 1 Gerencial
+ *
+ * IMPLEMENTAÇÃO FUTURA DO PAINEL ADMINISTRATIVO:
+ * - Pasta separada: /admin/ com sistema de login próprio
+ * - Acesso exclusivo do proprietário do SaaS (você)
+ * - Funcionalidades do painel admin:
+ *   * Ver todos os clientes do SaaS
+ *   * Criar novos clientes/escritórios
+ *   * Editar configurações de clientes existentes
+ *   * Monitorar uso por cliente
+ *   * Gerenciar planos e cobrança
+ *   * Logs de auditoria globais
+ *
+ * CONTROLE DE CONTA GERENCIAL:
+ * - Pode alterar Conta Simples -> Composta (se o plano permitir)
+ * - Pode visualizar todas as contas do sistema dele
+ * - Sistema de auditoria por conta
+ * - Controle de usuários e senhas
+ * - Limitado pelas regras do plano contratado
+ */
+
 export function UserManagement() {
   const [users, setUsers] = useState<User[]>(mockUsers);
   const [roles, setRoles] = useState<UserRole[]>(mockRoles);
