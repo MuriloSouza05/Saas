@@ -84,6 +84,15 @@ export function AdvancedFilters({ open, onOpenChange, onApplyFilters, existingTa
     });
   };
 
+  const addExistingTag = (tag: string) => {
+    if (!filters.tags.includes(tag)) {
+      setFilters({
+        ...filters,
+        tags: [...filters.tags, tag],
+      });
+    }
+  };
+
   const addLevel = (level: string) => {
     if (!filters.levels.includes(level)) {
       setFilters({
