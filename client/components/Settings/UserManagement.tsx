@@ -423,8 +423,15 @@ export function UserManagement() {
                 Funções e Permissões
               </CardTitle>
               <p className="text-sm text-muted-foreground">
-                Configure níveis de acesso e permissões por função
+                Configure níveis de acesso baseados no sistema de 3 tipos de conta
               </p>
+              <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-md">
+                <p className="text-xs text-blue-700 dark:text-blue-300">
+                  <strong>Sistema Implementado:</strong> Conta Simples (CRM básico),
+                  Conta Composta (CRM + Financeiro), Conta Gerencial (Acesso total + Auditoria).
+                  A quantidade de cada tipo é limitada pelo plano contratado.
+                </p>
+              </div>
             </div>
             <Button onClick={() => setShowRoleDialog(true)}>
               <Plus className="h-4 w-4 mr-2" />
