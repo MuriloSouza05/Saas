@@ -93,6 +93,15 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
   const [tags, setTags] = React.useState<string[]>(client?.tags || []);
   const [newTag, setNewTag] = React.useState('');
 
+  // FUNCIONALIDADE: Upload de arquivos para cliente
+  // Sistema de planos futuros:
+  // - Plano Básico: 1 arquivo por cliente
+  // - Plano Intermediário: 2 arquivos por cliente
+  // - Plano Premium: arquivos ilimitados por cliente
+  const [clientFiles, setClientFiles] = React.useState<File[]>([]);
+  const [fileError, setFileError] = React.useState<string | null>(null);
+  const MAX_FILES_BY_PLAN = 3; // Temporário - será dinâmico baseado no plano
+
   // Atualizar tags quando client mudar
   React.useEffect(() => {
     setTags(client?.tags || []);
