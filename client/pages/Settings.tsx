@@ -414,8 +414,17 @@ export function Settings() {
                       <Label htmlFor="company-name">Nome da Empresa</Label>
                       <Input
                         id="company-name"
-                        defaultValue="Escritório Silva & Associados"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        placeholder="Digite o nome da empresa"
                       />
+                      {/* COMENTÁRIO FUNCIONALIDADE:
+                          Quando este campo for alterado e salvo, o nome "LegalSaaS"
+                          no DashboardLayout será atualizado automaticamente.
+                          A implementação futura incluirá:
+                          1. Escutar evento customizado no DashboardLayout
+                          2. Sincronizar com localStorage ou banco de dados
+                          3. Atualização em tempo real em todas as interfaces */}
                     </div>
                     <div>
                       <Label htmlFor="company-cnpj">CNPJ</Label>
