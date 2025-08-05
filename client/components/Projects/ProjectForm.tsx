@@ -81,6 +81,15 @@ export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing =
   const [contacts, setContacts] = useState<ProjectContact[]>(project?.contacts || []);
   const [newContact, setNewContact] = useState({ name: '', email: '', phone: '', role: '' });
 
+  // FUNCIONALIDADE: Upload de arquivos para projeto
+  // Sistema de planos futuros:
+  // - Plano Básico: 1 arquivo por projeto
+  // - Plano Intermediário: 2 arquivos por projeto
+  // - Plano Premium: arquivos ilimitados por projeto
+  const [projectFiles, setProjectFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState<string | null>(null);
+  const MAX_FILES_BY_PLAN = 5; // Temporário - será dinâmico baseado no plano
+
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
