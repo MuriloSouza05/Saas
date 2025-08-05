@@ -771,6 +771,14 @@ export function CRM() {
           open={showAdvancedFilters}
           onOpenChange={setShowAdvancedFilters}
           onApplyFilters={handleApplyAdvancedFilters}
+          existingTags={
+            /* IMPLEMENTAÇÃO MELHORADA: Extrair todas as tags únicas dos clientes existentes */
+            Array.from(
+              new Set(
+                clients.flatMap(client => client.tags || [])
+              )
+            ).sort()
+          }
         />
 
         {/* Deal Form Modal */}
