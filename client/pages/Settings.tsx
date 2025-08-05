@@ -134,6 +134,11 @@ export function Settings() {
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
+
+  // FUNCIONALIDADE FUTURA: Nome dinâmico da empresa
+  // Estado para gerenciar o nome da empresa que aparece no DashboardLayout
+  const [companyName, setCompanyName] = useState<string>("LegalSaaS");
+  const [savedCompanyName, setSavedCompanyName] = useState<string>("LegalSaaS");
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [currentTemplate, setCurrentTemplate] = useState<
     "budget" | "invoice" | null
@@ -331,7 +336,7 @@ export function Settings() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Configurações</BreadcrumbPage>
+              <BreadcrumbPage>Configuraç��es</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
