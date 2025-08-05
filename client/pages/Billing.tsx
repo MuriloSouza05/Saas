@@ -846,7 +846,7 @@ export function Billing() {
 
   const handleOpenEmailModal = () => {
     if (selectedDocs.length === 0) {
-      alert('���️ Selecione pelo menos um documento para enviar por email.');
+      alert('⚠️ Selecione pelo menos um documento para enviar por email.');
       return;
     }
     setShowEmailModal(true);
