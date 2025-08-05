@@ -314,8 +314,20 @@ export function DashboardCharts({ className }: ChartsProps) {
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={clientsGrowth}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-              <XAxis dataKey="month" stroke="#6B7280" />
-              <YAxis stroke="#6B7280" />
+              <XAxis
+                dataKey="month"
+                stroke="#6B7280"
+                tick={{ fontSize: 12 }}
+                tickLine={{ stroke: '#6B7280' }}
+                axisLine={{ stroke: '#6B7280' }}
+              />
+              <YAxis
+                stroke="#6B7280"
+                tick={{ fontSize: 12 }}
+                tickLine={{ stroke: '#6B7280' }}
+                axisLine={{ stroke: '#6B7280' }}
+                width={60}
+              />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
               <Area
