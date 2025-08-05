@@ -48,17 +48,30 @@ import {
 } from 'lucide-react';
 import { User, UserRole } from '@/types/settings';
 
-// Mock data
+// SISTEMA DE 3 TIPOS DE CONTA IMPLEMENTADO
+// Conforme solicitado: Conta Simples, Conta Composta, Conta Gerencial
 const mockRoles: UserRole[] = [
   {
     id: '1',
-    name: 'Administrador',
-    description: 'Acesso completo ao sistema',
+    name: 'Conta Simples',
+    description: 'Acesso apenas ao CRM e áreas básicas do sistema',
     permissions: [
+      // CRM - Acesso total
       { module: 'crm', action: 'admin', granted: true },
+      // Dashboard - SEM informações financeiras (receitas, despesas, saldo)
+      { module: 'dashboard', action: 'read_basic', granted: true },
+      { module: 'dashboard', action: 'read_financial', granted: false },
+      // Projetos - Acesso total
       { module: 'projetos', action: 'admin', granted: true },
-      { module: 'financeiro', action: 'admin', granted: true },
-      { module: 'configuracoes', action: 'admin', granted: true },
+      // Tarefas - Acesso total
+      { module: 'tarefas', action: 'admin', granted: true },
+      // Cobrança - Acesso total
+      { module: 'cobranca', action: 'admin', granted: true },
+      // Fluxo de Caixa - SEM acesso
+      { module: 'fluxo-caixa', action: 'read', granted: false },
+      // Configurações - Apenas Notificações e Perfil
+      { module: 'configuracoes', action: 'read_basic', granted: true },
+      { module: 'configuracoes', action: 'admin', granted: false },
     ],
     isSystem: true,
     createdAt: '2024-01-01T00:00:00Z',
@@ -66,29 +79,53 @@ const mockRoles: UserRole[] = [
   },
   {
     id: '2',
-    name: 'Advogado Sênior',
-    description: 'Acesso limitado - casos específicos',
+    name: 'Conta Composta',
+    description: 'Acesso ao CRM + Fluxo de Caixa (Dashboard completo)',
     permissions: [
-      { module: 'crm', action: 'write', granted: true },
-      { module: 'projetos', action: 'write', granted: true },
-      { module: 'financeiro', action: 'read', granted: true },
-      { module: 'configuracoes', action: 'read', granted: false },
+      // Dashboard - Acesso completo (incluindo informações financeiras)
+      { module: 'dashboard', action: 'admin', granted: true },
+      // CRM - Acesso total
+      { module: 'crm', action: 'admin', granted: true },
+      // Projetos - Acesso total
+      { module: 'projetos', action: 'admin', granted: true },
+      // Tarefas - Acesso total
+      { module: 'tarefas', action: 'admin', granted: true },
+      // Cobrança - Acesso total
+      { module: 'cobranca', action: 'admin', granted: true },
+      // Fluxo de Caixa - Acesso total
+      { module: 'fluxo-caixa', action: 'admin', granted: true },
+      // Configurações - Apenas Notificações e Perfil
+      { module: 'configuracoes', action: 'read_basic', granted: true },
+      { module: 'configuracoes', action: 'admin', granted: false },
     ],
-    isSystem: false,
+    isSystem: true,
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
   {
     id: '3',
-    name: 'Paralegal',
-    description: 'Acesso somente leitura',
+    name: 'Conta Gerencial',
+    description: 'Acesso completo + Controle de colaboradores + Sistema de auditoria',
     permissions: [
-      { module: 'crm', action: 'read', granted: true },
-      { module: 'projetos', action: 'read', granted: true },
-      { module: 'financeiro', action: 'read', granted: false },
-      { module: 'configuracoes', action: 'read', granted: false },
+      // Todos os módulos - Acesso administrativo completo
+      { module: 'dashboard', action: 'admin', granted: true },
+      { module: 'crm', action: 'admin', granted: true },
+      { module: 'projetos', action: 'admin', granted: true },
+      { module: 'tarefas', action: 'admin', granted: true },
+      { module: 'cobranca', action: 'admin', granted: true },
+      { module: 'fluxo-caixa', action: 'admin', granted: true },
+      { module: 'configuracoes', action: 'admin', granted: true },
+      // Funcionalidades especiais de gerência
+      { module: 'user-management', action: 'admin', granted: true },
+      { module: 'audit-system', action: 'admin', granted: true },
+      { module: 'plan-management', action: 'admin', granted: true },
+      // IMPLEMENTAÇÃO FUTURA: Controle de planos
+      // - Consegue ver todas as contas do sistema
+      // - Sistema de auditoria de cada conta
+      // - Pode alterar usuários de Simples para Composta (baseado no plano)
+      // - Controle de senhas e usuários
     ],
-    isSystem: false,
+    isSystem: true,
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
