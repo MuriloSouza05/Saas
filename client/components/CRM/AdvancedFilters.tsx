@@ -24,6 +24,7 @@ interface AdvancedFiltersProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onApplyFilters: (filters: any) => void;
+  existingTags?: string[]; // Tags já existentes em todos os clientes
 }
 
 const clientLevels = [
