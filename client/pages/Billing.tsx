@@ -677,7 +677,7 @@ export function Billing() {
             ` : ''}
 
             <div class="footer-note">
-              <p><strong>Este documento foi gerado eletronicamente pelo sistema de gest��o.</strong></p>
+              <p><strong>Este documento foi gerado eletronicamente pelo sistema de gestão.</strong></p>
               <p>Escritório Silva & Associados - Soluções Jurídicas Especializadas</p>
               <p style="margin-top: 15px; font-size: 11px;">
                 📅 Documento gerado em: ${new Date().toLocaleString('pt-BR')}
