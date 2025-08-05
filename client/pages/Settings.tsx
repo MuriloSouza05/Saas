@@ -1354,7 +1354,7 @@ export function Settings() {
                       <Button
                         variant="outline"
                         onClick={() =>
-                          alert("�� Abrindo assistente de restauração...")
+                          alert("🔄 Abrindo assistente de restauração...")
                         }
                       >
                         <Upload className="h-4 w-4 mr-2" />
