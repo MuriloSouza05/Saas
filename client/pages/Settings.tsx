@@ -1354,7 +1354,7 @@ export function Settings() {
                       <Button
                         variant="outline"
                         onClick={() =>
-                          alert("🔄 Abrindo assistente de restauração...")
+                          alert("🔄 Abrindo assistente de restaura��ão...")
                         }
                       >
                         <Upload className="h-4 w-4 mr-2" />
@@ -1706,7 +1706,7 @@ export function Settings() {
               </DialogTitle>
               <DialogDescription>
                 {editingAccount
-                  ? "Atualize as informaç��es da conta bancária."
+                  ? "Atualize as informações da conta bancária."
                   : "Adicione uma nova conta bancária ao sistema."}
               </DialogDescription>
             </DialogHeader>
