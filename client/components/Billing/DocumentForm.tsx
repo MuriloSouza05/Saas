@@ -47,7 +47,7 @@ const documentSchema = z.object({
   date: z.string().min(1, "Data é obrigatória"),
   dueDate: z.string().min(1, "Data de vencimento é obrigatória"),
   senderId: z.string().min(1, "Remetente é obrigatório"),
-  receiverId: z.string().min(1, "Destinat��rio é obrigatório"),
+  receiverId: z.string().min(1, "Destinatário é obrigatório"),
   title: z.string().min(1, "Título é obrigatório"),
   description: z.string().optional(),
   currency: z.enum(["BRL", "USD", "EUR"]),
