@@ -28,7 +28,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { X } from 'lucide-react';
+import { X, Upload } from 'lucide-react';
 import { Client } from '@/types/crm';
 
 const clientSchema = z.object({
