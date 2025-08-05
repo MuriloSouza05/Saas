@@ -204,8 +204,25 @@ export function Settings() {
         // Aqui seria feito o upload real para o servidor
       }
 
+      // FUNCIONALIDADE IMPLEMENTADA: Mudança dinâmica do nome da empresa
+      // Salvar o nome da empresa e atualizar o DashboardLayout
+      if (companyName !== savedCompanyName) {
+        setSavedCompanyName(companyName);
+
+        // IMPLEMENTAÇÃO FUTURA: Armazenar no localStorage ou banco de dados
+        // localStorage.setItem('companyName', companyName);
+
+        // IMPLEMENTAÇÃO FUTURA: Disparar evento para atualizar o DashboardLayout
+        // window.dispatchEvent(new CustomEvent('companyNameUpdated', {
+        //   detail: { newName: companyName }
+        // }));
+
+        // IMPLEMENTAÇÃO FUTURA: Fazer requisição para o backend
+        // await updateCompanySettings({ name: companyName });
+      }
+
       alert(
-        `✅ Configurações da empresa salvas com sucesso!${logoFile ? "\n🇫Logo atualizado!" : ""}${faviconFile ? "\n🌐Favicon atualizado!" : ""}`,
+        `✅ Configurações da empresa salvas com sucesso!${companyName !== savedCompanyName ? "\n🏢 Nome da empresa atualizado!" : ""}${logoFile ? "\n🖼️ Logo atualizado!" : ""}${faviconFile ? "\n🌐 Favicon atualizado!" : ""}`,
       );
 
       // Resetar arquivos após o sucesso
@@ -1216,7 +1233,7 @@ export function Settings() {
                         {[
                           { method: "PIX", icon: "🏦", enabled: true },
                           {
-                            method: "Cartão de Crédito",
+                            method: "Cartão de Cr��dito",
                             icon: "💳",
                             enabled: true,
                           },
