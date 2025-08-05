@@ -476,7 +476,7 @@ export function Projects() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Projetos</h1>
             <p className="text-muted-foreground">
-              Gerenciamento de projetos jur��dicos com sistema Kanban
+              Gerenciamento de projetos jurídicos com sistema Kanban
             </p>
           </div>
           <div className="flex space-x-2">
