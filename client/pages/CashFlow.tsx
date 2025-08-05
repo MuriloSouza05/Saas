@@ -960,7 +960,7 @@ export function CashFlow() {
                   </div>
                 ))}
               {filteredTransactions.filter(t => t.type === 'expense').length === 0 && (
-                <p className="text-sm text-muted-foreground">Nenhuma despesa no per��odo</p>
+                <p className="text-sm text-muted-foreground">Nenhuma despesa no período</p>
               )}
             </CardContent>
           </Card>
