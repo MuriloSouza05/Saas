@@ -198,7 +198,7 @@ const mockTransactions: Transaction[] = [
  * - Exportação de dados (CSV)
  *
  * ESTRUTURA DE ABAS:
- * - Transa��ões: Lista principal com filtros
+ * - Transações: Lista principal com filtros
  * - Categorias: Visualização por categoria
  * - Relatórios: Análises e métricas
  * - Recorrentes: Gestão de automatizações
