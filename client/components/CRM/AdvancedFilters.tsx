@@ -52,7 +52,7 @@ const budgetRanges = [
   { label: 'Acima de R$ 50.000', min: 50001, max: null },
 ];
 
-export function AdvancedFilters({ open, onOpenChange, onApplyFilters }: AdvancedFiltersProps) {
+export function AdvancedFilters({ open, onOpenChange, onApplyFilters, existingTags = [] }: AdvancedFiltersProps) {
   const [filters, setFilters] = useState({
     levels: [] as string[],
     locations: [] as string[],
