@@ -262,6 +262,16 @@ export function Settings() {
       const reader = new FileReader();
       reader.onload = (e) => {
         setLogoPreview(e.target?.result as string);
+
+        // FUNCIONALIDADE FUTURA: Upload automático e seleção da logo
+        // Quando implementar backend, aqui será o local para:
+        // 1. Fazer upload automático do arquivo para o servidor
+        // 2. Salvar a URL da imagem no localStorage ou estado global
+        // 3. Atualizar automaticamente o logo no DashboardLayout
+        // 4. Enviar notificação de sucesso
+        // Exemplo de implementação futura:
+        // localStorage.setItem('companyLogo', e.target?.result as string);
+        // window.dispatchEvent(new Event('logoUpdated')); // Evento para atualizar layout
       };
       reader.readAsDataURL(file);
 
@@ -651,7 +661,7 @@ export function Settings() {
                     variant="outline"
                     onClick={() => {
                       alert(
-                        "🧪 Enviando email de teste para verificar configuração...\n\n✅ Email de teste enviado com sucesso!\nVerifique sua caixa de entrada.",
+                        "🧪 Enviando email de teste para verificar configuraç��o...\n\n✅ Email de teste enviado com sucesso!\nVerifique sua caixa de entrada.",
                       );
                     }}
                   >
