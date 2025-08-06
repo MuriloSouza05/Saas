@@ -159,7 +159,9 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
               {getCurrentPageDeals(stage.deals, stage.id).map((deal) => (
                 <Card
                   key={deal.id}
-                  className="cursor-move hover:shadow-md transition-shadow"
+                  className={`cursor-move hover:shadow-md transition-shadow ${
+                    pinnedDeals.has(deal.id) ? 'ring-2 ring-blue-200 bg-blue-50/50' : ''
+                  }`}
                   draggable
                   onDragStart={(e) => handleDragStart(e, deal.id)}
                 >
