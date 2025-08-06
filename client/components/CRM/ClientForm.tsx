@@ -93,6 +93,7 @@ const inssStatuses = [
 export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = false, existingTags = [] }: ClientFormProps) {
   const [tags, setTags] = React.useState<string[]>(client?.tags || []);
   const [newTag, setNewTag] = React.useState('');
+  const [selectedExistingTag, setSelectedExistingTag] = React.useState('');
 
   // FUNCIONALIDADE: Upload de arquivos para cliente
   // Sistema de planos futuros:
