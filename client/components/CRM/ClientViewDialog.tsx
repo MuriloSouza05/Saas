@@ -256,7 +256,7 @@ export function ClientViewDialog({
               </div>
             </div>
 
-            {(client.referredBy || client.createdBy) && (
+            {(client.referredBy || client.registeredBy) && (
               <div>
                 <h3 className="text-lg font-semibold mb-3">Referências</h3>
                 <div className="space-y-2 text-sm">
@@ -266,12 +266,10 @@ export function ClientViewDialog({
                       <span>{client.referredBy}</span>
                     </div>
                   )}
-                  {client.registeredBy && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Cadastrado por:</span>
-                      <span>{client.registeredBy}</span>
-                    </div>
-                  )}
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Cadastrado por:</span>
+                    <span>{client.registeredBy || 'Sistema Automático'}</span>
+                  </div>
                 </div>
               </div>
             )}
