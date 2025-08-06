@@ -548,14 +548,10 @@ export function Projects() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todos Status</SelectItem>
-              <SelectItem value="novo">Novo</SelectItem>
-              <SelectItem value="analise">Em Análise</SelectItem>
-              <SelectItem value="andamento">Em Andamento</SelectItem>
-              <SelectItem value="aguardando">Aguardando</SelectItem>
-              <SelectItem value="revisao">Revisão</SelectItem>
-              <SelectItem value="concluido">Concluído</SelectItem>
-              <SelectItem value="cancelado">Cancelado</SelectItem>
-              <SelectItem value="arquivado">Arquivado</SelectItem>
+              <SelectItem value="contacted">Em Contato</SelectItem>
+              <SelectItem value="proposal">Com Proposta</SelectItem>
+              <SelectItem value="won">Cliente Bem Sucedido</SelectItem>
+              <SelectItem value="lost">Cliente Perdido</SelectItem>
             </SelectContent>
           </Select>
           <Select value={priorityFilter} onValueChange={setPriorityFilter}>
