@@ -48,6 +48,67 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
     return deals.reduce((total, deal) => total + deal.budget, 0);
   };
 
+  // FUNCIONALIDADES DE PAGINAÇÃO
+  const getCurrentPageDeals = (deals: Deal[], stageId: string) => {
+    const currentPage = stagePagination[stageId] || 0;
+    const startIndex = currentPage * CARDS_PER_PAGE;
+    const endIndex = startIndex + CARDS_PER_PAGE;
+
+    // Separar deals pinados (sempre no topo) dos não pinados
+    const pinnedStageDeals = deals.filter(deal => pinnedDeals.has(deal.id));
+    const unpinnedDeals = deals.filter(deal => !pinnedDeals.has(deal.id));
+
+    // Deals pinados sempre aparecem primeiro, depois os paginados
+    const visiblePinnedDeals = pinnedStageDeals.slice(0, CARDS_PER_PAGE);
+    const remainingSlots = CARDS_PER_PAGE - visiblePinnedDeals.length;
+
+    if (remainingSlots > 0) {
+      const paginatedUnpinned = unpinnedDeals.slice(startIndex, startIndex + remainingSlots);
+      return [...visiblePinnedDeals, ...paginatedUnpinned];
+    }
+
+    return visiblePinnedDeals;
+  };
+
+  const getTotalPages = (deals: Deal[], stageId: string) => {
+    const unpinnedCount = deals.filter(deal => !pinnedDeals.has(deal.id)).length;
+    const pinnedCount = deals.filter(deal => pinnedDeals.has(deal.id)).length;
+    const totalVisibleSlots = Math.max(unpinnedCount + pinnedCount - pinnedCount, unpinnedCount);
+    return Math.ceil(totalVisibleSlots / CARDS_PER_PAGE);
+  };
+
+  const nextPage = (stageId: string, totalPages: number) => {
+    const currentPage = stagePagination[stageId] || 0;
+    if (currentPage < totalPages - 1) {
+      setStagePagination(prev => ({
+        ...prev,
+        [stageId]: currentPage + 1
+      }));
+    }
+  };
+
+  const prevPage = (stageId: string) => {
+    const currentPage = stagePagination[stageId] || 0;
+    if (currentPage > 0) {
+      setStagePagination(prev => ({
+        ...prev,
+        [stageId]: currentPage - 1
+      }));
+    }
+  };
+
+  const togglePin = (dealId: string) => {
+    setPinnedDeals(prev => {
+      const newPinned = new Set(prev);
+      if (newPinned.has(dealId)) {
+        newPinned.delete(dealId);
+      } else {
+        newPinned.add(dealId);
+      }
+      return newPinned;
+    });
+  };
+
   const handleDragStart = (e: React.DragEvent, dealId: string) => {
     e.dataTransfer.setData('text/plain', dealId);
   };
