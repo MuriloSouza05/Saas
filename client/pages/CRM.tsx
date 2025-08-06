@@ -355,15 +355,16 @@ export function CRM() {
   }, [clients, searchTerm, statusFilter, advancedFilters]);
 
   // Initial pipeline stages configuration
+  // PIPELINE SIMPLIFICADO: Apenas 4 estágios conforme solicitado
   const [pipelineStagesConfig, setPipelineStagesConfig] = useState([
-    { id: "opportunity", name: "Oportunidade", color: "blue" },
-    { id: "contacted", name: "Em Contato", color: "yellow" },
-    { id: "advanced", name: "Conversas Avançadas", color: "purple" },
-    { id: "proposal", name: "Com Proposta", color: "orange" },
+    { id: "contacted", name: "Em Contato", color: "blue" },
+    { id: "proposal", name: "Com Proposta", color: "yellow" },
     { id: "won", name: "Cliente Bem Sucedido", color: "green" },
     { id: "lost", name: "Cliente Perdido", color: "red" },
-    { id: "general", name: "Geral", color: "gray" },
   ]);
+
+  // REMOVIDOS: opportunity, advanced, general conforme solicitação
+  // IMPLEMENTAÇÃO FUTURA: Editar nomes dos stages também deve atualizar nos deals
 
   // Pipeline stages with deals
   const pipelineStages: PipelineStage[] = pipelineStagesConfig.map((stage) => ({
