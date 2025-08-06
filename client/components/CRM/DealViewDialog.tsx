@@ -290,13 +290,7 @@ export function DealViewDialog({
                 </div>
               </div>
 
-              {/* Quando não há arquivos 
-              <div className="col-span-full text-center py-8 text-muted-foreground">
-                <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>Nenhum documento anexado</p>
-                <p className="text-sm">Os arquivos do negócio aparecerão aqui</p>
-              </div>
-              */}
+              {/* Quando não há arquivos - funcionalidade será implementada dinamicamente */}
             </div>
           </div>
         </div>
