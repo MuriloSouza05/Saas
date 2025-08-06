@@ -180,6 +180,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
     onOpenChange(false);
     form.reset();
     setTags([]);
+    setSelectedExistingTag(''); // Reset dropdown
   };
 
   const addTag = () => {
