@@ -609,6 +609,14 @@ export function Projects() {
           project={editingProject}
           onSubmit={handleSubmitProject}
           isEditing={!!editingProject}
+          existingTags={
+            /* Extrair todas as tags únicas dos projetos existentes */
+            Array.from(
+              new Set(
+                projects.flatMap(project => project.tags || [])
+              )
+            ).sort()
+          }
         />
 
         {/* Project View Dialog */}
