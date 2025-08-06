@@ -412,12 +412,12 @@ export function Projects() {
     setShowProjectForm(true);
   };
 
-  // Calculate metrics
+  // Calculate metrics with new CRM-style statuses
   const totalProjects = projects.length;
-  const activeProjects = projects.filter(p => !['concluido', 'cancelado', 'arquivado'].includes(p.status)).length;
-  const overdueProjects = projects.filter(p => new Date(p.dueDate) < new Date() && !['concluido', 'cancelado', 'arquivado'].includes(p.status)).length;
-  const totalRevenue = projects.filter(p => p.status === 'concluido').reduce((sum, project) => sum + project.budget, 0);
-  const avgProgress = activeProjects > 0 ? Math.round(projects.filter(p => !['concluido', 'cancelado', 'arquivado'].includes(p.status)).reduce((sum, project) => sum + project.progress, 0) / activeProjects) : 0;
+  const activeProjects = projects.filter(p => !['won', 'lost'].includes(p.status)).length;
+  const overdueProjects = projects.filter(p => new Date(p.dueDate) < new Date() && !['won', 'lost'].includes(p.status)).length;
+  const totalRevenue = projects.filter(p => p.status === 'won').reduce((sum, project) => sum + project.budget, 0);
+  const avgProgress = activeProjects > 0 ? Math.round(projects.filter(p => !['won', 'lost'].includes(p.status)).reduce((sum, project) => sum + project.progress, 0) / activeProjects) : 0;
 
   return (
     <DashboardLayout>
