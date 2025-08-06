@@ -195,6 +195,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
   const addExistingTag = (tag: string) => {
     if (!tags.includes(tag)) {
       setTags([...tags, tag]);
+      setSelectedExistingTag(''); // Reset dropdown selection
     }
   };
 
