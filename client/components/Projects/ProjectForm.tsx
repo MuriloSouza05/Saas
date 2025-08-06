@@ -39,7 +39,7 @@ const projectSchema = z.object({
   address: z.string().optional(),
   budget: z.number().min(0, 'Orçamento deve ser positivo').optional(),
   currency: z.enum(['BRL', 'USD', 'EUR']),
-  status: z.enum(['novo', 'analise', 'andamento', 'aguardando', 'revisao', 'concluido', 'cancelado', 'arquivado']),
+  status: z.enum(['contacted', 'proposal', 'won', 'lost']),
   startDate: z.string().min(1, 'Data de início é obrigatória'),
   dueDate: z.string().min(1, 'Data de vencimento é obrigatória'),
   priority: z.enum(['low', 'medium', 'high', 'urgent']),
@@ -60,14 +60,10 @@ interface ProjectFormProps {
 }
 
 const statusOptions = [
-  { value: 'novo', label: 'Novo', color: 'bg-blue-100 text-blue-800' },
-  { value: 'analise', label: 'Em Análise', color: 'bg-yellow-100 text-yellow-800' },
-  { value: 'andamento', label: 'Em Andamento', color: 'bg-green-100 text-green-800' },
-  { value: 'aguardando', label: 'Aguardando Cliente', color: 'bg-orange-100 text-orange-800' },
-  { value: 'revisao', label: 'Revisão', color: 'bg-purple-100 text-purple-800' },
-  { value: 'concluido', label: 'Concluído', color: 'bg-green-100 text-green-800' },
-  { value: 'cancelado', label: 'Cancelado', color: 'bg-red-100 text-red-800' },
-  { value: 'arquivado', label: 'Arquivado', color: 'bg-gray-100 text-gray-800' },
+  { value: 'contacted', label: 'Em Contato', color: 'bg-blue-100 text-blue-800' },
+  { value: 'proposal', label: 'Com Proposta', color: 'bg-yellow-100 text-yellow-800' },
+  { value: 'won', label: 'Cliente Bem Sucedido', color: 'bg-green-100 text-green-800' },
+  { value: 'lost', label: 'Cliente Perdido', color: 'bg-red-100 text-red-800' },
 ];
 
 const priorityOptions = [
@@ -102,7 +98,7 @@ export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing =
       address: project?.address || '',
       budget: project?.budget || 0,
       currency: project?.currency || 'BRL',
-      status: project?.status || 'novo',
+      status: project?.status || 'contacted',
       startDate: project?.startDate ? project.startDate.split('T')[0] : '',
       dueDate: project?.dueDate ? project.dueDate.split('T')[0] : '',
       priority: project?.priority || 'medium',
@@ -124,7 +120,7 @@ export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing =
         address: project.address || '',
         budget: project.budget || 0,
         currency: project.currency || 'BRL',
-        status: project.status || 'novo',
+        status: project.status || 'contacted',
         startDate: project.startDate ? project.startDate.split('T')[0] : '',
         dueDate: project.dueDate ? project.dueDate.split('T')[0] : '',
         priority: project.priority || 'medium',
