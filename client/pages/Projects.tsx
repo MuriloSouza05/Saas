@@ -195,41 +195,29 @@ function ProjectCompactView({
 }: ProjectCompactViewProps) {
   const getStatusColor = (status: ProjectStatus) => {
     const colors = {
-      novo: 'bg-blue-100 text-blue-800',
-      analise: 'bg-yellow-100 text-yellow-800',
-      andamento: 'bg-green-100 text-green-800',
-      aguardando: 'bg-orange-100 text-orange-800',
-      revisao: 'bg-purple-100 text-purple-800',
-      concluido: 'bg-green-100 text-green-800',
-      cancelado: 'bg-red-100 text-red-800',
-      arquivado: 'bg-gray-100 text-gray-800'
+      contacted: 'bg-blue-100 text-blue-800',
+      proposal: 'bg-yellow-100 text-yellow-800',
+      won: 'bg-green-100 text-green-800',
+      lost: 'bg-red-100 text-red-800'
     };
-    return colors[status] || colors.novo;
+    return colors[status] || colors.contacted;
   };
 
   const getStatusLabel = (status: ProjectStatus) => {
     const labels = {
-      novo: 'Novo',
-      analise: 'Em Análise',
-      andamento: 'Em Andamento',
-      aguardando: 'Aguardando Cliente',
-      revisao: 'Revisão',
-      concluido: 'Concluído',
-      cancelado: 'Cancelado',
-      arquivado: 'Arquivado'
+      contacted: 'Em Contato',
+      proposal: 'Com Proposta',
+      won: 'Cliente Bem Sucedido',
+      lost: 'Cliente Perdido'
     };
     return labels[status] || status;
   };
 
   const statusOptions = [
-    { value: 'novo', label: 'Novo' },
-    { value: 'analise', label: 'Em Análise' },
-    { value: 'andamento', label: 'Em Andamento' },
-    { value: 'aguardando', label: 'Aguardando Cliente' },
-    { value: 'revisao', label: 'Revisão' },
-    { value: 'concluido', label: 'Concluído' },
-    { value: 'cancelado', label: 'Cancelado' },
-    { value: 'arquivado', label: 'Arquivado' }
+    { value: 'contacted', label: 'Em Contato' },
+    { value: 'proposal', label: 'Com Proposta' },
+    { value: 'won', label: 'Cliente Bem Sucedido' },
+    { value: 'lost', label: 'Cliente Perdido' }
   ];
 
   return (
