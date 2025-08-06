@@ -76,7 +76,7 @@ const mockClients: Client[] = [
     budget: 15000,
     currency: "BRL",
     level: "Premium",
-    tags: ["Direito Civil", "Prioritário"],
+    tags: ["Direito Civil", "Prioritário", "Empresa", "Premium"],
     description: "Cliente premium com múltiplos casos",
     cpf: "123.456.789-00",
     rg: "12.345.678-9",
