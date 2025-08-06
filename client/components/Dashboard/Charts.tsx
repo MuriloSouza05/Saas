@@ -172,6 +172,9 @@ export function DashboardCharts({ className }: ChartsProps) {
                 interval={0}
                 height={60}
                 orientation="bottom"
+                allowDecimals={false}
+                allowDuplicatedCategory={false}
+                scale="auto"
               />
               <YAxis
                 type="number"
@@ -183,6 +186,8 @@ export function DashboardCharts({ className }: ChartsProps) {
                 width={80}
                 domain={['auto', 'auto']}
                 orientation="left"
+                allowDecimals={false}
+                scale="auto"
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
@@ -330,6 +335,9 @@ export function DashboardCharts({ className }: ChartsProps) {
                 tickLine={{ stroke: '#6B7280' }}
                 axisLine={{ stroke: '#6B7280' }}
                 orientation="bottom"
+                allowDecimals={false}
+                allowDuplicatedCategory={false}
+                scale="auto"
               />
               <YAxis
                 type="number"
@@ -340,6 +348,8 @@ export function DashboardCharts({ className }: ChartsProps) {
                 width={60}
                 domain={[0, 'auto']}
                 orientation="left"
+                allowDecimals={false}
+                scale="auto"
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="count" name="Casos" radius={[4, 4, 0, 0]}>
@@ -371,6 +381,9 @@ export function DashboardCharts({ className }: ChartsProps) {
                 interval={0}
                 height={60}
                 orientation="bottom"
+                allowDecimals={false}
+                allowDuplicatedCategory={false}
+                scale="auto"
               />
               <YAxis
                 type="number"
@@ -381,6 +394,8 @@ export function DashboardCharts({ className }: ChartsProps) {
                 width={60}
                 domain={[0, 'auto']}
                 orientation="left"
+                allowDecimals={false}
+                scale="auto"
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
