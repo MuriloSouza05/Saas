@@ -780,6 +780,14 @@ export function CRM() {
           client={editingClient}
           onSubmit={handleSubmitClient}
           isEditing={!!editingClient}
+          existingTags={
+            /* Extrair todas as tags únicas dos clientes existentes */
+            Array.from(
+              new Set(
+                clients.flatMap(client => client.tags || [])
+              )
+            ).sort()
+          }
         />
 
         {/* Advanced Filters Dialog */}
