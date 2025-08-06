@@ -18,6 +18,7 @@ interface PipelineProps {
   onEditDeal: (deal: Deal) => void;
   onDeleteDeal: (dealId: string) => void;
   onMoveDeal: (dealId: string, newStage: DealStage) => void;
+  onViewDeal?: (deal: Deal) => void; // NOVA FUNCIONALIDADE: Visualizar deals
 }
 
 // PIPELINE SIMPLIFICADO: Apenas 4 estágios conforme solicitado
