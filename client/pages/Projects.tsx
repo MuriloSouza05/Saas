@@ -462,7 +462,7 @@ export function Projects() {
                 Lista
               </Button>
             </div>
-            <Button onClick={() => handleAddProject('novo')}>
+            <Button onClick={() => handleAddProject('contacted')}>
               <Plus className="h-4 w-4 mr-2" />
               Novo Projeto
             </Button>
