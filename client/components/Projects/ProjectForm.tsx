@@ -129,6 +129,7 @@ export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing =
         priority: project.priority || 'medium',
         progress: project.progress || 0,
         notes: project.notes || '',
+        createdBy: project.createdBy || 'Dr. Advogado', // Será currentUser.name
       });
       setTags(project.tags || []);
       setContacts(project.contacts || []);
