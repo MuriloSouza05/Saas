@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Plus, MoreHorizontal, Edit, Trash2, Mail, Phone } from 'lucide-react';
+import { Plus, MoreHorizontal, Edit, Trash2, Mail, Phone, ChevronLeft, ChevronRight, Pin } from 'lucide-react';
 import { Deal, PipelineStage, DealStage } from '@/types/crm';
 
 interface PipelineProps {
