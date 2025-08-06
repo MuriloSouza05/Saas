@@ -113,15 +113,23 @@ export function ProjectViewDialog({
               <FolderKanban className="h-8 w-8 text-blue-600" />
               <div>
                 <DialogTitle className="text-xl">{project.title}</DialogTitle>
-                <DialogDescription className="flex items-center space-x-2">
-                  <User className="h-4 w-4" />
-                  <span>{project.clientName}</span>
-                  {project.organization && (
-                    <>
-                      <span>•</span>
-                      <Building className="h-4 w-4" />
-                      <span>{project.organization}</span>
-                    </>
+                <DialogDescription>
+                  <div className="flex items-center space-x-2">
+                    <User className="h-4 w-4" />
+                    <span>{project.clientName}</span>
+                    {project.organization && (
+                      <>
+                        <span>•</span>
+                        <Building className="h-4 w-4" />
+                        <span>{project.organization}</span>
+                      </>
+                    )}
+                  </div>
+                  {/* IMPLEMENTAÇÃO: Mostrar colaborador que criou o projeto */}
+                  {project.createdBy && (
+                    <div className="flex items-center space-x-2 mt-1 text-xs text-muted-foreground">
+                      <span>Criado por: {project.createdBy}</span>
+                    </div>
                   )}
                 </DialogDescription>
               </div>
