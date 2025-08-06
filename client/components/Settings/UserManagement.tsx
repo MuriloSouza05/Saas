@@ -281,10 +281,16 @@ export function UserManagement() {
                 Gerencie usuários, permissões e acesso ao sistema
               </p>
             </div>
-            <Button onClick={() => setShowUserDialog(true)}>
+            {/* COMENTÁRIO IMPLEMENTAÇÃO:
+                Botão "Novo Usuário" removido para contas gerenciais.
+                As contas gerenciais NÃO podem criar novos usuários.
+                Os usuários são definidos e setados pelo administrador do SaaS.
+                Apenas o painel administrativo principal pode criar usuários.
+            */}
+            {/* <Button onClick={() => setShowUserDialog(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Novo Usuário
-            </Button>
+            </Button> */}
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
