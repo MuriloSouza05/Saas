@@ -142,20 +142,23 @@ export function DashboardCharts({ className }: ChartsProps) {
                 type="category"
                 dataKey="month"
                 stroke="#6B7280"
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: '#6B7280' }}
                 tickLine={{ stroke: '#6B7280' }}
                 axisLine={{ stroke: '#6B7280' }}
                 interval={0}
+                height={60}
+                orientation="bottom"
               />
               <YAxis
                 type="number"
                 stroke="#6B7280"
                 tickFormatter={formatCurrency}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: '#6B7280' }}
                 tickLine={{ stroke: '#6B7280' }}
                 axisLine={{ stroke: '#6B7280' }}
                 width={80}
                 domain={['auto', 'auto']}
+                orientation="left"
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
