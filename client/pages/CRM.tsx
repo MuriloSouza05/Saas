@@ -41,6 +41,7 @@ import { Pipeline } from "@/components/CRM/Pipeline";
 import { AdvancedFilters } from "@/components/CRM/AdvancedFilters";
 import { DealForm } from "@/components/CRM/DealForm";
 import { ClientViewDialog } from "@/components/CRM/ClientViewDialog";
+import { DealViewDialog } from "@/components/CRM/DealViewDialog";
 import { Client, Deal, PipelineStage, DealStage } from "@/types/crm";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
