@@ -135,7 +135,7 @@ const mockProjects: Project[] = [
     address: 'Rua da Inovação, 500, São Paulo - SP',
     budget: 45000,
     currency: 'BRL',
-    status: 'aguardando',
+    status: 'contacted',
     startDate: '2024-01-12T00:00:00Z',
     dueDate: '2024-04-30T00:00:00Z',
     tags: ['Empresarial', 'Recuperação', 'Urgente'],
