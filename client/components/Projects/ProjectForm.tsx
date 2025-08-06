@@ -45,6 +45,7 @@ const projectSchema = z.object({
   priority: z.enum(['low', 'medium', 'high', 'urgent']),
   progress: z.number().min(0).max(100).optional(),
   notes: z.string().optional(),
+  createdBy: z.string().optional(),
 });
 
 type ProjectFormData = z.infer<typeof projectSchema>;
