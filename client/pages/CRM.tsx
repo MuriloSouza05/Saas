@@ -86,6 +86,7 @@ const mockClients: Client[] = [
     inssStatus: "active",
     amountPaid: 8000,
     referredBy: "João Advogado",
+    registeredBy: "Dr. Silva - Sócio Gerente",
     createdAt: "2024-01-01T10:00:00Z",
     updatedAt: "2024-01-15T14:30:00Z",
     status: "active",
