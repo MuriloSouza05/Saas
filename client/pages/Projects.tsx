@@ -104,7 +104,7 @@ const mockProjects: Project[] = [
     address: 'Av. Paulista, 1000, São Paulo - SP',
     budget: 12000,
     currency: 'BRL',
-    status: 'revisao',
+    status: 'won',
     startDate: '2024-01-10T00:00:00Z',
     dueDate: '2024-02-28T00:00:00Z',
     tags: ['Família', 'Divórcio', 'Consensual'],
