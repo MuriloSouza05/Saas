@@ -445,6 +445,17 @@ export function CRM() {
     setShowDealForm(true);
   };
 
+  const handleViewDeal = (deal: Deal) => {
+    setViewingDeal(deal);
+    setShowDealView(true);
+  };
+
+  const handleEditFromDealView = (deal: Deal) => {
+    setEditingDeal(deal);
+    setShowDealView(false);
+    setShowDealForm(true);
+  };
+
   const handleDeleteDeal = (dealId: string) => {
     setDeals(deals.filter((deal) => deal.id !== dealId));
   };
