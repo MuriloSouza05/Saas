@@ -74,12 +74,33 @@ const priorityOptions = [
   { value: 'urgent', label: 'Urgente', color: 'text-red-600' },
 ];
 
+// RESPONSÁVEL: Colaboradores que têm acesso ao sistema
+// COMENTÁRIO IMPLEMENTAÇÃO: Lista todos os colaboradores cadastrados no sistema com acesso
+// Incluindo: Contas Simples, Contas Compostas e Contas Gerenciais
+// Esta lista seria carregada dinamicamente da API: GET /api/users/collaborators
+// Filtros por tipo de conta e permissões de acesso
 const assignedToOptions = [
-  'Dr. Silva',
-  'Dra. Costa',
-  'Dr. Oliveira',
-  'Ana Paralegal',
-  'Carlos Estagiário',
+  // CONTA GERENCIAL (acesso total)
+  'Dr. Silva - Sócio Gerente',
+  'Dra. Costa - Sócia Diretora',
+
+  // CONTA COMPOSTA (acesso ao fluxo de caixa e dashboard completo)
+  'Dr. Oliveira - Advogado Sênior',
+  'Dra. Ferreira - Advogada Especialista',
+
+  // CONTA SIMPLES (acesso limitado - sem financeiro)
+  'Ana Paralegal - Assistente Jurídica',
+  'Carlos Estagiário - Estagiário',
+  'Marina Santos - Advogada Júnior',
+  'Rafael Lima - Paralegal',
+
+  // IMPLEMENTAÇÃO FUTURA:
+  // Esta lista será carregada dinamicamente do backend baseada em:
+  // - Usuários ativos no sistema
+  // - Tipo de conta (Simples, Composta, Gerencial)
+  // - Permissões específicas
+  // - Status do colaborador (ativo/inativo)
+  // API: GET /api/users?role=collaborator&status=active
 ];
 
 const projectOptions = [
