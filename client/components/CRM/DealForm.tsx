@@ -134,6 +134,7 @@ export function DealForm({
     form.reset();
     setTags([]);
     setNewTag('');
+    setSelectedExistingTag(''); // Reset dropdown selection
     onOpenChange(false);
   };
 
