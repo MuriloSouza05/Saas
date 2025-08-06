@@ -1382,6 +1382,45 @@ export function Settings() {
                     <h3 className="text-lg font-medium">
                       Backup e Recuperação
                     </h3>
+                    {/* IMPLEMENTAÇÃO BACKEND - BACKUP E RECUPERAÇÃO:
+
+                        ESTRATÉGIA DE BACKUP:
+                        1. BACKUP AUTOMÁTICO DIÁRIO (PostgreSQL)
+                           - pg_dump completo da base de dados
+                           - Armazenamento em AWS S3 ou similar
+                           - Retenção: 30 dias para backups diários
+                           - Backup incremental de arquivos (documentos/imagens)
+
+                        2. BACKUP MANUAL (Sob DEMANDA)
+                           - Permite backup imediato antes de mudanças importantes
+                           - Inclui dados + arquivos + configurações
+                           - Download direto ou envio para cloud storage
+
+                        3. ESTRUTURA DO BACKUP:
+                           backup_YYYY-MM-DD_HH-mm-ss/
+                           ├── database.sql (dump PostgreSQL)
+                           ├── uploads/ (arquivos de clientes/projetos)
+                           ├── configs/ (configurações do sistema)
+                           └── metadata.json (info do backup)
+
+                        PROCESSO DE RECUPERAÇÃO:
+                        1. Upload do arquivo de backup
+                        2. Validação da integridade
+                        3. Criação de backup atual (segurança)
+                        4. Restauração em etapas:
+                           - Banco de dados (pg_restore)
+                           - Arquivos de upload
+                           - Configurações do sistema
+                        5. Verificação de integridade pós-restauração
+                        6. Logs detalhados do processo
+
+                        API ENDPOINTS:
+                        - POST /api/admin/backup/create - Gerar backup manual
+                        - GET /api/admin/backup/list - Listar backups disponíveis
+                        - POST /api/admin/backup/restore - Restaurar backup
+                        - GET /api/admin/backup/download/{id} - Download backup
+                        - DELETE /api/admin/backup/{id} - Excluir backup antigo
+                    */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Button
                         variant="outline"
