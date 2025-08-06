@@ -266,10 +266,10 @@ export function ClientViewDialog({
                       <span>{client.referredBy}</span>
                     </div>
                   )}
-                  {client.createdBy && (
+                  {client.registeredBy && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Criado por:</span>
-                      <span>{client.createdBy}</span>
+                      <span className="text-muted-foreground">Cadastrado por:</span>
+                      <span>{client.registeredBy}</span>
                     </div>
                   )}
                 </div>
