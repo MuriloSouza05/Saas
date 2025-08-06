@@ -90,7 +90,7 @@ const inssStatuses = [
   { value: 'pensioner', label: 'Pensionista' },
 ];
 
-export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = false }: ClientFormProps) {
+export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = false, existingTags = [] }: ClientFormProps) {
   const [tags, setTags] = React.useState<string[]>(client?.tags || []);
   const [newTag, setNewTag] = React.useState('');
 
@@ -340,7 +340,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                     <FormItem>
                       <FormLabel>Estado *</FormLabel>
                       <FormControl>
-                        <Input placeholder="São Paulo" {...field} />
+                        <Input placeholder="S��o Paulo" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
