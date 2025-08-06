@@ -109,6 +109,7 @@ const mockClients: Client[] = [
     maritalStatus: "single",
     birthDate: "1985-09-20",
     inssStatus: "inactive",
+    registeredBy: "Dra. Costa - Sócia Diretora",
     createdAt: "2024-01-05T09:15:00Z",
     updatedAt: "2024-01-10T16:45:00Z",
     status: "active",
