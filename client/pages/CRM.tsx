@@ -103,7 +103,7 @@ const mockClients: Client[] = [
     zipCode: "22070-000",
     budget: 8500,
     currency: "BRL",
-    tags: ["Trabalhista"],
+    tags: ["Trabalhista", "Demissão", "Rescisão"],
     description: "Caso trabalhista - demissão sem justa causa",
     cpf: "987.654.321-00",
     maritalStatus: "single",
