@@ -31,7 +31,7 @@ const stageConfig = {
 
 // REMOVIDOS: opportunity, advanced, general conforme solicitação
 
-export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDeal }: PipelineProps) {
+export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDeal, onViewDeal }: PipelineProps) {
   // IMPLEMENTAÇÃO: Paginação Kanban - 5 cards por página
   const [stagePagination, setStagePagination] = useState<Record<string, number>>({});
   const [pinnedDeals, setPinnedDeals] = useState<Set<string>>(new Set());
