@@ -128,19 +128,23 @@ export function DashboardCharts({ className }: ChartsProps) {
             <LineChart data={monthlyFinancialData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
               <XAxis
+                type="category"
                 dataKey="month"
                 stroke="#6B7280"
                 tick={{ fontSize: 12 }}
                 tickLine={{ stroke: '#6B7280' }}
                 axisLine={{ stroke: '#6B7280' }}
+                interval={0}
               />
               <YAxis
+                type="number"
                 stroke="#6B7280"
                 tickFormatter={formatCurrency}
                 tick={{ fontSize: 12 }}
                 tickLine={{ stroke: '#6B7280' }}
                 axisLine={{ stroke: '#6B7280' }}
                 width={80}
+                domain={['auto', 'auto']}
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
