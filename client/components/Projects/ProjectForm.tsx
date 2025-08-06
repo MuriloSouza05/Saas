@@ -77,7 +77,7 @@ const priorityOptions = [
   { value: 'urgent', label: 'Urgente', color: 'text-red-600' },
 ];
 
-export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing = false }: ProjectFormProps) {
+export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing = false, existingTags = [] }: ProjectFormProps) {
   const [tags, setTags] = useState<string[]>(project?.tags || []);
   const [newTag, setNewTag] = useState('');
   const [contacts, setContacts] = useState<ProjectContact[]>(project?.contacts || []);
