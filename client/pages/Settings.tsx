@@ -470,7 +470,7 @@ export function Settings() {
                         <Input id="company-zipcode" defaultValue="01310-100" />
                       </div>
                       <div>
-                        <Label htmlFor="company-country">País</Label>
+                        <Label htmlFor="company-country">Pa��s</Label>
                         <Input id="company-country" defaultValue="Brasil" />
                       </div>
                     </div>
@@ -692,7 +692,7 @@ export function Settings() {
                     variant="outline"
                     onClick={() => {
                       alert(
-                        "🧪 Enviando email de teste para verificar configuraç��o...\n\n✅ Email de teste enviado com sucesso!\nVerifique sua caixa de entrada.",
+                        "🧪 Enviando email de teste para verificar configuração...\n\n✅ Email de teste enviado com sucesso!\nVerifique sua caixa de entrada.",
                       );
                     }}
                   >
