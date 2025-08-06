@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Plus, MoreHorizontal, Edit, Trash2, Mail, Phone, ChevronLeft, ChevronRight, Pin } from 'lucide-react';
+import { Plus, MoreHorizontal, Edit, Trash2, Mail, Phone, ChevronLeft, ChevronRight, Pin, Eye } from 'lucide-react';
 import { Deal, PipelineStage, DealStage } from '@/types/crm';
 
 interface PipelineProps {
