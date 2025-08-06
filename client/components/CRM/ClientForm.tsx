@@ -638,7 +638,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                 {existingTags.length > 0 && (
                   <div>
                     <label className="text-sm text-muted-foreground">Selecionar de tags existentes:</label>
-                    <Select onValueChange={addExistingTag}>
+                    <Select value={selectedExistingTag} onValueChange={addExistingTag}>
                       <SelectTrigger>
                         <SelectValue placeholder="Escolher tag existente" />
                       </SelectTrigger>
