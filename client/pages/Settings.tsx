@@ -470,7 +470,7 @@ export function Settings() {
                         <Input id="company-zipcode" defaultValue="01310-100" />
                       </div>
                       <div>
-                        <Label htmlFor="company-country">Pa��s</Label>
+                        <Label htmlFor="company-country">País</Label>
                         <Input id="company-country" defaultValue="Brasil" />
                       </div>
                     </div>
