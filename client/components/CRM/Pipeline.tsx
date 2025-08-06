@@ -124,8 +124,10 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4 h-full">
-      {stages.map((stage) => (
+    <div className="w-full">
+      {/* LAYOUT TOTALMENTE RESPONSIVO: Ocupa todo o container respeitando espaçamento */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 w-full min-h-[600px]">
+        {stages.map((stage) => (
         <div
           key={stage.id}
           className="flex flex-col h-full"
@@ -313,8 +315,9 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
               )}
             </CardContent>
           </Card>
-        </div>
-      ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
