@@ -23,15 +23,11 @@ export interface Project {
   attachments: ProjectAttachment[];
 }
 
-export type ProjectStatus = 
-  | 'novo'
-  | 'analise'
-  | 'andamento'
-  | 'aguardando'
-  | 'revisao'
-  | 'concluido'
-  | 'cancelado'
-  | 'arquivado';
+export type ProjectStatus =
+  | 'contacted'  // Em Contato
+  | 'proposal'   // Com Proposta
+  | 'won'        // Cliente Bem Sucedido
+  | 'lost';      // Cliente Perdido
 
 export interface ProjectContact {
   id: string;
