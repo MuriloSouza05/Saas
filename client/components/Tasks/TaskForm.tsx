@@ -89,7 +89,7 @@ const projectOptions = [
   { id: '4', name: 'Ação Trabalhista - Pedro Souza' },
 ];
 
-export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false }: TaskFormProps) {
+export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false, existingTags = [] }: TaskFormProps) {
   const [tags, setTags] = useState<string[]>(task?.tags || []);
   const [newTag, setNewTag] = useState('');
   const [subtasks, setSubtasks] = useState<Subtask[]>(task?.subtasks || []);
