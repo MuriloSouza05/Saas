@@ -276,9 +276,11 @@ export function CRM() {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [showDealForm, setShowDealForm] = useState(false);
   const [showClientView, setShowClientView] = useState(false);
+  const [showDealView, setShowDealView] = useState(false);
   const [editingClient, setEditingClient] = useState<Client | undefined>();
   const [editingDeal, setEditingDeal] = useState<Deal | undefined>();
   const [viewingClient, setViewingClient] = useState<Client | null>(null);
+  const [viewingDeal, setViewingDeal] = useState<Deal | null>(null);
   const [dealInitialStage, setDealInitialStage] = useState<
     DealStage | undefined
   >();
