@@ -31,6 +31,10 @@ const stageConfig = {
 // REMOVIDOS: opportunity, advanced, general conforme solicitação
 
 export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDeal }: PipelineProps) {
+  // IMPLEMENTAÇÃO: Paginação Kanban - 5 cards por página
+  const [stagePagination, setStagePagination] = useState<Record<string, number>>({});
+  const [pinnedDeals, setPinnedDeals] = useState<Set<string>>(new Set());
+  const CARDS_PER_PAGE = 5;
   const formatCurrency = (value: number, currency: string) => {
     const formatters = {
       BRL: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }),
