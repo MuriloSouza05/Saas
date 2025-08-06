@@ -281,6 +281,7 @@ export function DashboardCharts({ className }: ChartsProps) {
             <BarChart data={casesByStatus}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
               <XAxis
+                type="category"
                 dataKey="status"
                 stroke="#6B7280"
                 angle={-45}
@@ -292,11 +293,13 @@ export function DashboardCharts({ className }: ChartsProps) {
                 axisLine={{ stroke: '#6B7280' }}
               />
               <YAxis
+                type="number"
                 stroke="#6B7280"
                 tick={{ fontSize: 12 }}
                 tickLine={{ stroke: '#6B7280' }}
                 axisLine={{ stroke: '#6B7280' }}
                 width={60}
+                domain={[0, 'auto']}
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="count" name="Casos" radius={[4, 4, 0, 0]}>
