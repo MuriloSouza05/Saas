@@ -328,6 +328,61 @@ export function ProjectViewDialog({
               </div>
             </div>
           )}
+
+          {/* IMPLEMENTAÇÃO: Seção de Documentos do Projeto */}
+          <Separator className="my-6" />
+          <div>
+            <h3 className="text-lg font-semibold mb-3 flex items-center">
+              <FileText className="h-5 w-5 mr-2" />
+              Documentos do Projeto
+            </h3>
+            {/* COMENTÁRIO IMPLEMENTAÇÃO FUTURA:
+                Esta seção mostrará os arquivos enviados no formulário de projeto.
+
+                BACKEND IMPLEMENTAÇÃO:
+                - Tabela: project_files
+                  * id, project_id, original_name, file_path, file_type, file_size
+                  * uploaded_at, uploaded_by
+                - API: GET /api/projects/{id}/files
+                - Storage: AWS S3 ou similar para arquivos
+
+                FUNCIONALIDADES:
+                - Preview de imagens (PNG, JPEG)
+                - Download de PDFs
+                - Versionamento de documentos
+                - Controle de acesso baseado em permissões
+                - Histórico de modificações
+            */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Exemplo de arquivo - será dinâmico */}
+              <div className="border rounded-lg p-3 hover:shadow-md transition-shadow">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                    <FileText className="h-5 w-5 text-green-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">contrato_projeto.pdf</p>
+                    <p className="text-xs text-muted-foreground">1.2 MB • PDF</p>
+                  </div>
+                </div>
+                <div className="mt-3 flex space-x-2">
+                  <Button size="sm" variant="outline" className="flex-1">
+                    Visualizar
+                  </Button>
+                  <Button size="sm" variant="outline" className="flex-1">
+                    Download
+                  </Button>
+                </div>
+              </div>
+
+              {/* Quando não há arquivos */}
+              <div className="col-span-full text-center py-8 text-muted-foreground">
+                <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                <p>Nenhum documento anexado</p>
+                <p className="text-sm">Os arquivos enviados no cadastro aparecerão aqui</p>
+              </div>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
