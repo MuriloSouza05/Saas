@@ -40,7 +40,8 @@ const dealSchema = z.object({
   address: z.string().min(1, 'Endereço é obrigatório'),
   budget: z.number().min(0, 'Orçamento deve ser positivo'),
   currency: z.enum(['BRL', 'USD', 'EUR']),
-  stage: z.enum(['opportunity', 'contacted', 'advanced', 'proposal', 'won', 'lost', 'general']),
+  // PIPELINE SIMPLIFICADO: Apenas 4 estágios conforme solicitado
+  stage: z.enum(['contacted', 'proposal', 'won', 'lost']),
   description: z.string().optional(),
 });
 
