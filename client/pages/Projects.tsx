@@ -330,55 +330,31 @@ export function Projects() {
     });
   }, [projects, searchTerm, statusFilter, priorityFilter]);
 
-  // Project stages with filtered projects
+  // STAGES IGUAIS AO CRM: Mesmos estágios do Pipeline de Vendas
   const projectStages: ProjectStage[] = [
     {
-      id: 'novo',
-      name: 'Novo',
+      id: 'contacted',
+      name: 'Em Contato',
       color: 'blue',
-      projects: filteredProjects.filter(project => project.status === 'novo'),
+      projects: filteredProjects.filter(project => project.status === 'contacted'),
     },
     {
-      id: 'analise',
-      name: 'Em Análise',
+      id: 'proposal',
+      name: 'Com Proposta',
       color: 'yellow',
-      projects: filteredProjects.filter(project => project.status === 'analise'),
+      projects: filteredProjects.filter(project => project.status === 'proposal'),
     },
     {
-      id: 'andamento',
-      name: 'Em Andamento',
+      id: 'won',
+      name: 'Cliente Bem Sucedido',
       color: 'green',
-      projects: filteredProjects.filter(project => project.status === 'andamento'),
+      projects: filteredProjects.filter(project => project.status === 'won'),
     },
     {
-      id: 'aguardando',
-      name: 'Aguardando Cliente',
-      color: 'orange',
-      projects: filteredProjects.filter(project => project.status === 'aguardando'),
-    },
-    {
-      id: 'revisao',
-      name: 'Revisão',
-      color: 'purple',
-      projects: filteredProjects.filter(project => project.status === 'revisao'),
-    },
-    {
-      id: 'concluido',
-      name: 'Concluído',
-      color: 'green',
-      projects: filteredProjects.filter(project => project.status === 'concluido'),
-    },
-    {
-      id: 'cancelado',
-      name: 'Cancelado',
+      id: 'lost',
+      name: 'Cliente Perdido',
       color: 'red',
-      projects: filteredProjects.filter(project => project.status === 'cancelado'),
-    },
-    {
-      id: 'arquivado',
-      name: 'Arquivado',
-      color: 'gray',
-      projects: filteredProjects.filter(project => project.status === 'arquivado'),
+      projects: filteredProjects.filter(project => project.status === 'lost'),
     },
   ];
 
