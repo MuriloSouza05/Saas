@@ -280,6 +280,35 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
                   </Button>
                 </div>
               )}
+
+              {/* CONTROLES DE PAGINAÇÃO */}
+              {stage.deals.length > CARDS_PER_PAGE && (
+                <div className="flex items-center justify-between pt-3 border-t">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => prevPage(stage.id)}
+                    disabled={!stagePagination[stage.id] || stagePagination[stage.id] === 0}
+                    className="h-6 w-6 p-0"
+                  >
+                    <ChevronLeft className="h-3 w-3" />
+                  </Button>
+
+                  <div className="text-xs text-muted-foreground">
+                    {(stagePagination[stage.id] || 0) + 1} / {getTotalPages(stage.deals, stage.id)}
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => nextPage(stage.id, getTotalPages(stage.deals, stage.id))}
+                    disabled={(stagePagination[stage.id] || 0) >= getTotalPages(stage.deals, stage.id) - 1}
+                    className="h-6 w-6 p-0"
+                  >
+                    <ChevronRight className="h-3 w-3" />
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
