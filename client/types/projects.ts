@@ -16,6 +16,7 @@ export interface Project {
   assignedTo: string[];
   priority: 'low' | 'medium' | 'high' | 'urgent';
   progress: number; // 0-100
+  createdBy?: string; // Nome do colaborador que criou o projeto
   createdAt: string;
   updatedAt: string;
   notes?: string;
