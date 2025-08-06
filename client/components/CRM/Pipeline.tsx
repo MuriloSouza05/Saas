@@ -185,6 +185,12 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
                               <Pin className={`mr-2 h-3 w-3 ${pinnedDeals.has(deal.id) ? 'text-blue-600' : ''}`} />
                               {pinnedDeals.has(deal.id) ? 'Desafixar' : 'Fixar'}
                             </DropdownMenuItem>
+                            {onViewDeal && (
+                              <DropdownMenuItem onClick={() => onViewDeal(deal)}>
+                                <Eye className="mr-2 h-3 w-3" />
+                                Visualizar
+                              </DropdownMenuItem>
+                            )}
                             <DropdownMenuItem onClick={() => onEditDeal(deal)}>
                               <Edit className="mr-2 h-3 w-3" />
                               Editar
