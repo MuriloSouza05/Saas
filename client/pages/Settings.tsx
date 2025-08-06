@@ -353,7 +353,7 @@ export function Settings() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Configuraç��es</BreadcrumbPage>
+              <BreadcrumbPage>Configurações</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
