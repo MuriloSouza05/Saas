@@ -56,6 +56,7 @@ interface ProjectFormProps {
   project?: Project;
   onSubmit: (data: ProjectFormData & { tags: string[]; contacts: ProjectContact[] }) => void;
   isEditing?: boolean;
+  existingTags?: string[]; // Tags existentes de outros projetos
 }
 
 const statusOptions = [
