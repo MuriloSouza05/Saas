@@ -55,9 +55,14 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
     const startIndex = currentPage * CARDS_PER_PAGE;
     const endIndex = startIndex + CARDS_PER_PAGE;
 
+    // ORDENAÇÃO: Novos negócios aparecem no topo - mais recentes primeiro
+    const sortedDeals = [...deals].sort((a, b) =>
+      new Date(b.createdAt || b.updatedAt || 0).getTime() - new Date(a.createdAt || a.updatedAt || 0).getTime()
+    );
+
     // Separar deals pinados (sempre no topo) dos não pinados
-    const pinnedStageDeals = deals.filter(deal => pinnedDeals.has(deal.id));
-    const unpinnedDeals = deals.filter(deal => !pinnedDeals.has(deal.id));
+    const pinnedStageDeals = sortedDeals.filter(deal => pinnedDeals.has(deal.id));
+    const unpinnedDeals = sortedDeals.filter(deal => !pinnedDeals.has(deal.id));
 
     // Deals pinados sempre aparecem primeiro, depois os paginados
     const visiblePinnedDeals = pinnedStageDeals.slice(0, CARDS_PER_PAGE);
