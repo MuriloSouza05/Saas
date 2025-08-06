@@ -66,6 +66,7 @@ interface ClientFormProps {
   client?: Client;
   onSubmit: (data: ClientFormData) => void;
   isEditing?: boolean;
+  existingTags?: string[]; // Tags existentes de outros clientes
 }
 
 const countries = [
