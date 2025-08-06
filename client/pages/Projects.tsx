@@ -67,7 +67,7 @@ const mockProjects: Project[] = [
     address: 'Rua das Flores, 123, São Paulo - SP',
     budget: 8500,
     currency: 'BRL',
-    status: 'andamento',
+    status: 'proposal',
     startDate: '2024-01-05T00:00:00Z',
     dueDate: '2024-03-15T00:00:00Z',
     tags: ['Previdenciário', 'INSS', 'Urgente'],
