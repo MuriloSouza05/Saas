@@ -101,9 +101,9 @@ export function DealForm({
       email: deal?.email || '',
       mobile: deal?.mobile || '',
       address: deal?.address || '',
-      budget: deal?.budget || 0,
+      budget: deal?.budget || undefined, // Permite campo vazio
       currency: deal?.currency || 'BRL',
-      stage: deal?.stage || initialStage || 'opportunity',
+      stage: deal?.stage || initialStage || 'contacted', // Estágio válido
       description: deal?.description || '',
     },
   });
