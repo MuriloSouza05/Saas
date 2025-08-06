@@ -191,6 +191,12 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
+  const addExistingTag = (tag: string) => {
+    if (!tags.includes(tag)) {
+      setTags([...tags, tag]);
+    }
+  };
+
   // FUNCIONALIDADE: Gerenciamento de arquivos do cliente
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
@@ -340,7 +346,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
                     <FormItem>
                       <FormLabel>Estado *</FormLabel>
                       <FormControl>
-                        <Input placeholder="S��o Paulo" {...field} />
+                        <Input placeholder="São Paulo" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
