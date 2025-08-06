@@ -714,6 +714,14 @@ export function Tasks() {
           task={editingTask}
           onSubmit={handleSubmitTask}
           isEditing={!!editingTask}
+          existingTags={
+            /* Extrair todas as tags únicas das tarefas existentes */
+            Array.from(
+              new Set(
+                tasks.flatMap(task => task.tags || [])
+              )
+            ).sort()
+          }
         />
 
         {/* Task View Dialog */}
