@@ -164,7 +164,7 @@ const mockProjects: Project[] = [
     address: 'Rua do Trabalho, 789, São Paulo - SP',
     budget: 15000,
     currency: 'BRL',
-    status: 'novo',
+    status: 'contacted',
     startDate: '2024-01-25T00:00:00Z',
     dueDate: '2024-05-15T00:00:00Z',
     tags: ['Trabalhista', 'Horas Extras'],
