@@ -133,7 +133,9 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
       inssStatus: client?.inssStatus || '',
       amountPaid: client?.amountPaid || 0,
       referredBy: client?.referredBy || '',
-      registeredBy: client?.registeredBy || 'Dr. Advogado',
+      // IMPLEMENTAÇÃO FUTURA: Pegar usuário atual logado do contexto/token
+      // registeredBy: currentUser?.name || 'Dr. Advogado',
+      registeredBy: client?.registeredBy || 'Dr. Advogado', // Temporário - será dinâmico
     },
   });
 
