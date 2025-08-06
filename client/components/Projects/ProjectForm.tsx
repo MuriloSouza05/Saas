@@ -107,6 +107,8 @@ export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing =
       priority: project?.priority || 'medium',
       progress: project?.progress || 0,
       notes: project?.notes || '',
+      // IMPLEMENTAÇÃO FUTURA: Pegar usuário atual logado do contexto/token
+      createdBy: project?.createdBy || 'Dr. Advogado', // Será currentUser.name
     },
   });
 
