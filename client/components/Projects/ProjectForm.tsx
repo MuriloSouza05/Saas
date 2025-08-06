@@ -159,6 +159,12 @@ export function ProjectForm({ open, onOpenChange, project, onSubmit, isEditing =
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
+  const addExistingTag = (tag: string) => {
+    if (!tags.includes(tag)) {
+      setTags([...tags, tag]);
+    }
+  };
+
   const addContact = () => {
     if (newContact.name.trim() && newContact.email.trim()) {
       const contact: ProjectContact = {
