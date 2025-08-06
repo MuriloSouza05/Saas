@@ -56,15 +56,15 @@ interface DealFormProps {
   isEditing?: boolean;
 }
 
+// PIPELINE SIMPLIFICADO: Apenas 4 estágios conforme solicitado
 const stageOptions = [
-  { value: 'opportunity', label: 'Oportunidade' },
   { value: 'contacted', label: 'Em Contato' },
-  { value: 'advanced', label: 'Conversas Avançadas' },
   { value: 'proposal', label: 'Com Proposta' },
   { value: 'won', label: 'Cliente Bem Sucedido' },
   { value: 'lost', label: 'Cliente Perdido' },
-  { value: 'general', label: 'Geral' },
 ];
+
+// REMOVIDOS: opportunity, advanced, general conforme solicitação
 
 export function DealForm({ 
   open, 
@@ -160,7 +160,7 @@ export function DealForm({
                   name="title"
                   render={({ field }) => (
                     <FormItem className="md:col-span-2">
-                      <FormLabel>Título do Negócio *</FormLabel>
+                      <FormLabel>T��tulo do Negócio *</FormLabel>
                       <FormControl>
                         <Input placeholder="Ex: Consultoria Jurídica Empresarial" {...field} />
                       </FormControl>
