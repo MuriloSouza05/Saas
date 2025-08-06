@@ -18,15 +18,39 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Suppress Recharts defaultProps warnings since they're from the library itself
+// Enhanced suppression of Recharts defaultProps warnings for React 18+
+// These warnings come from the Recharts library itself and cannot be fixed from our application code
 const originalWarn = console.warn;
+const originalError = console.error;
+
 console.warn = (...args) => {
   const message = args[0];
-  if (typeof message === 'string' && message.includes('defaultProps will be removed') &&
-      (message.includes('XAxis') || message.includes('YAxis'))) {
-    return; // Suppress these specific warnings
+  if (typeof message === 'string') {
+    // Suppress Recharts defaultProps warnings
+    if (message.includes('defaultProps will be removed') &&
+        (message.includes('XAxis') || message.includes('YAxis'))) {
+      return;
+    }
+    // Also catch React development warnings about Recharts components
+    if (message.includes('Warning: ') &&
+        (message.includes('XAxis') || message.includes('YAxis')) &&
+        message.includes('defaultProps')) {
+      return;
+    }
   }
   originalWarn.apply(console, args);
+};
+
+console.error = (...args) => {
+  const message = args[0];
+  if (typeof message === 'string') {
+    // Suppress React error logs about defaultProps from Recharts
+    if (message.includes('defaultProps') &&
+        (message.includes('XAxis') || message.includes('YAxis'))) {
+      return;
+    }
+  }
+  originalError.apply(console, args);
 };
 
 // Mock data for charts
