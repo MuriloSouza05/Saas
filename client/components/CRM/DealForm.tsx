@@ -118,14 +118,15 @@ export function DealForm({
         email: deal.email || '',
         mobile: deal.mobile || '',
         address: deal.address || '',
-        budget: deal.budget || 0,
+        budget: deal.budget || undefined, // Alterado para permitir campo vazio
         currency: deal.currency || 'BRL',
-        stage: deal.stage || initialStage || 'opportunity',
+        stage: deal.stage || initialStage || 'contacted', // Alterado para stage válido
         description: deal.description || '',
       });
       setTags(deal.tags || []);
     } else {
       setTags([]);
+      setSelectedExistingTag(''); // Reset dropdown selection
     }
   }, [deal, initialStage, form]);
 
