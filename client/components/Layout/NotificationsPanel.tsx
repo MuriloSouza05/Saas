@@ -35,6 +35,10 @@ interface Notification {
   time: string;
   read: boolean;
   actionable?: boolean;
+  // IMPLEMENTAÇÃO: Dados do cadastrante e detalhes
+  createdBy?: string; // Nome do colaborador que fez a ação
+  createdAt?: string; // Timestamp da ação
+  details?: string; // Informações adicionais
   /** Dados adicionais para redirecionamento */
   actionData?: {
     type: 'invoice' | 'project' | 'client' | 'task' | 'document';
