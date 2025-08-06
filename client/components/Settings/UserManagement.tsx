@@ -439,10 +439,16 @@ export function UserManagement() {
                 </p>
               </div>
             </div>
-            <Button onClick={() => setShowRoleDialog(true)}>
+            {/* COMENTÁRIO IMPLEMENTAÇÃO:
+                Botão "Nova Função" removido para contas gerenciais.
+                As funções são predefinidas: Conta Simples, Conta Composta, Conta Gerencial.
+                Estas funções são fixas e não podem ser alteradas pelos usuários.
+                Apenas o administrador do SaaS pode definir as permissões.
+            */}
+            {/* <Button onClick={() => setShowRoleDialog(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Nova Função
-            </Button>
+            </Button> */}
           </div>
         </CardHeader>
         <CardContent>
