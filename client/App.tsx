@@ -13,6 +13,7 @@ import { Tasks } from "./pages/Tasks";
 import { Billing } from "./pages/Billing";
 import { CashFlow } from "./pages/CashFlow";
 import { Settings } from "./pages/Settings";
+import { Notifications } from "./pages/Notifications";
 import { Login } from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
