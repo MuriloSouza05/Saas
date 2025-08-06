@@ -1406,6 +1406,33 @@ export function Settings() {
 
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">Sessões Ativas</h3>
+                    {/* IMPLEMENTAÇÃO BACKEND - SESSÕES ATIVAS:
+
+                        BANCO DE DADOS - Tabela: user_sessions
+                        - id (UUID): Identificador único da sessão
+                        - user_id (UUID): ID do usuário
+                        - session_token (TEXT): Token JWT da sessão
+                        - device_info (JSONB): Navegador, OS, device type
+                        - ip_address (INET): IP do cliente
+                        - location (TEXT): Localização baseada no IP (GeoIP)
+                        - created_at (TIMESTAMP): Momento do login
+                        - last_activity (TIMESTAMP): Última atividade
+                        - expires_at (TIMESTAMP): Expiração da sessão
+                        - is_active (BOOLEAN): Se a sessão está ativa
+
+                        API ENDPOINTS:
+                        - GET /api/users/sessions - Listar sessões ativas do usuário
+                        - DELETE /api/users/sessions/{session_id} - Encerrar sessão específica
+                        - DELETE /api/users/sessions/all - Encerrar todas as outras sessões
+
+                        FUNCIONALIDADES:
+                        - Detectar device/browser via User-Agent
+                        - Geolocalização via IP (MaxMind GeoIP2)
+                        - Auto-encerrar sessões expiradas (cron job)
+                        - Limitar número máximo de sessões simultâneas
+                        - Logs de auditoria para login/logout
+                        - Notificação de novo login em device desconhecido
+                    */}
                     <div className="space-y-2">
                       {[
                         {
