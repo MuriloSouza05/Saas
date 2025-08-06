@@ -364,18 +364,22 @@ export function NotificationsPanel() {
   const handleViewAllNotifications = () => {
     try {
       console.log('Navegando para todas as notificações');
-      
-      // Por enquanto, mostrar feedback que a funcionalidade está em desenvolvimento
+
+      // IMPLEMENTAÇÃO: Navegar para página dedicada de notificações
+      // Esta página mostrará todas as notificações com detalhes completos
+      navigate('/notificacoes');
+
+      // Mostrar feedback de navegação
       const notification = document.createElement('div');
       notification.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
-        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
         color: white;
         padding: 16px 24px;
         border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
         z-index: 9999;
         transform: translateX(100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -388,7 +392,7 @@ export function NotificationsPanel() {
           <div style="font-size: 20px;">🔔</div>
           <div>
             <div style="font-weight: 600; margin-bottom: 2px;">Central de Notificações</div>
-            <div style="opacity: 0.9; font-size: 12px;">Em breve: página dedicada!</div>
+            <div style="opacity: 0.9; font-size: 12px;">Redirecionando...</div>
           </div>
         </div>
       `;
