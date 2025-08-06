@@ -74,6 +74,9 @@ const mockNotifications: Notification[] = [
     time: '4 horas atrás',
     read: false,
     actionable: true,
+    createdBy: 'Junior Santos', // Colaborador que cadastrou
+    createdAt: '2024-01-28T10:00:00Z',
+    details: 'Cliente cadastrado com sucesso. Email: joao@email.com, Telefone: (11) 99999-8888',
     actionData: {
       type: 'client',
       id: '2',
