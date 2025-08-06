@@ -56,6 +56,7 @@ interface TaskFormProps {
   task?: Task;
   onSubmit: (data: TaskFormData & { tags: string[]; subtasks: Subtask[] }) => void;
   isEditing?: boolean;
+  existingTags?: string[]; // Tags existentes de outras tarefas
 }
 
 const statusOptions = [
