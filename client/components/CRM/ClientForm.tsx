@@ -107,6 +107,7 @@ export function ClientForm({ open, onOpenChange, client, onSubmit, isEditing = f
   // Atualizar tags quando client mudar
   React.useEffect(() => {
     setTags(client?.tags || []);
+    setSelectedExistingTag(''); // Reset dropdown quando trocar cliente
   }, [client]);
 
   const form = useForm<ClientFormData>({
