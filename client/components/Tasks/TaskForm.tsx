@@ -184,6 +184,12 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
+  const addExistingTag = (tag: string) => {
+    if (!tags.includes(tag)) {
+      setTags([...tags, tag]);
+    }
+  };
+
   const addSubtask = () => {
     if (newSubtask.trim()) {
       const subtask: Subtask = {
