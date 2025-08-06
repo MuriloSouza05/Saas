@@ -757,6 +757,7 @@ export function CRM() {
                     onEditDeal={handleEditDeal}
                     onDeleteDeal={handleDeleteDeal}
                     onMoveDeal={handleMoveDeal}
+                    onViewDeal={handleViewDeal}
                   />
                 ) : (
                   <PipelineListView
