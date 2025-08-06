@@ -366,12 +366,23 @@ export function UserManagement() {
                       )}
                     </TableCell>
                     <TableCell>
+                      {/* IMPLEMENTAÇÃO PORTAL CLIENTE:
+                          Esta funcionalidade controla se o usuário pode fazer login no sistema.
+                          - SIM (Habilitado): O usuário pode acessar o sistema com suas credenciais
+                          - NÃO (Desabilitado): O usuário não pode fazer login
+
+                          BACKEND IMPLEMENTAÇÃO:
+                          - Verificar este flag antes de permitir login
+                          - Bloquear tentativas de login se clientPortalAccess = false
+                          - Logs de auditoria quando acesso é negado
+                          - API: PUT /users/{id}/portal-access { enabled: boolean }
+                      */}
                       <div className="flex items-center space-x-2">
                         <Switch
                           checked={user.clientPortalAccess}
                           onCheckedChange={(checked) => {
-                            setUsers(users.map(u => 
-                              u.id === user.id 
+                            setUsers(users.map(u =>
+                              u.id === user.id
                                 ? { ...u, clientPortalAccess: checked }
                                 : u
                             ));
