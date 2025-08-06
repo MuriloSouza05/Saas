@@ -155,7 +155,8 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
               </div>
             </CardHeader>
             <CardContent className="flex-1 space-y-3 p-3 pt-0">
-              {stage.deals.map((deal) => (
+              {/* IMPLEMENTAÇÃO: Cards paginados - 5 por página */}
+              {getCurrentPageDeals(stage.deals, stage.id).map((deal) => (
                 <Card
                   key={deal.id}
                   className="cursor-move hover:shadow-md transition-shadow"
