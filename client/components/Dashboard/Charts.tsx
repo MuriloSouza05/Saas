@@ -302,18 +302,20 @@ export function DashboardCharts({ className }: ChartsProps) {
                 textAnchor="end"
                 height={80}
                 interval={0}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: '#6B7280' }}
                 tickLine={{ stroke: '#6B7280' }}
                 axisLine={{ stroke: '#6B7280' }}
+                orientation="bottom"
               />
               <YAxis
                 type="number"
                 stroke="#6B7280"
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: '#6B7280' }}
                 tickLine={{ stroke: '#6B7280' }}
                 axisLine={{ stroke: '#6B7280' }}
                 width={60}
                 domain={[0, 'auto']}
+                orientation="left"
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="count" name="Casos" radius={[4, 4, 0, 0]}>
