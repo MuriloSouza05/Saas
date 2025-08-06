@@ -815,6 +815,14 @@ export function CRM() {
           onEdit={handleEditFromView}
         />
 
+        {/* Deal View Dialog */}
+        <DealViewDialog
+          open={showDealView}
+          onOpenChange={setShowDealView}
+          deal={viewingDeal}
+          onEdit={handleEditFromDealView}
+        />
+
         {/* Stage Names Editing Dialog */}
         <Dialog open={editingStages} onOpenChange={safeSetEditingStages}>
           <DialogContent className="max-w-md">
