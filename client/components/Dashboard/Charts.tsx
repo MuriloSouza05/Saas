@@ -18,6 +18,17 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+// Suppress Recharts defaultProps warnings since they're from the library itself
+const originalWarn = console.warn;
+console.warn = (...args) => {
+  const message = args[0];
+  if (typeof message === 'string' && message.includes('defaultProps will be removed') &&
+      (message.includes('XAxis') || message.includes('YAxis'))) {
+    return; // Suppress these specific warnings
+  }
+  originalWarn.apply(console, args);
+};
+
 // Mock data for charts
 const monthlyFinancialData = [
   { month: 'Jan', receitas: 45000, despesas: 28000, saldo: 17000 },
