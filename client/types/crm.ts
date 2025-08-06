@@ -27,7 +27,8 @@ export interface Client {
   inssStatus?: string;
   amountPaid?: number;
   referredBy?: string;
-  
+  registeredBy?: string; // Nome do colaborador que cadastrou o cliente
+
   // Metadata
   createdAt: string;
   updatedAt: string;
