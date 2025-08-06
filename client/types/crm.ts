@@ -53,14 +53,14 @@ export interface Deal {
   updatedAt: string;
 }
 
-export type DealStage = 
-  | 'opportunity'
-  | 'contacted'
-  | 'advanced'
-  | 'proposal'
-  | 'won'
-  | 'lost'
-  | 'general';
+// SISTEMA SIMPLIFICADO: Apenas 4 estágios conforme solicitado
+export type DealStage =
+  | 'contacted'     // Em Contato
+  | 'proposal'      // Com Proposta
+  | 'won'           // Cliente Bem Sucedido
+  | 'lost';         // Cliente Perdido
+
+  // REMOVIDOS: 'opportunity', 'advanced', 'general' conforme solicitação
 
 export interface PipelineStage {
   id: DealStage;
