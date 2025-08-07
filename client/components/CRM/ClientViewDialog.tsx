@@ -72,6 +72,22 @@ export function ClientViewDialog({
     return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
 
+  // Guard clause para evitar erros quando client é undefined
+  if (!client) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Cliente não encontrado</DialogTitle>
+            <DialogDescription>
+              As informações do cliente não estão disponíveis.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
