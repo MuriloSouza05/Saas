@@ -51,7 +51,6 @@ export function DocumentsTable({
   onEditDoc,
   onDeleteDoc,
   onViewDoc,
-  onSendDoc,
   onDownloadDoc,
   onDuplicateDoc,
 }: DocumentsTableProps) {
