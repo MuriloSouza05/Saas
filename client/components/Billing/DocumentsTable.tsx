@@ -16,13 +16,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
-import { 
-  MoreHorizontal, 
-  Eye, 
-  Edit, 
-  Trash2, 
-  Send, 
-  Download, 
+import {
+  MoreHorizontal,
+  Eye,
+  Edit,
+  Trash2,
+  Download,
   Copy,
   CheckCircle,
   Clock,
