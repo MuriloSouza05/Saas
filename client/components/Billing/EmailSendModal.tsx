@@ -180,15 +180,21 @@ export function EmailSendModal({
           ? getTemplateContent(firstDoc)
           : "<p>No document content available</p>",
         reply_to: emailData.replyTo,
+        // NOVIDADE: Anexar documentos reais ao invés de PDF
+        // Em produção, isso seria integrado com sistema de armazenamento
         attachments:
-          emailData.attachPdf && firstDoc
-            ? [
-                {
-                  filename: `${firstDoc.type || "document"}_${firstDoc.number || "unknown"}.pdf`,
-                  content: "base64-content-here",
-                },
-              ]
+          emailData.attachPdf && documents.length > 0
+            ? documents.map(doc => ({
+                filename: `${doc.type || "document"}_${doc.number || "unknown"}.json`,
+                content: JSON.stringify(doc, null, 2), // Em produção: conteúdo real do arquivo
+                contentType: "application/json", // Em produção: tipo correto do arquivo
+              }))
             : undefined,
+        // COMENTÁRIO PARA BACKEND: Implementar integração com Resend API
+        // - Configurar API key do Resend no backend
+        // - Converter documentos para formato adequado (PDF, Word, etc.)
+        // - Implementar templates de email personalizáveis
+        // - Adicionar controle de entrega e leitura
       };
 
       // Call the actual send function
