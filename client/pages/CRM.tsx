@@ -524,6 +524,35 @@ export function CRM() {
         updatedAt: new Date().toISOString(),
       };
       setDeals([...deals, newDeal]);
+
+      // NOVIDADE: Enviar notificação quando novo negócio for adicionado ao Pipeline
+      // Em produção, isso seria uma chamada para API de notificações
+      console.log("📢 NOTIFICAÇÃO ENVIADA: Novo negócio no pipeline", {
+        type: 'info',
+        title: 'Novo Negócio Adicionado',
+        message: `${newDeal.title} foi adicionado ao Pipeline de Vendas`,
+        category: 'pipeline',
+        createdBy: 'Usuário Atual', // Em produção: pegar do contexto de auth
+        dealData: {
+          id: newDeal.id,
+          title: newDeal.title,
+          contactName: newDeal.contactName,
+          stage: newDeal.stage,
+          budget: newDeal.budget,
+          tags: newDeal.tags
+        }
+      });
+
+      // FUTURO: Integração com sistema de notificações
+      // await NotificationService.create({
+      //   type: 'deal_created',
+      //   title: 'Novo Negócio Adicionado',
+      //   message: `${newDeal.title} foi adicionado ao Pipeline de Vendas`,
+      //   entityId: newDeal.id,
+      //   entityType: 'deal',
+      //   userId: currentUser.id,
+      //   metadata: { stage: newDeal.stage, budget: newDeal.budget }
+      // });
     }
     setShowDealForm(false);
     setDealInitialStage(undefined);
