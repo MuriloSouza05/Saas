@@ -355,6 +355,7 @@ export function Billing() {
 
     // CORREÇÃO: Limpar estado de edição após salvar
     setEditingDocument(undefined);
+    setShowDocumentForm(false);
   };
 
   const handleSelectDoc = (docId: string) => {
