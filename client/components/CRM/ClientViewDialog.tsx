@@ -81,7 +81,7 @@ export function ClientViewDialog({
               <Avatar className="h-12 w-12">
                 <AvatarImage src={client.image} alt={client.name} />
                 <AvatarFallback className="text-lg">
-                  {client.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  {client?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'CL'}
                 </AvatarFallback>
               </Avatar>
               <div>
