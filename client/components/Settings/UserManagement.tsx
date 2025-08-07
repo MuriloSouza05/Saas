@@ -467,90 +467,9 @@ export function UserManagement() {
         </CardContent>
       </Card>
 
-      {/* User Form Dialog */}
-      <Dialog open={showUserDialog} onOpenChange={setShowUserDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {editingUser ? 'Editar Usuário' : 'Novo Usuário'}
-            </DialogTitle>
-            <DialogDescription>
-              Configure as informações e permissões do usuário.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <Input placeholder="Nome completo" />
-            <Input type="email" placeholder="Email" />
-            <Input placeholder="Telefone" />
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma função" />
-              </SelectTrigger>
-              <SelectContent>
-                {roles.map((role) => (
-                  <SelectItem key={role.id} value={role.id}>
-                    {role.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="flex items-center space-x-2">
-              <Switch />
-              <span className="text-sm">Acesso ao Portal do Cliente</span>
-            </div>
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setShowUserDialog(false)}>
-                Cancelar
-              </Button>
-              <Button>
-                {editingUser ? 'Atualizar' : 'Criar'} Usuário
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Role Form Dialog */}
-      <Dialog open={showRoleDialog} onOpenChange={setShowRoleDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {editingRole ? 'Editar Função' : 'Nova Função'}
-            </DialogTitle>
-            <DialogDescription>
-              Configure o nome, descrição e permissões da função.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <Input placeholder="Nome da função" />
-            <Input placeholder="Descrição" />
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium">Permissões por Módulo:</h4>
-              {['Dashboard', 'CRM', 'Projetos', 'Tarefas', 'Cobrança', 'Fluxo de Caixa', 'Configurações', 'Gerência'].map((module) => (
-                <div key={module} className="flex items-center justify-between p-3 border rounded">
-                  <span className="font-medium">{module}</span>
-                  <div className="flex space-x-2">
-                    {['read', 'write', 'delete', 'admin'].map((action) => (
-                      <label key={action} className="flex items-center space-x-1 text-sm">
-                        <input type="checkbox" className="rounded" />
-                        <span className="capitalize">{action}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setShowRoleDialog(false)}>
-                Cancelar
-              </Button>
-              <Button>
-                {editingRole ? 'Atualizar' : 'Criar'} Função
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* REMOVIDO: Dialogs de criação/edição de usuários e funções */}
+      {/* Conforme solicitado, apenas administrador pode gerenciar usuários */}
+      {/* Funcionalidades de edição foram removidas para contas gerenciais */}
     </div>
   );
 }
