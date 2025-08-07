@@ -103,7 +103,7 @@ export function ClientViewDialog({
               <div>
                 <DialogTitle className="text-xl">{client?.name || 'Cliente'}</DialogTitle>
                 <DialogDescription className="flex items-center space-x-2">
-                  {client.organization && (
+                  {client?.organization && (
                     <>
                       <Building className="h-4 w-4" />
                       <span>{client.organization}</span>
