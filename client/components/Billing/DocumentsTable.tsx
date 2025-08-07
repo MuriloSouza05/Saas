@@ -39,7 +39,6 @@ interface DocumentsTableProps {
   onEditDoc: (document: Document) => void;
   onDeleteDoc: (docId: string) => void;
   onViewDoc: (document: Document) => void;
-  onSendDoc: (document: Document) => void;
   onDownloadDoc: (document: Document) => void;
   onDuplicateDoc: (document: Document) => void;
 }
