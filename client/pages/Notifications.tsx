@@ -555,6 +555,53 @@ export function Notifications() {
             ))
           )}
         </div>
+
+        {/* NOVIDADE: Modais de visualização específicos para cada tipo de notificação */}
+        {/* Evita navegação de página que causava 3 segundos de tela branca */}
+
+        {/* Modal de Projeto */}
+        <ProjectViewDialog
+          open={showProjectDialog}
+          onOpenChange={setShowProjectDialog}
+          project={selectedItem}
+          onEdit={() => {
+            setShowProjectDialog(false);
+            navigate('/projetos');
+          }}
+        />
+
+        {/* Modal de Cliente */}
+        <ClientViewDialog
+          open={showClientDialog}
+          onOpenChange={setShowClientDialog}
+          client={selectedItem}
+          onEdit={() => {
+            setShowClientDialog(false);
+            navigate('/crm');
+          }}
+        />
+
+        {/* Modal de Documento/Fatura */}
+        <DocumentViewDialog
+          open={showDocumentDialog}
+          onOpenChange={setShowDocumentDialog}
+          document={selectedItem}
+          onEdit={() => {
+            setShowDocumentDialog(false);
+            navigate('/cobranca');
+          }}
+        />
+
+        {/* Modal de Tarefa */}
+        <TaskViewDialog
+          open={showTaskDialog}
+          onOpenChange={setShowTaskDialog}
+          task={selectedItem}
+          onEdit={() => {
+            setShowTaskDialog(false);
+            navigate('/tarefas');
+          }}
+        />
       </div>
     </DashboardLayout>
   );
