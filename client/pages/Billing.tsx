@@ -277,7 +277,7 @@ export function Billing() {
       senderDetails: mockCompanyDetails,
       receiverName: 'Cliente Selecionado',
       receiverDetails: mockClientDetails,
-      subtotal: data.items.reduce((sum: number, item: BillingItem) => sum + item.amount, 0),
+      subtotal: data.items.reduce((sum: number, item: BillingItem) => sum + (item.amount || 0), 0),
       total: (() => {
         const subtotal = data.items.reduce((sum: number, item: BillingItem) => sum + (item.amount || 0), 0);
         const discount = data.discount || 0;
@@ -621,7 +621,7 @@ export function Billing() {
 
           <div class="document-title">
             <span>
-              ${document.type === 'estimate' ? '��� ORÇAMENTO' :
+              ${document.type === 'estimate' ? '📋 ORÇAMENTO' :
                 document.type === '📄 FATURA'} Nº ${document.number}
             </span>
             <span class="status-badge">${
