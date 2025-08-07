@@ -396,6 +396,32 @@ export function CRM() {
         status: "active" as const,
       };
       setClients([...clients, newClient]);
+
+      // NOVIDADE: Enviar notificação quando novo cliente for cadastrado
+      // Em produção, isso seria uma chamada para API de notificações
+      console.log("📢 NOTIFICAÇÃO ENVIADA: Novo cliente cadastrado", {
+        type: 'info',
+        title: 'Novo Cliente Cadastrado',
+        message: `${newClient.name} foi adicionado ao CRM`,
+        category: 'client',
+        createdBy: 'Usuário Atual', // Em produção: pegar do contexto de auth
+        clientData: {
+          id: newClient.id,
+          name: newClient.name,
+          email: newClient.email,
+          tags: newClient.tags
+        }
+      });
+
+      // FUTURO: Integração com sistema de notificações
+      // await NotificationService.create({
+      //   type: 'client_created',
+      //   title: 'Novo Cliente Cadastrado',
+      //   message: `${newClient.name} foi adicionado ao CRM`,
+      //   entityId: newClient.id,
+      //   entityType: 'client',
+      //   userId: currentUser.id
+      // });
     }
     setShowClientForm(false);
   };
