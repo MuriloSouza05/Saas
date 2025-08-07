@@ -265,9 +265,12 @@ export function Billing() {
   };
 
   const handleSubmitDocument = (data: any) => {
+    // CORREÇÃO: Verificar se está editando documento existente ou criando novo
+    const isEditing = !!editingDocument;
+
     const baseDoc = {
       ...data,
-      id: Date.now().toString(),
+      id: isEditing ? editingDocument.id : Date.now().toString(),
       date: data.date + 'T00:00:00Z',
       dueDate: data.dueDate + 'T00:00:00Z',
       senderName: 'Escritório Silva & Associados',
@@ -276,11 +279,11 @@ export function Billing() {
       receiverDetails: mockClientDetails,
       subtotal: data.items.reduce((sum: number, item: BillingItem) => sum + item.amount, 0),
       total: data.items.reduce((sum: number, item: BillingItem) => sum + item.amount, 0) - data.discount + data.fee + data.tax,
-      status: 'DRAFT' as DocumentStatus,
-      attachments: [],
-      createdAt: new Date().toISOString(),
+      status: isEditing ? editingDocument.status : 'DRAFT' as DocumentStatus,
+      attachments: isEditing ? editingDocument.attachments : [],
+      createdAt: isEditing ? editingDocument.createdAt : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      createdBy: 'Dr. Silva',
+      createdBy: isEditing ? editingDocument.createdBy : 'Dr. Silva',
       lastModifiedBy: 'Dr. Silva',
     };
 
