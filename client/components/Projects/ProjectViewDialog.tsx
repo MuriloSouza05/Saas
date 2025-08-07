@@ -246,7 +246,7 @@ export function ProjectViewDialog({
           )}
 
           {/* Contatos */}
-          {project.contacts && project.contacts.length > 0 && (
+          {project.contacts && Array.isArray(project.contacts) && project.contacts.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold flex items-center mb-3">
                 <User className="h-5 w-5 mr-2" />
