@@ -278,7 +278,13 @@ export function Billing() {
       receiverName: 'Cliente Selecionado',
       receiverDetails: mockClientDetails,
       subtotal: data.items.reduce((sum: number, item: BillingItem) => sum + item.amount, 0),
-      total: data.items.reduce((sum: number, item: BillingItem) => sum + item.amount, 0) - data.discount + data.fee + data.tax,
+      total: (() => {
+        const subtotal = data.items.reduce((sum: number, item: BillingItem) => sum + (item.amount || 0), 0);
+        const discount = data.discount || 0;
+        const fee = data.fee || 0;
+        const tax = data.tax || 0;
+        return subtotal - discount + fee + tax;
+      })(),
       status: isEditing ? editingDocument.status : 'DRAFT' as DocumentStatus,
       attachments: isEditing ? editingDocument.attachments : [],
       createdAt: isEditing ? editingDocument.createdAt : new Date().toISOString(),
@@ -615,7 +621,7 @@ export function Billing() {
 
           <div class="document-title">
             <span>
-              ${document.type === 'estimate' ? '📋 ORÇAMENTO' :
+              ${document.type === 'estimate' ? '��� ORÇAMENTO' :
                 document.type === '📄 FATURA'} Nº ${document.number}
             </span>
             <span class="status-badge">${
