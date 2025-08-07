@@ -388,16 +388,20 @@ export function EmailSendModal({
                 />
               </div>
 
+              {/* NOVIDADE: Anexar documentos ao invés de PDF */}
               <div className="flex items-center space-x-2">
                 <Switch
-                  id="attach-pdf"
-                  checked={emailData.attachPdf}
+                  id="attach-docs"
+                  checked={emailData.attachPdf} // Mantido nome para compatibilidade
                   onCheckedChange={(checked) =>
                     setEmailData((prev) => ({ ...prev, attachPdf: checked }))
                   }
                 />
-                <Label htmlFor="attach-pdf">Anexar PDF dos documentos</Label>
+                <Label htmlFor="attach-docs">Anexar documentos selecionados</Label>
               </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Os documentos selecionados serão enviados como anexo no email
+              </p>
             </div>
 
             {/* Preview */}
