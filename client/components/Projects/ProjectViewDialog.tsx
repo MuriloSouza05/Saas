@@ -338,7 +338,7 @@ export function ProjectViewDialog({
           )}
 
           {/* IMPLEMENTAÇÃO MELHORADA: Seção de Documentos do Projeto - só aparece quando há documentos */}
-          {(project.files && project.files.length > 0) && (
+          {(project.files && Array.isArray(project.files) && project.files.length > 0) && (
             <>
               <Separator className="my-6" />
               <div>
