@@ -58,6 +58,9 @@ const documentSchema = z.object({
   tax: z.number().min(0, "Imposto deve ser positivo"),
   taxType: z.enum(["percentage", "fixed"]),
   notes: z.string().optional(),
+}).refine((data) => true, {
+  message: "Pelo menos um item deve ser adicionado",
+  path: ["items"], // Campo virtual para mostrar erro
 });
 
 type DocumentFormData = z.infer<typeof documentSchema>;
