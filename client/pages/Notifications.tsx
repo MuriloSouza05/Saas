@@ -178,6 +178,7 @@ export function Notifications() {
     assignedTo: ['Dr. Advogado'],
     contacts: [],
     attachments: [],
+    files: [],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-28T00:00:00Z',
   };
@@ -225,7 +226,7 @@ export function Notifications() {
         tax: 0,
       }
     ],
-    senderName: 'Escritório Silva & Associados',
+    senderName: 'Escrit��rio Silva & Associados',
     receiverName: 'Maria Silva',
   };
 
@@ -445,7 +446,7 @@ export function Notifications() {
                     <SelectItem value="all">Todas as categorias</SelectItem>
                     <SelectItem value="client">CRM</SelectItem>
                     <SelectItem value="project">Projetos</SelectItem>
-                    <SelectItem value="billing">Cobrança</SelectItem>
+                    <SelectItem value="billing">Cobran��a</SelectItem>
                     <SelectItem value="task">Tarefas</SelectItem>
                     <SelectItem value="system">Sistema</SelectItem>
                   </SelectContent>
