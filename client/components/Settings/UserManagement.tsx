@@ -255,17 +255,10 @@ export function UserManagement() {
     }
   };
 
-  const toggleUserStatus = (userId: string) => {
-    setUsers(users.map(user => 
-      user.id === userId 
-        ? { ...user, status: user.status === 'active' ? 'inactive' : 'active' }
-        : user
-    ));
-  };
-
-  const deleteUser = (userId: string) => {
-    setUsers(users.filter(user => user.id !== userId));
-  };
+  // REMOVIDO: Funções de ação do usuário conforme solicitado
+  // Apenas administrador pode ativar/desativar/excluir usuários
+  // const toggleUserStatus = (userId: string) => { ... };
+  // const deleteUser = (userId: string) => { ... };
 
   return (
     <div className="space-y-6">
