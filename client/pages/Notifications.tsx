@@ -6,7 +6,7 @@
  * com detalhes completos incluindo:
  * - Quem cadastrou/fez a ação
  * - Horário detalhado
- * - Informa��ões adicionais
+ * - Informações adicionais
  * - Ações disponíveis
  */
 
@@ -293,6 +293,38 @@ export function Notifications() {
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  // NOVIDADE: Função para abrir modal específico baseado no tipo de notificação
+  // Substitui navegação por página que causava 3 segundos de tela branca
+  const handleViewDetails = (notification: DetailedNotification) => {
+    markAsRead(notification.id);
+
+    if (!notification.actionData) return;
+
+    // IMPLEMENTAÇÃO: Abrir modal específico conforme tipo da notificação
+    switch (notification.actionData.type) {
+      case 'project':
+        setSelectedItem(mockProject);
+        setShowProjectDialog(true);
+        break;
+      case 'client':
+        setSelectedItem(mockClient);
+        setShowClientDialog(true);
+        break;
+      case 'invoice':
+      case 'document':
+        setSelectedItem(mockDocument);
+        setShowDocumentDialog(true);
+        break;
+      case 'task':
+        setSelectedItem(mockTask);
+        setShowTaskDialog(true);
+        break;
+      default:
+        // Fallback: navegar para a página se não houver modal específico
+        navigate(notification.actionData.page);
+    }
+  };
 
   return (
     <DashboardLayout>
