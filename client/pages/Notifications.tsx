@@ -519,14 +519,10 @@ export function Notifications() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           {notification.actionData && (
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="outline"
-                              onClick={() => {
-                                markAsRead(notification.id);
-                                // Navegar para a página específica
-                                window.location.href = notification.actionData!.page;
-                              }}
+                              onClick={() => handleViewDetails(notification)}
                             >
                               <Eye className="h-4 w-4 mr-2" />
                               Ver Detalhes
