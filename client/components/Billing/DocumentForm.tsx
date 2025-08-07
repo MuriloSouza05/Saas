@@ -283,7 +283,26 @@ export function DocumentForm({
   }, [doc, open]);
 
   const handleSubmit = createSafeDialogHandler((data: DocumentFormData) => {
-    onSubmit({ ...data, items });
+    // NOVIDADE: Validação obrigatória de itens para Orçamentos e Faturas
+    if (items.length === 0) {
+      alert("Erro: Pelo menos um item deve ser adicionado ao documento!");
+      return;
+    }
+
+    // CORREÇÃO: Garantir que valores não sejam undefined/NaN
+    const validItems = items.filter(item =>
+      item.description &&
+      !isNaN(item.quantity) &&
+      !isNaN(item.rate) &&
+      !isNaN(item.amount)
+    );
+
+    if (validItems.length === 0) {
+      alert("Erro: Todos os itens devem ter valores válidos!");
+      return;
+    }
+
+    onSubmit({ ...data, items: validItems });
     safeOnOpenChange(false);
   });
 
