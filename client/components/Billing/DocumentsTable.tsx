@@ -269,12 +269,8 @@ export function DocumentsTable({
                         <Copy className="mr-2 h-4 w-4" />
                         Duplicar
                       </DropdownMenuItem>
-                      {document.status === 'DRAFT' && (
-                        <DropdownMenuItem onClick={() => onSendDoc(document)}>
-                          <Send className="mr-2 h-4 w-4" />
-                          Enviar
-                        </DropdownMenuItem>
-                      )}
+                      {/* REMOVIDO: Opção "Enviar" para evitar erros undefined */}
+                      {/* Em produção, implementar funcionalidade completa de envio */}
                       <DropdownMenuItem onClick={() => onDownloadDoc(document)}>
                         <Download className="mr-2 h-4 w-4" />
                         Download PDF
