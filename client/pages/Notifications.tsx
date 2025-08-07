@@ -11,11 +11,17 @@
  */
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+// NOVIDADE: Importar componentes de visualização para abrir modais específicos
+import { ProjectViewDialog } from '@/components/Projects/ProjectViewDialog';
+import { ClientViewDialog } from '@/components/CRM/ClientViewDialog';
+import { DocumentViewDialog } from '@/components/Billing/DocumentViewDialog';
+import { TaskViewDialog } from '@/components/Tasks/TaskViewDialog';
 import {
   Select,
   SelectContent,
