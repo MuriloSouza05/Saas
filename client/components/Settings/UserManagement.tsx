@@ -54,7 +54,7 @@ const mockRoles: UserRole[] = [
   {
     id: '1',
     name: 'Conta Simples',
-    description: 'Acesso apenas ao CRM e áreas básicas do sistema',
+    description: 'Acesso apenas ao CRM e ��reas básicas do sistema',
     permissions: [
       // CRM - Acesso total
       { module: 'crm', action: 'admin', granted: true },
@@ -394,35 +394,9 @@ export function UserManagement() {
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => setEditingUser(user)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Editar
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => toggleUserStatus(user.id)}>
-                            {user.status === 'active' ? (
-                              <><UserX className="mr-2 h-4 w-4" />Desativar</>
-                            ) : (
-                              <><UserCheck className="mr-2 h-4 w-4" />Ativar</>
-                            )}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            onClick={() => deleteUser(user.id)}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Excluir
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+                    {/* REMOVIDO: Dropdown de ações (Editar, Excluir, Desativar) */}
+                    {/* Conforme solicitado, apenas administrador pode gerenciar usuários */}
+                    {/* O controle de portal permanece para o gerente */}
                   </TableRow>
                 ))}
               </TableBody>
