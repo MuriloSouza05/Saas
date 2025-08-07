@@ -420,6 +420,36 @@ export function Tasks() {
         projectTitle: data.projectId ? 'Projeto Relacionado' : undefined,
       };
       setTasks([...tasks, newTask]);
+
+      // NOVIDADE: Enviar notificação quando nova tarefa for criada
+      // Em produção, isso seria uma chamada para API de notificações
+      console.log("📢 NOTIFICAÇÃO ENVIADA: Nova tarefa criada", {
+        type: 'info',
+        title: 'Nova Tarefa Criada',
+        message: `${newTask.title} foi atribuída${newTask.assignedTo ? ` a ${newTask.assignedTo}` : ''}`,
+        category: 'task',
+        createdBy: 'Usuário Atual', // Em produção: pegar do contexto de auth
+        taskData: {
+          id: newTask.id,
+          title: newTask.title,
+          assignedTo: newTask.assignedTo,
+          priority: newTask.priority,
+          endDate: newTask.endDate,
+          projectTitle: newTask.projectTitle,
+          tags: newTask.tags
+        }
+      });
+
+      // FUTURO: Integração com sistema de notificações
+      // await NotificationService.create({
+      //   type: 'task_created',
+      //   title: 'Nova Tarefa Criada',
+      //   message: `${newTask.title} foi${newTask.assignedTo ? ` atribuída a ${newTask.assignedTo}` : ' criada'}`,
+      //   entityId: newTask.id,
+      //   entityType: 'task',
+      //   userId: currentUser.id,
+      //   assignedUserId: newTask.assignedTo ? getUserIdByName(newTask.assignedTo) : null
+      // });
     }
     setShowTaskForm(false);
   };
