@@ -293,6 +293,22 @@ export function Billing() {
         convertedToInvoice: false,
       };
       setEstimates([...estimates, estimate]);
+
+      // NOVIDADE: Enviar notificação quando novo orçamento for criado
+      console.log("📢 NOTIFICAÇÃO ENVIADA: Novo orçamento criado", {
+        type: 'info',
+        title: 'Novo Orçamento Criado',
+        message: `Orçamento ${estimate.number} foi criado para ${estimate.receiverName}`,
+        category: 'billing',
+        createdBy: 'Usuário Atual',
+        documentData: {
+          id: estimate.id,
+          number: estimate.number,
+          type: 'estimate',
+          client: estimate.receiverName,
+          amount: estimate.total
+        }
+      });
     } else if (documentType === 'invoice') {
       const invoice: Invoice = {
         ...baseDoc,
@@ -303,6 +319,23 @@ export function Billing() {
         remindersSent: 0,
       };
       setInvoices([...invoices, invoice]);
+
+      // NOVIDADE: Enviar notificação quando nova fatura for criada
+      console.log("📢 NOTIFICAÇÃO ENVIADA: Nova fatura criada", {
+        type: 'warning',
+        title: 'Nova Fatura Criada',
+        message: `Fatura ${invoice.number} foi criada para ${invoice.receiverName} - Valor: R$ ${invoice.total.toFixed(2)}`,
+        category: 'billing',
+        createdBy: 'Usuário Atual',
+        documentData: {
+          id: invoice.id,
+          number: invoice.number,
+          type: 'invoice',
+          client: invoice.receiverName,
+          amount: invoice.total,
+          dueDate: invoice.dueDate
+        }
+      });
     }
   };
 
