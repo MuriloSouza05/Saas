@@ -33,18 +33,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { 
-  Plus, 
-  MoreHorizontal, 
-  Edit, 
-  Trash2, 
-  Users, 
+import {
+  Users,
   Shield,
   Mail,
   Phone,
-  Calendar,
-  UserCheck,
-  UserX
+  Calendar
+  // REMOVIDO: Ícones de ação não utilizados (MoreHorizontal, Edit, Trash2, UserCheck, UserX)
 } from 'lucide-react';
 import { User, UserRole } from '@/types/settings';
 
