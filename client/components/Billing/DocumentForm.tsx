@@ -142,8 +142,7 @@ export function DocumentForm({
     description: "",
     quantity: 1,
     rate: 0,
-    tax: 0,
-    taxType: "percentage" as const,
+    // REMOVIDO: Campos de taxa para simplificar o formulário
   });
 
   const form = useForm<DocumentFormData>({
