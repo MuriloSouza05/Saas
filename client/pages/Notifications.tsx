@@ -6,7 +6,7 @@
  * com detalhes completos incluindo:
  * - Quem cadastrou/fez a ação
  * - Horário detalhado
- * - Informações adicionais
+ * - Informa��ões adicionais
  * - Ações disponíveis
  */
 
@@ -147,11 +147,77 @@ const mockNotifications: DetailedNotification[] = [
 ];
 
 export function Notifications() {
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<DetailedNotification[]>(mockNotifications);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [readFilter, setReadFilter] = useState<string>('all');
+
+  // NOVIDADE: Estados para controlar modais de visualização específicos
+  const [showProjectDialog, setShowProjectDialog] = useState(false);
+  const [showClientDialog, setShowClientDialog] = useState(false);
+  const [showDocumentDialog, setShowDocumentDialog] = useState(false);
+  const [showTaskDialog, setShowTaskDialog] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+
+  // NOVIDADE: Mock data para demonstrar funcionalidade "Ver Detalhes"
+  // Em produção, estes dados viriam de APIs baseados no ID da notificação
+  const mockProject = {
+    id: '3',
+    title: 'Ação Previdenciária - Maria Silva',
+    description: 'Revisão de aposentadoria negada pelo INSS',
+    clientName: 'Maria Silva',
+    status: 'won',
+    startDate: '2024-01-01T00:00:00Z',
+    dueDate: '2024-02-15T00:00:00Z',
+    budget: 5500,
+    currency: 'BRL',
+    progress: 100,
+    tags: ['Previdenciário', 'INSS', 'Concluído'],
+    assignedTo: ['Dr. Advogado'],
+    contacts: [],
+    attachments: [],
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-28T00:00:00Z',
+  };
+
+  const mockClient = {
+    id: '2',
+    name: 'João Santos',
+    email: 'joao@email.com',
+    mobile: '(11) 99999-8888',
+    address: 'São Paulo - SP',
+    tags: ['Direito Trabalhista', 'Novo Cliente'],
+    registeredBy: 'Junior Santos',
+    createdAt: '2024-01-28T10:00:00Z',
+    status: 'active',
+  };
+
+  const mockDocument = {
+    id: 'INV-001',
+    number: 'INV-001',
+    type: 'invoice',
+    status: 'pending',
+    clientName: 'Maria Silva',
+    amount: 2500,
+    dueDate: '2024-01-30T00:00:00Z',
+    createdAt: '2024-01-26T00:00:00Z',
+    items: [],
+  };
+
+  const mockTask = {
+    id: '5',
+    title: 'Revisar documentos contratuais',
+    description: 'Tarefa urgente para revisar contratos de prestação de serviços',
+    status: 'pending',
+    priority: 'high',
+    dueDate: '2024-01-30T00:00:00Z',
+    assignedTo: 'Dr. Silva',
+    projectTitle: 'Consultoria Empresarial',
+    clientName: 'Empresa ABC',
+    createdAt: '2024-01-27T14:30:00Z',
+  };
 
   // Filtrar notificações
   const filteredNotifications = notifications.filter(notification => {
