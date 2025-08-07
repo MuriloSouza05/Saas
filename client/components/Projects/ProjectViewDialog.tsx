@@ -278,7 +278,7 @@ export function ProjectViewDialog({
           )}
 
           {/* Tags */}
-          {project.tags && project.tags.length > 0 && (
+          {project.tags && Array.isArray(project.tags) && project.tags.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold flex items-center mb-3">
                 <Tag className="h-5 w-5 mr-2" />
