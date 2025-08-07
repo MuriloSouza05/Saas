@@ -1070,7 +1070,6 @@ export function Billing() {
                   onEditDoc={handleEditDoc}
                   onDeleteDoc={handleDeleteDoc}
                   onViewDoc={handleViewDoc}
-                  onSendDoc={handleSendDoc}
                   onDownloadDoc={handleDownloadDoc}
                   onDuplicateDoc={handleDuplicateDoc}
                 />
