@@ -229,7 +229,7 @@ export function ProjectViewDialog({
           <Separator />
 
           {/* Equipe Atribuída */}
-          {project.assignedTo && project.assignedTo.length > 0 && (
+          {project.assignedTo && Array.isArray(project.assignedTo) && project.assignedTo.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold flex items-center mb-3">
                 <Users className="h-5 w-5 mr-2" />
