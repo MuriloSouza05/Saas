@@ -54,7 +54,7 @@ const mockRoles: UserRole[] = [
   {
     id: '1',
     name: 'Conta Simples',
-    description: 'Acesso apenas ao CRM e ��reas básicas do sistema',
+    description: 'Acesso apenas ao CRM e áreas básicas do sistema',
     permissions: [
       // CRM - Acesso total
       { module: 'crm', action: 'admin', granted: true },
@@ -220,10 +220,11 @@ const mockUsers: User[] = [
 export function UserManagement() {
   const [users, setUsers] = useState<User[]>(mockUsers);
   const [roles, setRoles] = useState<UserRole[]>(mockRoles);
-  const [showUserDialog, setShowUserDialog] = useState(false);
-  const [showRoleDialog, setShowRoleDialog] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | undefined>();
-  const [editingRole, setEditingRole] = useState<UserRole | undefined>();
+  // REMOVIDO: Estados de edição conforme solicitado
+  // const [showUserDialog, setShowUserDialog] = useState(false);
+  // const [showRoleDialog, setShowRoleDialog] = useState(false);
+  // const [editingUser, setEditingUser] = useState<User | undefined>();
+  // const [editingRole, setEditingRole] = useState<UserRole | undefined>();
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredUsers = users.filter(user =>
