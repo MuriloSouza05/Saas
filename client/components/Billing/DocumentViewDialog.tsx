@@ -240,7 +240,7 @@ export function DocumentViewDialog({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {document.items.map((item, index) => (
+                {(document?.items || []).map((item, index) => (
                   <TableRow key={index}>
                     <TableCell>{item.description}</TableCell>
                     <TableCell className="text-center">{item.quantity}</TableCell>
