@@ -519,11 +519,19 @@ export function DocumentForm({
 
             {/* Items */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Itens</h3>
+              <div>
+                <h3 className="text-lg font-semibold">Itens *</h3>
+                <p className="text-sm text-muted-foreground">
+                  Pelo menos um item deve ser adicionado ao documento
+                </p>
+              </div>
 
               {/* Add new item */}
-              <div className="grid grid-cols-12 gap-2 p-4 border rounded-lg bg-muted/50">
+              <div className="grid grid-cols-10 gap-2 p-4 border rounded-lg bg-muted/50">
                 <div className="col-span-5">
+                  <label className="text-xs text-muted-foreground block mb-1">
+                    Descrição do Serviço
+                  </label>
                   <Select
                     value={newItem.description}
                     onValueChange={(value) =>
@@ -543,9 +551,13 @@ export function DocumentForm({
                   </Select>
                 </div>
                 <div className="col-span-2">
+                  <label className="text-xs text-muted-foreground block mb-1">
+                    Quantidade
+                  </label>
                   <Input
                     type="number"
                     placeholder="Qtd"
+                    min="1"
                     value={newItem.quantity}
                     onChange={(e) =>
                       setNewItem({
@@ -556,9 +568,14 @@ export function DocumentForm({
                   />
                 </div>
                 <div className="col-span-2">
+                  <label className="text-xs text-muted-foreground block mb-1">
+                    Valor Unitário (R$)
+                  </label>
                   <Input
                     type="number"
-                    placeholder="Valor"
+                    placeholder="0.00"
+                    min="0"
+                    step="0.01"
                     value={newItem.rate}
                     onChange={(e) =>
                       setNewItem({
@@ -568,20 +585,11 @@ export function DocumentForm({
                     }
                   />
                 </div>
-                <div className="col-span-2">
-                  <Input
-                    type="number"
-                    placeholder="Taxa %"
-                    value={newItem.tax}
-                    onChange={(e) =>
-                      setNewItem({
-                        ...newItem,
-                        tax: parseFloat(e.target.value) || 0,
-                      })
-                    }
-                  />
-                </div>
+                {/* REMOVIDO: Campo taxa sem funcionalidade conforme solicitado */}
                 <div className="col-span-1">
+                  <label className="text-xs text-muted-foreground block mb-1">
+                    Ação
+                  </label>
                   <Button type="button" onClick={addItem} className="w-full">
                     <Plus className="h-4 w-4" />
                   </Button>
