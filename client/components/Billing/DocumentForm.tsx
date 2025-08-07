@@ -203,20 +203,16 @@ export function DocumentForm({
 
   const addItem = () => {
     if (newItem.description.trim() && newItem.rate > 0) {
+      // CORREÇÃO: Cálculo simplificado sem taxa individual por item
       const amount = newItem.quantity * newItem.rate;
-      const taxAmount =
-        newItem.taxType === "percentage"
-          ? (amount * newItem.tax) / 100
-          : newItem.tax;
 
       const item: BillingItem = {
         id: Date.now().toString(),
         description: newItem.description,
         quantity: newItem.quantity,
         rate: newItem.rate,
-        amount: amount + taxAmount,
-        tax: newItem.tax,
-        taxType: newItem.taxType,
+        amount: amount,
+        tax: 0, // Mantido para compatibilidade com tipos
       };
 
       setItems([...items, item]);
@@ -224,8 +220,6 @@ export function DocumentForm({
         description: "",
         quantity: 1,
         rate: 0,
-        tax: 0,
-        taxType: "percentage",
       });
     }
   };
