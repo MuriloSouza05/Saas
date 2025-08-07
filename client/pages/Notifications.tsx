@@ -208,9 +208,25 @@ export function Notifications() {
     status: 'pending',
     clientName: 'Maria Silva',
     amount: 2500,
+    total: 2500,
+    subtotal: 2500,
     dueDate: '2024-01-30T00:00:00Z',
+    date: '2024-01-26T00:00:00Z',
     createdAt: '2024-01-26T00:00:00Z',
-    items: [],
+    updatedAt: '2024-01-26T00:00:00Z',
+    currency: 'BRL',
+    items: [
+      {
+        id: '1',
+        description: 'Consultoria Jurídica',
+        quantity: 1,
+        rate: 2500,
+        amount: 2500,
+        tax: 0,
+      }
+    ],
+    senderName: 'Escritório Silva & Associados',
+    receiverName: 'Maria Silva',
   };
 
   const mockTask = {
