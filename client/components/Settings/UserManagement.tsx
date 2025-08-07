@@ -315,7 +315,8 @@ export function UserManagement() {
                   <TableHead>Status</TableHead>
                   <TableHead>Último Login</TableHead>
                   <TableHead>Portal Cliente</TableHead>
-                  <TableHead className="w-12">Ações</TableHead>
+                  {/* REMOVIDO: Coluna "Ações" conforme solicitado */}
+                  {/* Apenas administrador do sistema pode gerenciar usuários */}
                 </TableRow>
               </TableHeader>
               <TableBody>
