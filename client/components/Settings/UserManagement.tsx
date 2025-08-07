@@ -18,13 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+// REMOVIDO: Imports de Dialog não utilizados após remoção das funcionalidades de edição
 import {
   Select,
   SelectContent,
