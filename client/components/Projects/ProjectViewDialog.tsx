@@ -321,7 +321,7 @@ export function ProjectViewDialog({
           )}
 
           {/* Anexos */}
-          {project.attachments && project.attachments.length > 0 && (
+          {project.attachments && Array.isArray(project.attachments) && project.attachments.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold mb-3">Anexos</h3>
               <div className="space-y-2">
