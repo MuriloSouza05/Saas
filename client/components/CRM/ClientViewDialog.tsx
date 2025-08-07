@@ -113,9 +113,9 @@ export function ClientViewDialog({
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <Badge className={getStatusColor(client.status)}>
-                {client.status === 'active' ? 'Ativo' : 
-                 client.status === 'inactive' ? 'Inativo' : 'Pendente'}
+              <Badge className={getStatusColor(client?.status || 'active')}>
+                {client?.status === 'active' ? 'Ativo' :
+                 client?.status === 'inactive' ? 'Inativo' : 'Pendente'}
               </Badge>
               {onEdit && (
                 <Button variant="outline" size="sm" onClick={() => onEdit(client)}>
@@ -301,7 +301,7 @@ export function ClientViewDialog({
                 {/* COMENTÁRIO IMPLEMENTAÇÃO FUTURA:
                     Esta seção mostrará os arquivos enviados no formulário de cliente.
 
-                    BACKEND IMPLEMENTAÇÃO:
+                    BACKEND IMPLEMENTA��ÃO:
                     - Tabela: client_files
                       * id, client_id, original_name, file_path, file_type, file_size
                       * uploaded_at, uploaded_by
