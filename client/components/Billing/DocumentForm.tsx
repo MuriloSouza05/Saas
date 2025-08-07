@@ -235,11 +235,8 @@ export function DocumentForm({
           ? {
               ...item,
               quantity,
-              amount:
-                quantity * item.rate +
-                (item.taxType === "percentage"
-                  ? (quantity * item.rate * (item.tax || 0)) / 100
-                  : item.tax || 0),
+              // CORREÇÃO: Cálculo simplificado sem taxa individual
+              amount: quantity * item.rate,
             }
           : item,
       ),
