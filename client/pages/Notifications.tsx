@@ -187,11 +187,18 @@ export function Notifications() {
     name: 'João Santos',
     email: 'joao@email.com',
     mobile: '(11) 99999-8888',
-    address: 'São Paulo - SP',
+    address: 'Rua das Flores, 123, Centro',
+    city: 'São Paulo',
+    state: 'SP',
+    zipCode: '01234-567',
+    country: 'BR',
     tags: ['Direito Trabalhista', 'Novo Cliente'],
     registeredBy: 'Junior Santos',
     createdAt: '2024-01-28T10:00:00Z',
+    updatedAt: '2024-01-28T10:00:00Z',
     status: 'active',
+    budget: 5000,
+    currency: 'BRL',
   };
 
   const mockDocument = {
