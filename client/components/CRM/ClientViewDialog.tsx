@@ -85,7 +85,7 @@ export function ClientViewDialog({
                 </AvatarFallback>
               </Avatar>
               <div>
-                <DialogTitle className="text-xl">{client.name}</DialogTitle>
+                <DialogTitle className="text-xl">{client?.name || 'Cliente'}</DialogTitle>
                 <DialogDescription className="flex items-center space-x-2">
                   {client.organization && (
                     <>
