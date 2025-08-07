@@ -235,11 +235,18 @@ export function Notifications() {
     description: 'Tarefa urgente para revisar contratos de prestação de serviços',
     status: 'pending',
     priority: 'high',
-    dueDate: '2024-01-30T00:00:00Z',
+    startDate: '2024-01-27T00:00:00Z',
+    endDate: '2024-01-30T00:00:00Z',
     assignedTo: 'Dr. Silva',
     projectTitle: 'Consultoria Empresarial',
     clientName: 'Empresa ABC',
+    tags: ['Contratos', 'Urgente'],
+    estimatedHours: 4,
+    actualHours: 0,
+    progress: 0,
     createdAt: '2024-01-27T14:30:00Z',
+    updatedAt: '2024-01-27T14:30:00Z',
+    attachments: [],
   };
 
   // Filtrar notificações
