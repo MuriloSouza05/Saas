@@ -14,13 +14,7 @@ import {
 } from '@/components/ui/table';
 // REMOVIDO: Imports de DropdownMenu não utilizados após remoção das ações
 // REMOVIDO: Imports de Dialog não utilizados após remoção das funcionalidades de edição
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+// REMOVIDO: Imports de Select não utilizados após remoção dos dialogs
 import { Switch } from '@/components/ui/switch';
 import {
   Users,
