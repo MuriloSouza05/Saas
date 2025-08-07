@@ -12,12 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+// REMOVIDO: Imports de DropdownMenu não utilizados após remoção das ações
 // REMOVIDO: Imports de Dialog não utilizados após remoção das funcionalidades de edição
 import {
   Select,
