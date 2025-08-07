@@ -108,17 +108,20 @@ export function DocumentViewDialog({
   };
 
   const calculateTotal = () => {
+    if (!document?.items) return 0;
     const subtotal = document.items.reduce((sum, item) => sum + (item.quantity * item.rate), 0);
-    const taxTotal = document.items.reduce((sum, item) => sum + (item.quantity * item.rate * item.tax / 100), 0);
+    const taxTotal = document.items.reduce((sum, item) => sum + (item.quantity * item.rate * (item.tax || 0) / 100), 0);
     return subtotal + taxTotal;
   };
 
   const calculateSubtotal = () => {
+    if (!document?.items) return 0;
     return document.items.reduce((sum, item) => sum + (item.quantity * item.rate), 0);
   };
 
   const calculateTaxTotal = () => {
-    return document.items.reduce((sum, item) => sum + (item.quantity * item.rate * item.tax / 100), 0);
+    if (!document?.items) return 0;
+    return document.items.reduce((sum, item) => sum + (item.quantity * item.rate * (item.tax || 0) / 100), 0);
   };
 
   return (
