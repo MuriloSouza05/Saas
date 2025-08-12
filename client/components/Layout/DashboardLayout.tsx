@@ -138,6 +138,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <Scale className="h-8 w-8 text-sidebar-primary" />
               <div className="flex flex-col">
                 <span className="text-lg font-bold text-sidebar-foreground">
+                  {/* IMPLEMENTAÇÃO FUTURA: Nome dinâmico da empresa
+                      Este "LegalSaaS" será substituído pelo nome real da empresa
+                      configurado em Settings > Empresa quando o backend estiver implementado.
+                      O valor virá de uma API que retorna o nome da empresa baseado no
+                      usuário logado. Exemplo: companySettings.name || "LegalSaaS" */}
                   LegalSaaS
                 </span>
                 <span className="text-xs text-sidebar-foreground/70">

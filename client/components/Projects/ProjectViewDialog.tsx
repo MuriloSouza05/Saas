@@ -55,6 +55,14 @@ export function ProjectViewDialog({
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
   const getStatusLabel = (status: string) => {
     const statusMap = {
       planejamento: 'Planejamento',
@@ -113,15 +121,23 @@ export function ProjectViewDialog({
               <FolderKanban className="h-8 w-8 text-blue-600" />
               <div>
                 <DialogTitle className="text-xl">{project.title}</DialogTitle>
-                <DialogDescription className="flex items-center space-x-2">
-                  <User className="h-4 w-4" />
-                  <span>{project.clientName}</span>
-                  {project.organization && (
-                    <>
-                      <span>•</span>
-                      <Building className="h-4 w-4" />
-                      <span>{project.organization}</span>
-                    </>
+                <DialogDescription className="space-y-2">
+                  <span className="flex items-center space-x-2">
+                    <User className="h-4 w-4" />
+                    <span>{project.clientName}</span>
+                    {project.organization && (
+                      <>
+                        <span>•</span>
+                        <Building className="h-4 w-4" />
+                        <span>{project.organization}</span>
+                      </>
+                    )}
+                  </span>
+                  {/* IMPLEMENTAÇÃO: Mostrar colaborador que criou o projeto */}
+                  {project.createdBy && (
+                    <span className="flex items-center space-x-2 text-xs text-muted-foreground block mt-1">
+                      Criado por: {project.createdBy}
+                    </span>
                   )}
                 </DialogDescription>
               </div>
@@ -213,7 +229,7 @@ export function ProjectViewDialog({
           <Separator />
 
           {/* Equipe Atribuída */}
-          {project.assignedTo && project.assignedTo.length > 0 && (
+          {project.assignedTo && Array.isArray(project.assignedTo) && project.assignedTo.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold flex items-center mb-3">
                 <Users className="h-5 w-5 mr-2" />
@@ -230,7 +246,7 @@ export function ProjectViewDialog({
           )}
 
           {/* Contatos */}
-          {project.contacts && project.contacts.length > 0 && (
+          {project.contacts && Array.isArray(project.contacts) && project.contacts.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold flex items-center mb-3">
                 <User className="h-5 w-5 mr-2" />
@@ -262,7 +278,7 @@ export function ProjectViewDialog({
           )}
 
           {/* Tags */}
-          {project.tags && project.tags.length > 0 && (
+          {project.tags && Array.isArray(project.tags) && project.tags.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold flex items-center mb-3">
                 <Tag className="h-5 w-5 mr-2" />
@@ -305,7 +321,7 @@ export function ProjectViewDialog({
           )}
 
           {/* Anexos */}
-          {project.attachments && project.attachments.length > 0 && (
+          {project.attachments && Array.isArray(project.attachments) && project.attachments.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold mb-3">Anexos</h3>
               <div className="space-y-2">
@@ -319,6 +335,69 @@ export function ProjectViewDialog({
                 ))}
               </div>
             </div>
+          )}
+
+          {/* IMPLEMENTAÇÃO MELHORADA: Seção de Documentos do Projeto - só aparece quando há documentos */}
+          {(project.files && Array.isArray(project.files) && project.files.length > 0) && (
+            <>
+              <Separator className="my-6" />
+              <div>
+                <h3 className="text-lg font-semibold mb-3 flex items-center">
+                  <FileText className="h-5 w-5 mr-2" />
+                  Documentos do Projeto ({project.files.length})
+                </h3>
+                {/* COMENTÁRIO IMPLEMENTAÇÃO:
+                    Esta seção só é visível quando há documentos anexados ao projeto.
+
+                    ESTRUTURA DO BACKEND:
+                    - project.files: Array de objetos com { id, name, type, size, url, uploadedAt, uploadedBy }
+                    - API: GET /api/projects/{id}/files
+                    - Storage: AWS S3 ou pasta local para arquivos
+
+                    FUNCIONALIDADES:
+                    - Preview inline para imagens
+                    - Download direto para PDFs
+                    - Histórico de uploads
+                    - Controle de permissões de acesso
+                */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {project.files.map((file, index) => (
+                    <div key={file.id || index} className="border rounded-lg p-3 hover:shadow-md transition-shadow">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                          file.type?.includes('pdf') ? 'bg-red-100' :
+                          file.type?.includes('image') ? 'bg-blue-100' : 'bg-gray-100'
+                        }`}>
+                          <FileText className={`h-5 w-5 ${
+                            file.type?.includes('pdf') ? 'text-red-600' :
+                            file.type?.includes('image') ? 'text-blue-600' : 'text-gray-600'
+                          }`} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{file.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {file.size && formatFileSize(file.size)} • {file.type?.split('/')[1]?.toUpperCase() || 'Arquivo'}
+                          </p>
+                          {file.uploadedAt && (
+                            <p className="text-xs text-muted-foreground">
+                              Enviado: {formatDate(file.uploadedAt)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="mt-3 flex space-x-2">
+                        <Button size="sm" variant="outline" className="flex-1">
+                          {file.type?.includes('image') ? 'Preview' : 'Visualizar'}
+                        </Button>
+                        <Button size="sm" variant="outline" className="flex-1">
+                          Download
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
         </div>
       </DialogContent>

@@ -134,6 +134,11 @@ export function Settings() {
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
+
+  // FUNCIONALIDADE FUTURA: Nome dinâmico da empresa
+  // Estado para gerenciar o nome da empresa que aparece no DashboardLayout
+  const [companyName, setCompanyName] = useState<string>("LegalSaaS");
+  const [savedCompanyName, setSavedCompanyName] = useState<string>("LegalSaaS");
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [currentTemplate, setCurrentTemplate] = useState<
     "budget" | "invoice" | null
@@ -199,8 +204,25 @@ export function Settings() {
         // Aqui seria feito o upload real para o servidor
       }
 
+      // FUNCIONALIDADE IMPLEMENTADA: Mudança dinâmica do nome da empresa
+      // Salvar o nome da empresa e atualizar o DashboardLayout
+      if (companyName !== savedCompanyName) {
+        setSavedCompanyName(companyName);
+
+        // IMPLEMENTAÇÃO FUTURA: Armazenar no localStorage ou banco de dados
+        // localStorage.setItem('companyName', companyName);
+
+        // IMPLEMENTAÇÃO FUTURA: Disparar evento para atualizar o DashboardLayout
+        // window.dispatchEvent(new CustomEvent('companyNameUpdated', {
+        //   detail: { newName: companyName }
+        // }));
+
+        // IMPLEMENTAÇÃO FUTURA: Fazer requisição para o backend
+        // await updateCompanySettings({ name: companyName });
+      }
+
       alert(
-        `✅ Configurações da empresa salvas com sucesso!${logoFile ? "\n🇫Logo atualizado!" : ""}${faviconFile ? "\n🌐Favicon atualizado!" : ""}`,
+        `✅ Configurações da empresa salvas com sucesso!${companyName !== savedCompanyName ? "\n🏢 Nome da empresa atualizado!" : ""}${logoFile ? "\n🖼️ Logo atualizado!" : ""}${faviconFile ? "\n🌐 Favicon atualizado!" : ""}`,
       );
 
       // Resetar arquivos após o sucesso
@@ -262,6 +284,16 @@ export function Settings() {
       const reader = new FileReader();
       reader.onload = (e) => {
         setLogoPreview(e.target?.result as string);
+
+        // FUNCIONALIDADE FUTURA: Upload automático e seleção da logo
+        // Quando implementar backend, aqui será o local para:
+        // 1. Fazer upload automático do arquivo para o servidor
+        // 2. Salvar a URL da imagem no localStorage ou estado global
+        // 3. Atualizar automaticamente o logo no DashboardLayout
+        // 4. Enviar notificação de sucesso
+        // Exemplo de implementação futura:
+        // localStorage.setItem('companyLogo', e.target?.result as string);
+        // window.dispatchEvent(new Event('logoUpdated')); // Evento para atualizar layout
       };
       reader.readAsDataURL(file);
 
@@ -382,8 +414,17 @@ export function Settings() {
                       <Label htmlFor="company-name">Nome da Empresa</Label>
                       <Input
                         id="company-name"
-                        defaultValue="Escritório Silva & Associados"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        placeholder="Digite o nome da empresa"
                       />
+                      {/* COMENTÁRIO FUNCIONALIDADE:
+                          Quando este campo for alterado e salvo, o nome "LegalSaaS"
+                          no DashboardLayout será atualizado automaticamente.
+                          A implementação futura incluirá:
+                          1. Escutar evento customizado no DashboardLayout
+                          2. Sincronizar com localStorage ou banco de dados
+                          3. Atualização em tempo real em todas as interfaces */}
                     </div>
                     <div>
                       <Label htmlFor="company-cnpj">CNPJ</Label>
@@ -1201,7 +1242,7 @@ export function Settings() {
                         {[
                           { method: "PIX", icon: "🏦", enabled: true },
                           {
-                            method: "Cartão de Crédito",
+                            method: "Cartão de Cr��dito",
                             icon: "💳",
                             enabled: true,
                           },
@@ -1341,6 +1382,45 @@ export function Settings() {
                     <h3 className="text-lg font-medium">
                       Backup e Recuperação
                     </h3>
+                    {/* IMPLEMENTAÇÃO BACKEND - BACKUP E RECUPERAÇÃO:
+
+                        ESTRATÉGIA DE BACKUP:
+                        1. BACKUP AUTOMÁTICO DIÁRIO (PostgreSQL)
+                           - pg_dump completo da base de dados
+                           - Armazenamento em AWS S3 ou similar
+                           - Retenção: 30 dias para backups diários
+                           - Backup incremental de arquivos (documentos/imagens)
+
+                        2. BACKUP MANUAL (Sob DEMANDA)
+                           - Permite backup imediato antes de mudanças importantes
+                           - Inclui dados + arquivos + configurações
+                           - Download direto ou envio para cloud storage
+
+                        3. ESTRUTURA DO BACKUP:
+                           backup_YYYY-MM-DD_HH-mm-ss/
+                           ├── database.sql (dump PostgreSQL)
+                           ├── uploads/ (arquivos de clientes/projetos)
+                           ├── configs/ (configurações do sistema)
+                           └── metadata.json (info do backup)
+
+                        PROCESSO DE RECUPERAÇÃO:
+                        1. Upload do arquivo de backup
+                        2. Validação da integridade
+                        3. Criação de backup atual (segurança)
+                        4. Restauração em etapas:
+                           - Banco de dados (pg_restore)
+                           - Arquivos de upload
+                           - Configurações do sistema
+                        5. Verificação de integridade pós-restauração
+                        6. Logs detalhados do processo
+
+                        API ENDPOINTS:
+                        - POST /api/admin/backup/create - Gerar backup manual
+                        - GET /api/admin/backup/list - Listar backups disponíveis
+                        - POST /api/admin/backup/restore - Restaurar backup
+                        - GET /api/admin/backup/download/{id} - Download backup
+                        - DELETE /api/admin/backup/{id} - Excluir backup antigo
+                    */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Button
                         variant="outline"
@@ -1354,7 +1434,7 @@ export function Settings() {
                       <Button
                         variant="outline"
                         onClick={() =>
-                          alert("�� Abrindo assistente de restauração...")
+                          alert("🔄 Abrindo assistente de restaura��ão...")
                         }
                       >
                         <Upload className="h-4 w-4 mr-2" />
@@ -1365,6 +1445,33 @@ export function Settings() {
 
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">Sessões Ativas</h3>
+                    {/* IMPLEMENTAÇÃO BACKEND - SESSÕES ATIVAS:
+
+                        BANCO DE DADOS - Tabela: user_sessions
+                        - id (UUID): Identificador único da sessão
+                        - user_id (UUID): ID do usuário
+                        - session_token (TEXT): Token JWT da sessão
+                        - device_info (JSONB): Navegador, OS, device type
+                        - ip_address (INET): IP do cliente
+                        - location (TEXT): Localização baseada no IP (GeoIP)
+                        - created_at (TIMESTAMP): Momento do login
+                        - last_activity (TIMESTAMP): Última atividade
+                        - expires_at (TIMESTAMP): Expiração da sessão
+                        - is_active (BOOLEAN): Se a sessão está ativa
+
+                        API ENDPOINTS:
+                        - GET /api/users/sessions - Listar sessões ativas do usuário
+                        - DELETE /api/users/sessions/{session_id} - Encerrar sessão específica
+                        - DELETE /api/users/sessions/all - Encerrar todas as outras sessões
+
+                        FUNCIONALIDADES:
+                        - Detectar device/browser via User-Agent
+                        - Geolocalização via IP (MaxMind GeoIP2)
+                        - Auto-encerrar sessões expiradas (cron job)
+                        - Limitar número máximo de sessões simultâneas
+                        - Logs de auditoria para login/logout
+                        - Notificação de novo login em device desconhecido
+                    */}
                     <div className="space-y-2">
                       {[
                         {
@@ -1706,7 +1813,7 @@ export function Settings() {
               </DialogTitle>
               <DialogDescription>
                 {editingAccount
-                  ? "Atualize as informaç��es da conta bancária."
+                  ? "Atualize as informações da conta bancária."
                   : "Adicione uma nova conta bancária ao sistema."}
               </DialogDescription>
             </DialogHeader>

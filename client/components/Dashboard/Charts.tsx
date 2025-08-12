@@ -18,6 +18,41 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+// Enhanced suppression of Recharts defaultProps warnings for React 18+
+// These warnings come from the Recharts library itself and cannot be fixed from our application code
+const originalWarn = console.warn;
+const originalError = console.error;
+
+console.warn = (...args) => {
+  const message = args[0];
+  if (typeof message === 'string') {
+    // Suppress Recharts defaultProps warnings
+    if (message.includes('defaultProps will be removed') &&
+        (message.includes('XAxis') || message.includes('YAxis'))) {
+      return;
+    }
+    // Also catch React development warnings about Recharts components
+    if (message.includes('Warning: ') &&
+        (message.includes('XAxis') || message.includes('YAxis')) &&
+        message.includes('defaultProps')) {
+      return;
+    }
+  }
+  originalWarn.apply(console, args);
+};
+
+console.error = (...args) => {
+  const message = args[0];
+  if (typeof message === 'string') {
+    // Suppress React error logs about defaultProps from Recharts
+    if (message.includes('defaultProps') &&
+        (message.includes('XAxis') || message.includes('YAxis'))) {
+      return;
+    }
+  }
+  originalError.apply(console, args);
+};
+
 // Mock data for charts
 const monthlyFinancialData = [
   { month: 'Jan', receitas: 45000, despesas: 28000, saldo: 17000 },
@@ -127,10 +162,32 @@ export function DashboardCharts({ className }: ChartsProps) {
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyFinancialData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-              <XAxis dataKey="month" stroke="#6B7280" />
-              <YAxis 
+              <XAxis
+                type="category"
+                dataKey="month"
+                stroke="#6B7280"
+                tick={{ fontSize: 12, fill: '#6B7280' }}
+                tickLine={{ stroke: '#6B7280' }}
+                axisLine={{ stroke: '#6B7280' }}
+                interval={0}
+                height={60}
+                orientation="bottom"
+                allowDecimals={false}
+                allowDuplicatedCategory={false}
+                scale="auto"
+              />
+              <YAxis
+                type="number"
                 stroke="#6B7280"
                 tickFormatter={formatCurrency}
+                tick={{ fontSize: 12, fill: '#6B7280' }}
+                tickLine={{ stroke: '#6B7280' }}
+                axisLine={{ stroke: '#6B7280' }}
+                width={80}
+                domain={['auto', 'auto']}
+                orientation="left"
+                allowDecimals={false}
+                scale="auto"
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
@@ -267,15 +324,33 @@ export function DashboardCharts({ className }: ChartsProps) {
             <BarChart data={casesByStatus}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
               <XAxis
+                type="category"
                 dataKey="status"
                 stroke="#6B7280"
                 angle={-45}
                 textAnchor="end"
                 height={80}
                 interval={0}
-                fontSize={12}
+                tick={{ fontSize: 12, fill: '#6B7280' }}
+                tickLine={{ stroke: '#6B7280' }}
+                axisLine={{ stroke: '#6B7280' }}
+                orientation="bottom"
+                allowDecimals={false}
+                allowDuplicatedCategory={false}
+                scale="auto"
               />
-              <YAxis stroke="#6B7280" />
+              <YAxis
+                type="number"
+                stroke="#6B7280"
+                tick={{ fontSize: 12, fill: '#6B7280' }}
+                tickLine={{ stroke: '#6B7280' }}
+                axisLine={{ stroke: '#6B7280' }}
+                width={60}
+                domain={[0, 'auto']}
+                orientation="left"
+                allowDecimals={false}
+                scale="auto"
+              />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="count" name="Casos" radius={[4, 4, 0, 0]}>
                 {casesByStatus.map((entry, index) => (
@@ -296,8 +371,32 @@ export function DashboardCharts({ className }: ChartsProps) {
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={clientsGrowth}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-              <XAxis dataKey="month" stroke="#6B7280" />
-              <YAxis stroke="#6B7280" />
+              <XAxis
+                type="category"
+                dataKey="month"
+                stroke="#6B7280"
+                tick={{ fontSize: 12, fill: '#6B7280' }}
+                tickLine={{ stroke: '#6B7280' }}
+                axisLine={{ stroke: '#6B7280' }}
+                interval={0}
+                height={60}
+                orientation="bottom"
+                allowDecimals={false}
+                allowDuplicatedCategory={false}
+                scale="auto"
+              />
+              <YAxis
+                type="number"
+                stroke="#6B7280"
+                tick={{ fontSize: 12, fill: '#6B7280' }}
+                tickLine={{ stroke: '#6B7280' }}
+                axisLine={{ stroke: '#6B7280' }}
+                width={60}
+                domain={[0, 'auto']}
+                orientation="left"
+                allowDecimals={false}
+                scale="auto"
+              />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
               <Area

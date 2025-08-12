@@ -12,53 +12,44 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+// REMOVIDO: Imports de DropdownMenu não utilizados após remoção das ações
+// REMOVIDO: Imports de Dialog não utilizados após remoção das funcionalidades de edição
+// REMOVIDO: Imports de Select não utilizados após remoção dos dialogs
 import { Switch } from '@/components/ui/switch';
-import { 
-  Plus, 
-  MoreHorizontal, 
-  Edit, 
-  Trash2, 
-  Users, 
+import {
+  Users,
   Shield,
   Mail,
   Phone,
-  Calendar,
-  UserCheck,
-  UserX
+  Calendar
+  // REMOVIDO: Ícones de ação não utilizados (MoreHorizontal, Edit, Trash2, UserCheck, UserX)
 } from 'lucide-react';
 import { User, UserRole } from '@/types/settings';
 
-// Mock data
+// SISTEMA DE 3 TIPOS DE CONTA IMPLEMENTADO
+// Conforme solicitado: Conta Simples, Conta Composta, Conta Gerencial
 const mockRoles: UserRole[] = [
   {
     id: '1',
-    name: 'Administrador',
-    description: 'Acesso completo ao sistema',
+    name: 'Conta Simples',
+    description: 'Acesso apenas ao CRM e áreas básicas do sistema',
     permissions: [
+      // CRM - Acesso total
       { module: 'crm', action: 'admin', granted: true },
+      // Dashboard - SEM informações financeiras (receitas, despesas, saldo)
+      { module: 'dashboard', action: 'read_basic', granted: true },
+      { module: 'dashboard', action: 'read_financial', granted: false },
+      // Projetos - Acesso total
       { module: 'projetos', action: 'admin', granted: true },
-      { module: 'financeiro', action: 'admin', granted: true },
-      { module: 'configuracoes', action: 'admin', granted: true },
+      // Tarefas - Acesso total
+      { module: 'tarefas', action: 'admin', granted: true },
+      // Cobrança - Acesso total
+      { module: 'cobranca', action: 'admin', granted: true },
+      // Fluxo de Caixa - SEM acesso
+      { module: 'fluxo-caixa', action: 'read', granted: false },
+      // Configurações - Apenas Notificações e Perfil
+      { module: 'configuracoes', action: 'read_basic', granted: true },
+      { module: 'configuracoes', action: 'admin', granted: false },
     ],
     isSystem: true,
     createdAt: '2024-01-01T00:00:00Z',
@@ -66,29 +57,53 @@ const mockRoles: UserRole[] = [
   },
   {
     id: '2',
-    name: 'Advogado Sênior',
-    description: 'Acesso limitado - casos específicos',
+    name: 'Conta Composta',
+    description: 'Acesso ao CRM + Fluxo de Caixa (Dashboard completo)',
     permissions: [
-      { module: 'crm', action: 'write', granted: true },
-      { module: 'projetos', action: 'write', granted: true },
-      { module: 'financeiro', action: 'read', granted: true },
-      { module: 'configuracoes', action: 'read', granted: false },
+      // Dashboard - Acesso completo (incluindo informações financeiras)
+      { module: 'dashboard', action: 'admin', granted: true },
+      // CRM - Acesso total
+      { module: 'crm', action: 'admin', granted: true },
+      // Projetos - Acesso total
+      { module: 'projetos', action: 'admin', granted: true },
+      // Tarefas - Acesso total
+      { module: 'tarefas', action: 'admin', granted: true },
+      // Cobrança - Acesso total
+      { module: 'cobranca', action: 'admin', granted: true },
+      // Fluxo de Caixa - Acesso total
+      { module: 'fluxo-caixa', action: 'admin', granted: true },
+      // Configurações - Apenas Notificações e Perfil
+      { module: 'configuracoes', action: 'read_basic', granted: true },
+      { module: 'configuracoes', action: 'admin', granted: false },
     ],
-    isSystem: false,
+    isSystem: true,
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
   {
     id: '3',
-    name: 'Paralegal',
-    description: 'Acesso somente leitura',
+    name: 'Conta Gerencial',
+    description: 'Acesso completo + Controle de colaboradores + Sistema de auditoria',
     permissions: [
-      { module: 'crm', action: 'read', granted: true },
-      { module: 'projetos', action: 'read', granted: true },
-      { module: 'financeiro', action: 'read', granted: false },
-      { module: 'configuracoes', action: 'read', granted: false },
+      // Todos os módulos - Acesso administrativo completo
+      { module: 'dashboard', action: 'admin', granted: true },
+      { module: 'crm', action: 'admin', granted: true },
+      { module: 'projetos', action: 'admin', granted: true },
+      { module: 'tarefas', action: 'admin', granted: true },
+      { module: 'cobranca', action: 'admin', granted: true },
+      { module: 'fluxo-caixa', action: 'admin', granted: true },
+      { module: 'configuracoes', action: 'admin', granted: true },
+      // Funcionalidades especiais de gerência
+      { module: 'user-management', action: 'admin', granted: true },
+      { module: 'audit-system', action: 'admin', granted: true },
+      { module: 'plan-management', action: 'admin', granted: true },
+      // IMPLEMENTAÇÃO FUTURA: Controle de planos
+      // - Consegue ver todas as contas do sistema
+      // - Sistema de auditoria de cada conta
+      // - Pode alterar usuários de Simples para Composta (baseado no plano)
+      // - Controle de senhas e usuários
     ],
-    isSystem: false,
+    isSystem: true,
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
   },
@@ -97,24 +112,24 @@ const mockRoles: UserRole[] = [
 const mockUsers: User[] = [
   {
     id: '1',
-    name: 'Dr. Silva',
+    name: 'Dr. Silva (Gerente)',
     email: 'silva@escritorio.com.br',
     phone: '(11) 99999-1234',
-    roleId: '1',
-    role: mockRoles[0],
+    roleId: '3', // Conta Gerencial
+    role: mockRoles[2],
     status: 'active',
     lastLogin: '2024-01-28T14:30:00Z',
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-28T14:30:00Z',
-    permissions: mockRoles[0].permissions,
+    permissions: mockRoles[2].permissions,
     clientPortalAccess: false,
   },
   {
     id: '2',
-    name: 'Dra. Costa',
+    name: 'Dra. Costa (Financeiro)',
     email: 'costa@escritorio.com.br',
     phone: '(11) 88888-5678',
-    roleId: '2',
+    roleId: '2', // Conta Composta
     role: mockRoles[1],
     status: 'active',
     lastLogin: '2024-01-28T10:15:00Z',
@@ -125,39 +140,69 @@ const mockUsers: User[] = [
   },
   {
     id: '3',
-    name: 'Ana Paralegal',
+    name: 'Ana (Atendimento)',
     email: 'ana@escritorio.com.br',
     phone: '(11) 77777-9999',
-    roleId: '3',
-    role: mockRoles[2],
+    roleId: '1', // Conta Simples
+    role: mockRoles[0],
     status: 'active',
     lastLogin: '2024-01-27T16:45:00Z',
     createdAt: '2024-01-15T00:00:00Z',
     updatedAt: '2024-01-27T16:45:00Z',
-    permissions: mockRoles[2].permissions,
+    permissions: mockRoles[0].permissions,
     clientPortalAccess: true,
   },
   {
     id: '4',
-    name: 'Carlos Estagiário',
+    name: 'Carlos (Estagiário)',
     email: 'carlos@escritorio.com.br',
-    roleId: '3',
-    role: mockRoles[2],
+    roleId: '1', // Conta Simples
+    role: mockRoles[0],
     status: 'pending',
     createdAt: '2024-01-25T00:00:00Z',
     updatedAt: '2024-01-25T00:00:00Z',
-    permissions: mockRoles[2].permissions,
+    permissions: mockRoles[0].permissions,
     clientPortalAccess: false,
   },
 ];
 
+/*
+ * SISTEMA DE PLANOS E PAINEL ADMINISTRATIVO FUTURO
+ * ================================================
+ *
+ * PLANOS IMPLEMENTADOS:
+ *
+ * 1. PLANO BÁSICO: 1 Conta Simples, 1 Conta Composta, 1 Conta Gerencial
+ * 2. PLANO PREMIUM: 2 Contas Simples, 2 Contas Compostas, 1 Conta Gerencial
+ * 3. PLANO EMPRESARIAL: Ilimitadas Contas Simples, Ilimitadas Compostas, 1 Gerencial
+ *
+ * IMPLEMENTAÇÃO FUTURA DO PAINEL ADMINISTRATIVO:
+ * - Pasta separada: /admin/ com sistema de login próprio
+ * - Acesso exclusivo do proprietário do SaaS (você)
+ * - Funcionalidades do painel admin:
+ *   * Ver todos os clientes do SaaS
+ *   * Criar novos clientes/escritórios
+ *   * Editar configurações de clientes existentes
+ *   * Monitorar uso por cliente
+ *   * Gerenciar planos e cobrança
+ *   * Logs de auditoria globais
+ *
+ * CONTROLE DE CONTA GERENCIAL:
+ * - Pode alterar Conta Simples -> Composta (se o plano permitir)
+ * - Pode visualizar todas as contas do sistema dele
+ * - Sistema de auditoria por conta
+ * - Controle de usuários e senhas
+ * - Limitado pelas regras do plano contratado
+ */
+
 export function UserManagement() {
   const [users, setUsers] = useState<User[]>(mockUsers);
   const [roles, setRoles] = useState<UserRole[]>(mockRoles);
-  const [showUserDialog, setShowUserDialog] = useState(false);
-  const [showRoleDialog, setShowRoleDialog] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | undefined>();
-  const [editingRole, setEditingRole] = useState<UserRole | undefined>();
+  // REMOVIDO: Estados de edição conforme solicitado
+  // const [showUserDialog, setShowUserDialog] = useState(false);
+  // const [showRoleDialog, setShowRoleDialog] = useState(false);
+  // const [editingUser, setEditingUser] = useState<User | undefined>();
+  // const [editingRole, setEditingRole] = useState<UserRole | undefined>();
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredUsers = users.filter(user =>
@@ -188,17 +233,10 @@ export function UserManagement() {
     }
   };
 
-  const toggleUserStatus = (userId: string) => {
-    setUsers(users.map(user => 
-      user.id === userId 
-        ? { ...user, status: user.status === 'active' ? 'inactive' : 'active' }
-        : user
-    ));
-  };
-
-  const deleteUser = (userId: string) => {
-    setUsers(users.filter(user => user.id !== userId));
-  };
+  // REMOVIDO: Funções de ação do usuário conforme solicitado
+  // Apenas administrador pode ativar/desativar/excluir usuários
+  // const toggleUserStatus = (userId: string) => { ... };
+  // const deleteUser = (userId: string) => { ... };
 
   return (
     <div className="space-y-6">
@@ -215,10 +253,16 @@ export function UserManagement() {
                 Gerencie usuários, permissões e acesso ao sistema
               </p>
             </div>
-            <Button onClick={() => setShowUserDialog(true)}>
+            {/* COMENTÁRIO IMPLEMENTAÇÃO:
+                Botão "Novo Usuário" removido para contas gerenciais.
+                As contas gerenciais NÃO podem criar novos usuários.
+                Os usuários são definidos e setados pelo administrador do SaaS.
+                Apenas o painel administrativo principal pode criar usuários.
+            */}
+            {/* <Button onClick={() => setShowUserDialog(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Novo Usuário
-            </Button>
+            </Button> */}
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -243,7 +287,8 @@ export function UserManagement() {
                   <TableHead>Status</TableHead>
                   <TableHead>Último Login</TableHead>
                   <TableHead>Portal Cliente</TableHead>
-                  <TableHead className="w-12">Ações</TableHead>
+                  {/* REMOVIDO: Coluna "Ações" conforme solicitado */}
+                  {/* Apenas administrador do sistema pode gerenciar usuários */}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -294,12 +339,23 @@ export function UserManagement() {
                       )}
                     </TableCell>
                     <TableCell>
+                      {/* IMPLEMENTAÇÃO PORTAL CLIENTE:
+                          Esta funcionalidade controla se o usuário pode fazer login no sistema.
+                          - SIM (Habilitado): O usuário pode acessar o sistema com suas credenciais
+                          - NÃO (Desabilitado): O usuário não pode fazer login
+
+                          BACKEND IMPLEMENTAÇÃO:
+                          - Verificar este flag antes de permitir login
+                          - Bloquear tentativas de login se clientPortalAccess = false
+                          - Logs de auditoria quando acesso é negado
+                          - API: PUT /users/{id}/portal-access { enabled: boolean }
+                      */}
                       <div className="flex items-center space-x-2">
                         <Switch
                           checked={user.clientPortalAccess}
                           onCheckedChange={(checked) => {
-                            setUsers(users.map(u => 
-                              u.id === user.id 
+                            setUsers(users.map(u =>
+                              u.id === user.id
                                 ? { ...u, clientPortalAccess: checked }
                                 : u
                             ));
@@ -310,35 +366,9 @@ export function UserManagement() {
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => setEditingUser(user)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Editar
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => toggleUserStatus(user.id)}>
-                            {user.status === 'active' ? (
-                              <><UserX className="mr-2 h-4 w-4" />Desativar</>
-                            ) : (
-                              <><UserCheck className="mr-2 h-4 w-4" />Ativar</>
-                            )}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            onClick={() => deleteUser(user.id)}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Excluir
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+                    {/* REMOVIDO: Dropdown de ações (Editar, Excluir, Desativar) */}
+                    {/* Conforme solicitado, apenas administrador pode gerenciar usuários */}
+                    {/* O controle de portal permanece para o gerente */}
                   </TableRow>
                 ))}
               </TableBody>
@@ -357,13 +387,26 @@ export function UserManagement() {
                 Funções e Permissões
               </CardTitle>
               <p className="text-sm text-muted-foreground">
-                Configure níveis de acesso e permissões por função
+                Configure níveis de acesso baseados no sistema de 3 tipos de conta
               </p>
+              <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-md">
+                <p className="text-xs text-blue-700 dark:text-blue-300">
+                  <strong>Sistema Implementado:</strong> Conta Simples (CRM básico),
+                  Conta Composta (CRM + Financeiro), Conta Gerencial (Acesso total + Auditoria).
+                  A quantidade de cada tipo é limitada pelo plano contratado.
+                </p>
+              </div>
             </div>
-            <Button onClick={() => setShowRoleDialog(true)}>
+            {/* COMENTÁRIO IMPLEMENTAÇÃO:
+                Botão "Nova Função" removido para contas gerenciais.
+                As funções são predefinidas: Conta Simples, Conta Composta, Conta Gerencial.
+                Estas funções são fixas e não podem ser alteradas pelos usuários.
+                Apenas o administrador do SaaS pode definir as permissões.
+            */}
+            {/* <Button onClick={() => setShowRoleDialog(true)}>
               <Plus className="h-4 w-4 mr-2" />
               Nova Função
-            </Button>
+            </Button> */}
           </div>
         </CardHeader>
         <CardContent>
@@ -373,25 +416,7 @@ export function UserManagement() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">{role.name}</CardTitle>
-                    {!role.isSystem && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => setEditingRole(role)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Editar
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Excluir
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
+                    {/* REMOVIDO: Menu de ações das funções conforme solicitado */}
                   </div>
                   <p className="text-sm text-muted-foreground">{role.description}</p>
                   {role.isSystem && (
@@ -425,90 +450,9 @@ export function UserManagement() {
         </CardContent>
       </Card>
 
-      {/* User Form Dialog */}
-      <Dialog open={showUserDialog} onOpenChange={setShowUserDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {editingUser ? 'Editar Usuário' : 'Novo Usuário'}
-            </DialogTitle>
-            <DialogDescription>
-              Configure as informações e permissões do usuário.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <Input placeholder="Nome completo" />
-            <Input type="email" placeholder="Email" />
-            <Input placeholder="Telefone" />
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma função" />
-              </SelectTrigger>
-              <SelectContent>
-                {roles.map((role) => (
-                  <SelectItem key={role.id} value={role.id}>
-                    {role.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="flex items-center space-x-2">
-              <Switch />
-              <span className="text-sm">Acesso ao Portal do Cliente</span>
-            </div>
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setShowUserDialog(false)}>
-                Cancelar
-              </Button>
-              <Button>
-                {editingUser ? 'Atualizar' : 'Criar'} Usuário
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Role Form Dialog */}
-      <Dialog open={showRoleDialog} onOpenChange={setShowRoleDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {editingRole ? 'Editar Função' : 'Nova Função'}
-            </DialogTitle>
-            <DialogDescription>
-              Configure o nome, descrição e permissões da função.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <Input placeholder="Nome da função" />
-            <Input placeholder="Descrição" />
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium">Permissões por Módulo:</h4>
-              {['CRM', 'Projetos', 'Tarefas', 'Cobrança', 'Financeiro', 'Configurações'].map((module) => (
-                <div key={module} className="flex items-center justify-between p-3 border rounded">
-                  <span className="font-medium">{module}</span>
-                  <div className="flex space-x-2">
-                    {['read', 'write', 'delete', 'admin'].map((action) => (
-                      <label key={action} className="flex items-center space-x-1 text-sm">
-                        <input type="checkbox" className="rounded" />
-                        <span className="capitalize">{action}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setShowRoleDialog(false)}>
-                Cancelar
-              </Button>
-              <Button>
-                {editingRole ? 'Atualizar' : 'Criar'} Função
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* REMOVIDO: Dialogs de criação/edição de usuários e funções */}
+      {/* Conforme solicitado, apenas administrador pode gerenciar usuários */}
+      {/* Funcionalidades de edição foram removidas para contas gerenciais */}
     </div>
   );
 }

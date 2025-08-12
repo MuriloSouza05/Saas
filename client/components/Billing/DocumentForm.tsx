@@ -47,7 +47,7 @@ const documentSchema = z.object({
   date: z.string().min(1, "Data é obrigatória"),
   dueDate: z.string().min(1, "Data de vencimento é obrigatória"),
   senderId: z.string().min(1, "Remetente é obrigatório"),
-  receiverId: z.string().min(1, "Destinat��rio é obrigatório"),
+  receiverId: z.string().min(1, "Destinatário é obrigatório"),
   title: z.string().min(1, "Título é obrigatório"),
   description: z.string().optional(),
   currency: z.enum(["BRL", "USD", "EUR"]),
@@ -58,6 +58,9 @@ const documentSchema = z.object({
   tax: z.number().min(0, "Imposto deve ser positivo"),
   taxType: z.enum(["percentage", "fixed"]),
   notes: z.string().optional(),
+}).refine((data) => true, {
+  message: "Pelo menos um item deve ser adicionado",
+  path: ["items"], // Campo virtual para mostrar erro
 });
 
 type DocumentFormData = z.infer<typeof documentSchema>;
@@ -139,8 +142,7 @@ export function DocumentForm({
     description: "",
     quantity: 1,
     rate: 0,
-    tax: 0,
-    taxType: "percentage" as const,
+    // REMOVIDO: Campos de taxa para simplificar o formulário
   });
 
   const form = useForm<DocumentFormData>({
@@ -201,20 +203,16 @@ export function DocumentForm({
 
   const addItem = () => {
     if (newItem.description.trim() && newItem.rate > 0) {
+      // CORREÇÃO: Cálculo simplificado sem taxa individual por item
       const amount = newItem.quantity * newItem.rate;
-      const taxAmount =
-        newItem.taxType === "percentage"
-          ? (amount * newItem.tax) / 100
-          : newItem.tax;
 
       const item: BillingItem = {
         id: Date.now().toString(),
         description: newItem.description,
         quantity: newItem.quantity,
         rate: newItem.rate,
-        amount: amount + taxAmount,
-        tax: newItem.tax,
-        taxType: newItem.taxType,
+        amount: amount,
+        tax: 0, // Mantido para compatibilidade com tipos
       };
 
       setItems([...items, item]);
@@ -222,8 +220,6 @@ export function DocumentForm({
         description: "",
         quantity: 1,
         rate: 0,
-        tax: 0,
-        taxType: "percentage",
       });
     }
   };
@@ -239,11 +235,8 @@ export function DocumentForm({
           ? {
               ...item,
               quantity,
-              amount:
-                quantity * item.rate +
-                (item.taxType === "percentage"
-                  ? (quantity * item.rate * (item.tax || 0)) / 100
-                  : item.tax || 0),
+              // CORREÇÃO: Cálculo simplificado sem taxa individual
+              amount: quantity * item.rate,
             }
           : item,
       ),
@@ -280,7 +273,26 @@ export function DocumentForm({
   }, [doc, open]);
 
   const handleSubmit = createSafeDialogHandler((data: DocumentFormData) => {
-    onSubmit({ ...data, items });
+    // NOVIDADE: Validação obrigatória de itens para Orçamentos e Faturas
+    if (items.length === 0) {
+      alert("Erro: Pelo menos um item deve ser adicionado ao documento!");
+      return;
+    }
+
+    // CORREÇÃO: Garantir que valores não sejam undefined/NaN
+    const validItems = items.filter(item =>
+      item.description &&
+      !isNaN(item.quantity) &&
+      !isNaN(item.rate) &&
+      !isNaN(item.amount)
+    );
+
+    if (validItems.length === 0) {
+      alert("Erro: Todos os itens devem ter valores válidos!");
+      return;
+    }
+
+    onSubmit({ ...data, items: validItems });
     safeOnOpenChange(false);
   });
 
@@ -497,11 +509,19 @@ export function DocumentForm({
 
             {/* Items */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Itens</h3>
+              <div>
+                <h3 className="text-lg font-semibold">Itens *</h3>
+                <p className="text-sm text-muted-foreground">
+                  Pelo menos um item deve ser adicionado ao documento
+                </p>
+              </div>
 
               {/* Add new item */}
-              <div className="grid grid-cols-12 gap-2 p-4 border rounded-lg bg-muted/50">
+              <div className="grid grid-cols-10 gap-2 p-4 border rounded-lg bg-muted/50">
                 <div className="col-span-5">
+                  <label className="text-xs text-muted-foreground block mb-1">
+                    Descrição do Serviço
+                  </label>
                   <Select
                     value={newItem.description}
                     onValueChange={(value) =>
@@ -521,9 +541,13 @@ export function DocumentForm({
                   </Select>
                 </div>
                 <div className="col-span-2">
+                  <label className="text-xs text-muted-foreground block mb-1">
+                    Quantidade
+                  </label>
                   <Input
                     type="number"
                     placeholder="Qtd"
+                    min="1"
                     value={newItem.quantity}
                     onChange={(e) =>
                       setNewItem({
@@ -534,9 +558,14 @@ export function DocumentForm({
                   />
                 </div>
                 <div className="col-span-2">
+                  <label className="text-xs text-muted-foreground block mb-1">
+                    Valor Unitário (R$)
+                  </label>
                   <Input
                     type="number"
-                    placeholder="Valor"
+                    placeholder="0.00"
+                    min="0"
+                    step="0.01"
                     value={newItem.rate}
                     onChange={(e) =>
                       setNewItem({
@@ -546,20 +575,11 @@ export function DocumentForm({
                     }
                   />
                 </div>
-                <div className="col-span-2">
-                  <Input
-                    type="number"
-                    placeholder="Taxa %"
-                    value={newItem.tax}
-                    onChange={(e) =>
-                      setNewItem({
-                        ...newItem,
-                        tax: parseFloat(e.target.value) || 0,
-                      })
-                    }
-                  />
-                </div>
+                {/* REMOVIDO: Campo taxa sem funcionalidade conforme solicitado */}
                 <div className="col-span-1">
+                  <label className="text-xs text-muted-foreground block mb-1">
+                    Ação
+                  </label>
                   <Button type="button" onClick={addItem} className="w-full">
                     <Plus className="h-4 w-4" />
                   </Button>

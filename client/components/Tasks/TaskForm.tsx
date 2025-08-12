@@ -56,6 +56,7 @@ interface TaskFormProps {
   task?: Task;
   onSubmit: (data: TaskFormData & { tags: string[]; subtasks: Subtask[] }) => void;
   isEditing?: boolean;
+  existingTags?: string[]; // Tags existentes de outras tarefas
 }
 
 const statusOptions = [
@@ -73,12 +74,33 @@ const priorityOptions = [
   { value: 'urgent', label: 'Urgente', color: 'text-red-600' },
 ];
 
+// RESPONSÁVEL: Colaboradores que têm acesso ao sistema
+// COMENTÁRIO IMPLEMENTAÇÃO: Lista todos os colaboradores cadastrados no sistema com acesso
+// Incluindo: Contas Simples, Contas Compostas e Contas Gerenciais
+// Esta lista seria carregada dinamicamente da API: GET /api/users/collaborators
+// Filtros por tipo de conta e permissões de acesso
 const assignedToOptions = [
-  'Dr. Silva',
-  'Dra. Costa',
-  'Dr. Oliveira',
-  'Ana Paralegal',
-  'Carlos Estagiário',
+  // CONTA GERENCIAL (acesso total)
+  'Dr. Silva - Sócio Gerente',
+  'Dra. Costa - Sócia Diretora',
+
+  // CONTA COMPOSTA (acesso ao fluxo de caixa e dashboard completo)
+  'Dr. Oliveira - Advogado Sênior',
+  'Dra. Ferreira - Advogada Especialista',
+
+  // CONTA SIMPLES (acesso limitado - sem financeiro)
+  'Ana Paralegal - Assistente Jurídica',
+  'Carlos Estagiário - Estagiário',
+  'Marina Santos - Advogada Júnior',
+  'Rafael Lima - Paralegal',
+
+  // IMPLEMENTAÇÃO FUTURA:
+  // Esta lista será carregada dinamicamente do backend baseada em:
+  // - Usuários ativos no sistema
+  // - Tipo de conta (Simples, Composta, Gerencial)
+  // - Permissões específicas
+  // - Status do colaborador (ativo/inativo)
+  // API: GET /api/users?role=collaborator&status=active
 ];
 
 const projectOptions = [
@@ -88,7 +110,7 @@ const projectOptions = [
   { id: '4', name: 'Ação Trabalhista - Pedro Souza' },
 ];
 
-export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false }: TaskFormProps) {
+export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false, existingTags = [] }: TaskFormProps) {
   const [tags, setTags] = useState<string[]>(task?.tags || []);
   const [newTag, setNewTag] = useState('');
   const [subtasks, setSubtasks] = useState<Subtask[]>(task?.subtasks || []);
@@ -181,6 +203,12 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
 
   const removeTag = (tagToRemove: string) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const addExistingTag = (tag: string) => {
+    if (!tags.includes(tag)) {
+      setTags([...tags, tag]);
+    }
   };
 
   const addSubtask = () => {
@@ -512,23 +540,54 @@ export function TaskForm({ open, onOpenChange, task, onSubmit, isEditing = false
             {/* Tags */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Tags</h3>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Adicionar tag"
-                  value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                />
-                <Button type="button" onClick={addTag}>
-                  Adicionar
-                </Button>
+
+              {/* IMPLEMENTAÇÃO MELHORADA: Dropdown com tags existentes + input para novas */}
+              <div className="space-y-3">
+                {/* Dropdown com tags já existentes no sistema */}
+                {existingTags.length > 0 && (
+                  <div>
+                    <label className="text-sm text-muted-foreground">Selecionar de tags existentes:</label>
+                    <Select onValueChange={addExistingTag}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Escolher tag existente" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {existingTags
+                          .filter(tag => !tags.includes(tag))
+                          .map((tag) => (
+                            <SelectItem key={tag} value={tag}>
+                              {tag}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                {/* Input para criar nova tag */}
+                <div>
+                  <label className="text-sm text-muted-foreground">Ou criar nova tag:</label>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Digite nova tag"
+                      value={newTag}
+                      onChange={(e) => setNewTag(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                    />
+                    <Button type="button" onClick={addTag}>
+                      Adicionar
+                    </Button>
+                  </div>
+                </div>
               </div>
+
+              {/* Tags selecionadas */}
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
                   <Badge key={tag} variant="secondary" className="flex items-center gap-1">
                     {tag}
-                    <X 
-                      className="h-3 w-3 cursor-pointer" 
+                    <X
+                      className="h-3 w-3 cursor-pointer"
                       onClick={() => removeTag(tag)}
                     />
                   </Badge>

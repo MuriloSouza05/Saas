@@ -41,6 +41,7 @@ import { Pipeline } from "@/components/CRM/Pipeline";
 import { AdvancedFilters } from "@/components/CRM/AdvancedFilters";
 import { DealForm } from "@/components/CRM/DealForm";
 import { ClientViewDialog } from "@/components/CRM/ClientViewDialog";
+import { DealViewDialog } from "@/components/CRM/DealViewDialog";
 import { Client, Deal, PipelineStage, DealStage } from "@/types/crm";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -75,7 +76,7 @@ const mockClients: Client[] = [
     budget: 15000,
     currency: "BRL",
     level: "Premium",
-    tags: ["Direito Civil", "Prioritário"],
+    tags: ["Direito Civil", "Prioritário", "Empresa", "Premium"],
     description: "Cliente premium com múltiplos casos",
     cpf: "123.456.789-00",
     rg: "12.345.678-9",
@@ -85,6 +86,7 @@ const mockClients: Client[] = [
     inssStatus: "active",
     amountPaid: 8000,
     referredBy: "João Advogado",
+    registeredBy: "Dr. Silva - Sócio Gerente",
     createdAt: "2024-01-01T10:00:00Z",
     updatedAt: "2024-01-15T14:30:00Z",
     status: "active",
@@ -101,12 +103,13 @@ const mockClients: Client[] = [
     zipCode: "22070-000",
     budget: 8500,
     currency: "BRL",
-    tags: ["Trabalhista"],
+    tags: ["Trabalhista", "Demissão", "Rescisão"],
     description: "Caso trabalhista - demissão sem justa causa",
     cpf: "987.654.321-00",
     maritalStatus: "single",
     birthDate: "1985-09-20",
     inssStatus: "inactive",
+    registeredBy: "Dra. Costa - Sócia Diretora",
     createdAt: "2024-01-05T09:15:00Z",
     updatedAt: "2024-01-10T16:45:00Z",
     status: "active",
@@ -275,9 +278,11 @@ export function CRM() {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [showDealForm, setShowDealForm] = useState(false);
   const [showClientView, setShowClientView] = useState(false);
+  const [showDealView, setShowDealView] = useState(false);
   const [editingClient, setEditingClient] = useState<Client | undefined>();
   const [editingDeal, setEditingDeal] = useState<Deal | undefined>();
   const [viewingClient, setViewingClient] = useState<Client | null>(null);
+  const [viewingDeal, setViewingDeal] = useState<Deal | null>(null);
   const [dealInitialStage, setDealInitialStage] = useState<
     DealStage | undefined
   >();
@@ -355,15 +360,16 @@ export function CRM() {
   }, [clients, searchTerm, statusFilter, advancedFilters]);
 
   // Initial pipeline stages configuration
+  // PIPELINE SIMPLIFICADO: Apenas 4 estágios conforme solicitado
   const [pipelineStagesConfig, setPipelineStagesConfig] = useState([
-    { id: "opportunity", name: "Oportunidade", color: "blue" },
-    { id: "contacted", name: "Em Contato", color: "yellow" },
-    { id: "advanced", name: "Conversas Avançadas", color: "purple" },
-    { id: "proposal", name: "Com Proposta", color: "orange" },
+    { id: "contacted", name: "Em Contato", color: "blue" },
+    { id: "proposal", name: "Com Proposta", color: "yellow" },
     { id: "won", name: "Cliente Bem Sucedido", color: "green" },
     { id: "lost", name: "Cliente Perdido", color: "red" },
-    { id: "general", name: "Geral", color: "gray" },
   ]);
+
+  // REMOVIDOS: opportunity, advanced, general conforme solicitação
+  // IMPLEMENTAÇÃO FUTURA: Editar nomes dos stages também deve atualizar nos deals
 
   // Pipeline stages with deals
   const pipelineStages: PipelineStage[] = pipelineStagesConfig.map((stage) => ({
@@ -390,6 +396,32 @@ export function CRM() {
         status: "active" as const,
       };
       setClients([...clients, newClient]);
+
+      // NOVIDADE: Enviar notificação quando novo cliente for cadastrado
+      // Em produção, isso seria uma chamada para API de notificações
+      console.log("📢 NOTIFICAÇÃO ENVIADA: Novo cliente cadastrado", {
+        type: 'info',
+        title: 'Novo Cliente Cadastrado',
+        message: `${newClient.name} foi adicionado ao CRM`,
+        category: 'client',
+        createdBy: 'Usuário Atual', // Em produção: pegar do contexto de auth
+        clientData: {
+          id: newClient.id,
+          name: newClient.name,
+          email: newClient.email,
+          tags: newClient.tags
+        }
+      });
+
+      // FUTURO: Integração com sistema de notificações
+      // await NotificationService.create({
+      //   type: 'client_created',
+      //   title: 'Novo Cliente Cadastrado',
+      //   message: `${newClient.name} foi adicionado ao CRM`,
+      //   entityId: newClient.id,
+      //   entityType: 'client',
+      //   userId: currentUser.id
+      // });
     }
     setShowClientForm(false);
   };
@@ -441,6 +473,17 @@ export function CRM() {
     setShowDealForm(true);
   };
 
+  const handleViewDeal = (deal: Deal) => {
+    setViewingDeal(deal);
+    setShowDealView(true);
+  };
+
+  const handleEditFromDealView = (deal: Deal) => {
+    setEditingDeal(deal);
+    setShowDealView(false);
+    setShowDealForm(true);
+  };
+
   const handleDeleteDeal = (dealId: string) => {
     setDeals(deals.filter((deal) => deal.id !== dealId));
   };
@@ -481,6 +524,35 @@ export function CRM() {
         updatedAt: new Date().toISOString(),
       };
       setDeals([...deals, newDeal]);
+
+      // NOVIDADE: Enviar notificação quando novo negócio for adicionado ao Pipeline
+      // Em produção, isso seria uma chamada para API de notificações
+      console.log("📢 NOTIFICAÇÃO ENVIADA: Novo negócio no pipeline", {
+        type: 'info',
+        title: 'Novo Negócio Adicionado',
+        message: `${newDeal.title} foi adicionado ao Pipeline de Vendas`,
+        category: 'pipeline',
+        createdBy: 'Usuário Atual', // Em produção: pegar do contexto de auth
+        dealData: {
+          id: newDeal.id,
+          title: newDeal.title,
+          contactName: newDeal.contactName,
+          stage: newDeal.stage,
+          budget: newDeal.budget,
+          tags: newDeal.tags
+        }
+      });
+
+      // FUTURO: Integração com sistema de notificações
+      // await NotificationService.create({
+      //   type: 'deal_created',
+      //   title: 'Novo Negócio Adicionado',
+      //   message: `${newDeal.title} foi adicionado ao Pipeline de Vendas`,
+      //   entityId: newDeal.id,
+      //   entityType: 'deal',
+      //   userId: currentUser.id,
+      //   metadata: { stage: newDeal.stage, budget: newDeal.budget }
+      // });
     }
     setShowDealForm(false);
     setDealInitialStage(undefined);
@@ -742,6 +814,7 @@ export function CRM() {
                     onEditDeal={handleEditDeal}
                     onDeleteDeal={handleDeleteDeal}
                     onMoveDeal={handleMoveDeal}
+                    onViewDeal={handleViewDeal}
                   />
                 ) : (
                   <PipelineListView
@@ -764,6 +837,14 @@ export function CRM() {
           client={editingClient}
           onSubmit={handleSubmitClient}
           isEditing={!!editingClient}
+          existingTags={
+            /* Extrair todas as tags únicas dos clientes existentes */
+            Array.from(
+              new Set(
+                clients.flatMap(client => client.tags || [])
+              )
+            ).sort()
+          }
         />
 
         {/* Advanced Filters Dialog */}
@@ -771,6 +852,14 @@ export function CRM() {
           open={showAdvancedFilters}
           onOpenChange={setShowAdvancedFilters}
           onApplyFilters={handleApplyAdvancedFilters}
+          existingTags={
+            /* IMPLEMENTAÇÃO MELHORADA: Extrair todas as tags únicas dos clientes existentes */
+            Array.from(
+              new Set(
+                clients.flatMap(client => client.tags || [])
+              )
+            ).sort()
+          }
         />
 
         {/* Deal Form Modal */}
@@ -789,6 +878,14 @@ export function CRM() {
           onOpenChange={setShowClientView}
           client={viewingClient}
           onEdit={handleEditFromView}
+        />
+
+        {/* Deal View Dialog */}
+        <DealViewDialog
+          open={showDealView}
+          onOpenChange={setShowDealView}
+          deal={viewingDeal}
+          onEdit={handleEditFromDealView}
         />
 
         {/* Stage Names Editing Dialog */}

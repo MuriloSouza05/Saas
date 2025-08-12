@@ -67,7 +67,7 @@ const mockProjects: Project[] = [
     address: 'Rua das Flores, 123, São Paulo - SP',
     budget: 8500,
     currency: 'BRL',
-    status: 'andamento',
+    status: 'proposal',
     startDate: '2024-01-05T00:00:00Z',
     dueDate: '2024-03-15T00:00:00Z',
     tags: ['Previdenciário', 'INSS', 'Urgente'],
@@ -104,7 +104,7 @@ const mockProjects: Project[] = [
     address: 'Av. Paulista, 1000, São Paulo - SP',
     budget: 12000,
     currency: 'BRL',
-    status: 'revisao',
+    status: 'won',
     startDate: '2024-01-10T00:00:00Z',
     dueDate: '2024-02-28T00:00:00Z',
     tags: ['Família', 'Divórcio', 'Consensual'],
@@ -135,7 +135,7 @@ const mockProjects: Project[] = [
     address: 'Rua da Inovação, 500, São Paulo - SP',
     budget: 45000,
     currency: 'BRL',
-    status: 'aguardando',
+    status: 'contacted',
     startDate: '2024-01-12T00:00:00Z',
     dueDate: '2024-04-30T00:00:00Z',
     tags: ['Empresarial', 'Recuperação', 'Urgente'],
@@ -164,7 +164,7 @@ const mockProjects: Project[] = [
     address: 'Rua do Trabalho, 789, São Paulo - SP',
     budget: 15000,
     currency: 'BRL',
-    status: 'novo',
+    status: 'contacted',
     startDate: '2024-01-25T00:00:00Z',
     dueDate: '2024-05-15T00:00:00Z',
     tags: ['Trabalhista', 'Horas Extras'],
@@ -195,41 +195,29 @@ function ProjectCompactView({
 }: ProjectCompactViewProps) {
   const getStatusColor = (status: ProjectStatus) => {
     const colors = {
-      novo: 'bg-blue-100 text-blue-800',
-      analise: 'bg-yellow-100 text-yellow-800',
-      andamento: 'bg-green-100 text-green-800',
-      aguardando: 'bg-orange-100 text-orange-800',
-      revisao: 'bg-purple-100 text-purple-800',
-      concluido: 'bg-green-100 text-green-800',
-      cancelado: 'bg-red-100 text-red-800',
-      arquivado: 'bg-gray-100 text-gray-800'
+      contacted: 'bg-blue-100 text-blue-800',
+      proposal: 'bg-yellow-100 text-yellow-800',
+      won: 'bg-green-100 text-green-800',
+      lost: 'bg-red-100 text-red-800'
     };
-    return colors[status] || colors.novo;
+    return colors[status] || colors.contacted;
   };
 
   const getStatusLabel = (status: ProjectStatus) => {
     const labels = {
-      novo: 'Novo',
-      analise: 'Em Análise',
-      andamento: 'Em Andamento',
-      aguardando: 'Aguardando Cliente',
-      revisao: 'Revisão',
-      concluido: 'Concluído',
-      cancelado: 'Cancelado',
-      arquivado: 'Arquivado'
+      contacted: 'Em Contato',
+      proposal: 'Com Proposta',
+      won: 'Cliente Bem Sucedido',
+      lost: 'Cliente Perdido'
     };
     return labels[status] || status;
   };
 
   const statusOptions = [
-    { value: 'novo', label: 'Novo' },
-    { value: 'analise', label: 'Em Análise' },
-    { value: 'andamento', label: 'Em Andamento' },
-    { value: 'aguardando', label: 'Aguardando Cliente' },
-    { value: 'revisao', label: 'Revisão' },
-    { value: 'concluido', label: 'Concluído' },
-    { value: 'cancelado', label: 'Cancelado' },
-    { value: 'arquivado', label: 'Arquivado' }
+    { value: 'contacted', label: 'Em Contato' },
+    { value: 'proposal', label: 'Com Proposta' },
+    { value: 'won', label: 'Cliente Bem Sucedido' },
+    { value: 'lost', label: 'Cliente Perdido' }
   ];
 
   return (
@@ -330,55 +318,31 @@ export function Projects() {
     });
   }, [projects, searchTerm, statusFilter, priorityFilter]);
 
-  // Project stages with filtered projects
+  // STAGES IGUAIS AO CRM: Mesmos estágios do Pipeline de Vendas
   const projectStages: ProjectStage[] = [
     {
-      id: 'novo',
-      name: 'Novo',
+      id: 'contacted',
+      name: 'Em Contato',
       color: 'blue',
-      projects: filteredProjects.filter(project => project.status === 'novo'),
+      projects: filteredProjects.filter(project => project.status === 'contacted'),
     },
     {
-      id: 'analise',
-      name: 'Em Análise',
+      id: 'proposal',
+      name: 'Com Proposta',
       color: 'yellow',
-      projects: filteredProjects.filter(project => project.status === 'analise'),
+      projects: filteredProjects.filter(project => project.status === 'proposal'),
     },
     {
-      id: 'andamento',
-      name: 'Em Andamento',
+      id: 'won',
+      name: 'Cliente Bem Sucedido',
       color: 'green',
-      projects: filteredProjects.filter(project => project.status === 'andamento'),
+      projects: filteredProjects.filter(project => project.status === 'won'),
     },
     {
-      id: 'aguardando',
-      name: 'Aguardando Cliente',
-      color: 'orange',
-      projects: filteredProjects.filter(project => project.status === 'aguardando'),
-    },
-    {
-      id: 'revisao',
-      name: 'Revisão',
-      color: 'purple',
-      projects: filteredProjects.filter(project => project.status === 'revisao'),
-    },
-    {
-      id: 'concluido',
-      name: 'Concluído',
-      color: 'green',
-      projects: filteredProjects.filter(project => project.status === 'concluido'),
-    },
-    {
-      id: 'cancelado',
-      name: 'Cancelado',
+      id: 'lost',
+      name: 'Cliente Perdido',
       color: 'red',
-      projects: filteredProjects.filter(project => project.status === 'cancelado'),
-    },
-    {
-      id: 'arquivado',
-      name: 'Arquivado',
-      color: 'gray',
-      projects: filteredProjects.filter(project => project.status === 'arquivado'),
+      projects: filteredProjects.filter(project => project.status === 'lost'),
     },
   ];
 
@@ -448,12 +412,12 @@ export function Projects() {
     setShowProjectForm(true);
   };
 
-  // Calculate metrics
+  // Calculate metrics with new CRM-style statuses
   const totalProjects = projects.length;
-  const activeProjects = projects.filter(p => !['concluido', 'cancelado', 'arquivado'].includes(p.status)).length;
-  const overdueProjects = projects.filter(p => new Date(p.dueDate) < new Date() && !['concluido', 'cancelado', 'arquivado'].includes(p.status)).length;
-  const totalRevenue = projects.filter(p => p.status === 'concluido').reduce((sum, project) => sum + project.budget, 0);
-  const avgProgress = activeProjects > 0 ? Math.round(projects.filter(p => !['concluido', 'cancelado', 'arquivado'].includes(p.status)).reduce((sum, project) => sum + project.progress, 0) / activeProjects) : 0;
+  const activeProjects = projects.filter(p => !['won', 'lost'].includes(p.status)).length;
+  const overdueProjects = projects.filter(p => new Date(p.dueDate) < new Date() && !['won', 'lost'].includes(p.status)).length;
+  const totalRevenue = projects.filter(p => p.status === 'won').reduce((sum, project) => sum + project.budget, 0);
+  const avgProgress = activeProjects > 0 ? Math.round(projects.filter(p => !['won', 'lost'].includes(p.status)).reduce((sum, project) => sum + project.progress, 0) / activeProjects) : 0;
 
   return (
     <DashboardLayout>
@@ -476,7 +440,7 @@ export function Projects() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Projetos</h1>
             <p className="text-muted-foreground">
-              Gerenciamento de projetos jur��dicos com sistema Kanban
+              Gerenciamento de projetos jurídicos com sistema Kanban
             </p>
           </div>
           <div className="flex space-x-2">
@@ -498,7 +462,7 @@ export function Projects() {
                 Lista
               </Button>
             </div>
-            <Button onClick={() => handleAddProject('novo')}>
+            <Button onClick={() => handleAddProject('contacted')}>
               <Plus className="h-4 w-4 mr-2" />
               Novo Projeto
             </Button>
@@ -584,14 +548,10 @@ export function Projects() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todos Status</SelectItem>
-              <SelectItem value="novo">Novo</SelectItem>
-              <SelectItem value="analise">Em Análise</SelectItem>
-              <SelectItem value="andamento">Em Andamento</SelectItem>
-              <SelectItem value="aguardando">Aguardando</SelectItem>
-              <SelectItem value="revisao">Revisão</SelectItem>
-              <SelectItem value="concluido">Concluído</SelectItem>
-              <SelectItem value="cancelado">Cancelado</SelectItem>
-              <SelectItem value="arquivado">Arquivado</SelectItem>
+              <SelectItem value="contacted">Em Contato</SelectItem>
+              <SelectItem value="proposal">Com Proposta</SelectItem>
+              <SelectItem value="won">Cliente Bem Sucedido</SelectItem>
+              <SelectItem value="lost">Cliente Perdido</SelectItem>
             </SelectContent>
           </Select>
           <Select value={priorityFilter} onValueChange={setPriorityFilter}>
@@ -645,6 +605,14 @@ export function Projects() {
           project={editingProject}
           onSubmit={handleSubmitProject}
           isEditing={!!editingProject}
+          existingTags={
+            /* Extrair todas as tags únicas dos projetos existentes */
+            Array.from(
+              new Set(
+                projects.flatMap(project => project.tags || [])
+              )
+            ).sort()
+          }
         />
 
         {/* Project View Dialog */}

@@ -16,13 +16,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
-import { 
-  MoreHorizontal, 
-  Eye, 
-  Edit, 
-  Trash2, 
-  Send, 
-  Download, 
+import {
+  MoreHorizontal,
+  Eye,
+  Edit,
+  Trash2,
+  Download,
   Copy,
   CheckCircle,
   Clock,
@@ -40,7 +39,6 @@ interface DocumentsTableProps {
   onEditDoc: (document: Document) => void;
   onDeleteDoc: (docId: string) => void;
   onViewDoc: (document: Document) => void;
-  onSendDoc: (document: Document) => void;
   onDownloadDoc: (document: Document) => void;
   onDuplicateDoc: (document: Document) => void;
 }
@@ -53,7 +51,6 @@ export function DocumentsTable({
   onEditDoc,
   onDeleteDoc,
   onViewDoc,
-  onSendDoc,
   onDownloadDoc,
   onDuplicateDoc,
 }: DocumentsTableProps) {
@@ -269,12 +266,8 @@ export function DocumentsTable({
                         <Copy className="mr-2 h-4 w-4" />
                         Duplicar
                       </DropdownMenuItem>
-                      {document.status === 'DRAFT' && (
-                        <DropdownMenuItem onClick={() => onSendDoc(document)}>
-                          <Send className="mr-2 h-4 w-4" />
-                          Enviar
-                        </DropdownMenuItem>
-                      )}
+                      {/* REMOVIDO: Opção "Enviar" para evitar erros undefined */}
+                      {/* Em produção, implementar funcionalidade completa de envio */}
                       <DropdownMenuItem onClick={() => onDownloadDoc(document)}>
                         <Download className="mr-2 h-4 w-4" />
                         Download PDF

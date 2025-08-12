@@ -198,7 +198,7 @@ const mockTransactions: Transaction[] = [
  * - Exportação de dados (CSV)
  *
  * ESTRUTURA DE ABAS:
- * - Transa��ões: Lista principal com filtros
+ * - Transações: Lista principal com filtros
  * - Categorias: Visualização por categoria
  * - Relatórios: Análises e métricas
  * - Recorrentes: Gestão de automatizações
@@ -835,7 +835,7 @@ export function CashFlow() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">���� Saldo</CardTitle>
+              <CardTitle className="text-sm font-medium">🏦 Saldo</CardTitle>
               <Calculator className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -960,7 +960,7 @@ export function CashFlow() {
                   </div>
                 ))}
               {filteredTransactions.filter(t => t.type === 'expense').length === 0 && (
-                <p className="text-sm text-muted-foreground">Nenhuma despesa no per��odo</p>
+                <p className="text-sm text-muted-foreground">Nenhuma despesa no período</p>
               )}
             </CardContent>
           </Card>

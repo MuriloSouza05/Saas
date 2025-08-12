@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,17 +11,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { 
-  Plus, 
-  MoreHorizontal, 
-  Edit, 
-  Trash2, 
-  Calendar, 
+import {
+  Plus,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Calendar,
   Clock,
   AlertTriangle,
   User,
   CheckSquare,
-  Timer
+  Timer,
+  ChevronLeft,
+  ChevronRight,
+  Pin,
+  Eye
 } from 'lucide-react';
 import { Task, TaskBoard as TaskBoardType, TaskStatus } from '@/types/tasks';
 
@@ -35,12 +39,12 @@ interface TaskBoardProps {
   onToggleSubtask: (taskId: string, subtaskId: string) => void;
 }
 
+// STAGES IGUAIS AO CRM: Mesmo pipeline do CRM Pipeline de Vendas
 const statusConfig = {
-  not_started: { name: '🔴 Não Feito', color: 'bg-red-100 text-red-800 border-red-200' },
-  in_progress: { name: '🟡 Em Progresso', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
-  completed: { name: '🟢 Feito', color: 'bg-green-100 text-green-800 border-green-200' },
-  on_hold: { name: '⏸️ Pausado', color: 'bg-gray-100 text-gray-800 border-gray-200' },
-  cancelled: { name: '❌ Cancelado', color: 'bg-red-100 text-red-800 border-red-200' },
+  contacted: { name: 'Em Contato', color: 'bg-blue-100 text-blue-800 border-blue-200' },
+  proposal: { name: 'Com Proposta', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
+  won: { name: 'Cliente Bem Sucedido', color: 'bg-green-100 text-green-800 border-green-200' },
+  lost: { name: 'Cliente Perdido', color: 'bg-red-100 text-red-800 border-red-200' },
 };
 
 const priorityConfig = {
@@ -50,15 +54,19 @@ const priorityConfig = {
   urgent: { icon: '🔴', color: 'text-red-600' },
 };
 
-export function TaskBoard({ 
-  boards, 
-  onAddTask, 
-  onEditTask, 
-  onDeleteTask, 
+export function TaskBoard({
+  boards,
+  onAddTask,
+  onEditTask,
+  onDeleteTask,
   onMoveTask,
   onViewTask,
   onToggleSubtask
 }: TaskBoardProps) {
+  // IMPLEMENTAÇÃO: Paginação Kanban - 5 tasks por página
+  const [stagePagination, setStagePagination] = useState<Record<string, number>>({});
+  const [pinnedTasks, setPinnedTasks] = useState<Set<string>>(new Set());
+  const TASKS_PER_PAGE = 5;
   const getDaysUntilDue = (endDate: string) => {
     const due = new Date(endDate);
     const today = new Date();
@@ -77,6 +85,72 @@ export function TaskBoard({
     return { completed, total };
   };
 
+  // FUNCIONALIDADES DE PAGINAÇÃO
+  const getCurrentPageTasks = (tasks: Task[], stageId: string) => {
+    const currentPage = stagePagination[stageId] || 0;
+    const startIndex = currentPage * TASKS_PER_PAGE;
+    const endIndex = startIndex + TASKS_PER_PAGE;
+
+    // ORDENAÇÃO: Novas tarefas aparecem no topo - mais recentes primeiro
+    const sortedTasks = [...tasks].sort((a, b) =>
+      new Date(b.createdAt || b.updatedAt || 0).getTime() - new Date(a.createdAt || a.updatedAt || 0).getTime()
+    );
+
+    // Separar tarefas pinadas (sempre no topo) das não pinadas
+    const pinnedStageTasks = sortedTasks.filter(task => pinnedTasks.has(task.id));
+    const unpinnedTasks = sortedTasks.filter(task => !pinnedTasks.has(task.id));
+
+    // Tarefas pinadas sempre aparecem primeiro, depois as paginadas
+    const visiblePinnedTasks = pinnedStageTasks.slice(0, TASKS_PER_PAGE);
+    const remainingSlots = TASKS_PER_PAGE - visiblePinnedTasks.length;
+
+    if (remainingSlots > 0) {
+      const paginatedUnpinned = unpinnedTasks.slice(startIndex, startIndex + remainingSlots);
+      return [...visiblePinnedTasks, ...paginatedUnpinned];
+    }
+
+    return visiblePinnedTasks;
+  };
+
+  const getTotalPages = (tasks: Task[], stageId: string) => {
+    const unpinnedCount = tasks.filter(task => !pinnedTasks.has(task.id)).length;
+    const pinnedCount = tasks.filter(task => pinnedTasks.has(task.id)).length;
+    const totalVisibleSlots = Math.max(unpinnedCount + pinnedCount - pinnedCount, unpinnedCount);
+    return Math.ceil(totalVisibleSlots / TASKS_PER_PAGE);
+  };
+
+  const nextPage = (stageId: string, totalPages: number) => {
+    const currentPage = stagePagination[stageId] || 0;
+    if (currentPage < totalPages - 1) {
+      setStagePagination(prev => ({
+        ...prev,
+        [stageId]: currentPage + 1
+      }));
+    }
+  };
+
+  const prevPage = (stageId: string) => {
+    const currentPage = stagePagination[stageId] || 0;
+    if (currentPage > 0) {
+      setStagePagination(prev => ({
+        ...prev,
+        [stageId]: currentPage - 1
+      }));
+    }
+  };
+
+  const togglePin = (taskId: string) => {
+    setPinnedTasks(prev => {
+      const newPinned = new Set(prev);
+      if (newPinned.has(taskId)) {
+        newPinned.delete(taskId);
+      } else {
+        newPinned.add(taskId);
+      }
+      return newPinned;
+    });
+  };
+
   const handleDragStart = (e: React.DragEvent, taskId: string) => {
     e.dataTransfer.setData('text/plain', taskId);
   };
@@ -92,8 +166,10 @@ export function TaskBoard({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 h-full">
-      {boards.map((board) => (
+    <div className="w-full">
+      {/* LAYOUT TOTALMENTE RESPONSIVO: Ocupa todo o container respeitando espaçamento */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 w-full min-h-[600px]">
+        {boards.map((board) => (
         <div
           key={board.id}
           className="flex flex-col h-full"
@@ -120,7 +196,8 @@ export function TaskBoard({
               </div>
             </CardHeader>
             <CardContent className="flex-1 space-y-3 p-3 pt-0">
-              {board.tasks.map((task) => {
+              {/* IMPLEMENTAÇÃO: Cards paginados - 5 por página */}
+              {getCurrentPageTasks(board.tasks, board.id).map((task) => {
                 const daysUntilDue = getDaysUntilDue(task.endDate);
                 const overdue = isOverdue(task.endDate);
                 const subtaskStats = getCompletedSubtasks(task);
@@ -128,9 +205,11 @@ export function TaskBoard({
                 return (
                   <Card
                     key={task.id}
-                    className="cursor-move hover:shadow-md transition-shadow border-l-4"
-                    style={{ borderLeftColor: 
-                      task.priority === 'urgent' ? '#ef4444' : 
+                    className={`cursor-move hover:shadow-md transition-shadow border-l-4 ${
+                      pinnedTasks.has(task.id) ? 'ring-2 ring-blue-200 bg-blue-50/50' : ''
+                    }`}
+                    style={{ borderLeftColor:
+                      task.priority === 'urgent' ? '#ef4444' :
                       task.priority === 'high' ? '#f97316' :
                       task.priority === 'medium' ? '#f59e0b' : '#6b7280' }}
                     draggable
@@ -169,14 +248,19 @@ export function TaskBoard({
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => togglePin(task.id)}>
+                                  <Pin className={`mr-2 h-3 w-3 ${pinnedTasks.has(task.id) ? 'text-blue-600' : ''}`} />
+                                  {pinnedTasks.has(task.id) ? 'Desafixar' : 'Fixar'}
+                                </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => onViewTask(task)}>
+                                  <Eye className="mr-2 h-3 w-3" />
                                   Visualizar
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => onEditTask(task)}>
                                   <Edit className="mr-2 h-3 w-3" />
                                   Editar
                                 </DropdownMenuItem>
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                   onClick={() => onDeleteTask(task.id)}
                                   className="text-destructive"
                                 >
@@ -316,10 +400,40 @@ export function TaskBoard({
                   </Button>
                 </div>
               )}
+
+              {/* CONTROLES DE PAGINAÇÃO */}
+              {board.tasks.length > TASKS_PER_PAGE && (
+                <div className="flex items-center justify-between pt-3 border-t">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => prevPage(board.id)}
+                    disabled={!stagePagination[board.id] || stagePagination[board.id] === 0}
+                    className="h-6 w-6 p-0"
+                  >
+                    <ChevronLeft className="h-3 w-3" />
+                  </Button>
+
+                  <div className="text-xs text-muted-foreground">
+                    {(stagePagination[board.id] || 0) + 1} / {getTotalPages(board.tasks, board.id)}
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => nextPage(board.id, getTotalPages(board.tasks, board.id))}
+                    disabled={(stagePagination[board.id] || 0) >= getTotalPages(board.tasks, board.id) - 1}
+                    className="h-6 w-6 p-0"
+                  >
+                    <ChevronRight className="h-3 w-3" />
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
-        </div>
-      ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

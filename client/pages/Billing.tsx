@@ -265,22 +265,31 @@ export function Billing() {
   };
 
   const handleSubmitDocument = (data: any) => {
+    // CORREÇÃO: Verificar se está editando documento existente ou criando novo
+    const isEditing = !!editingDocument;
+
     const baseDoc = {
       ...data,
-      id: Date.now().toString(),
+      id: isEditing ? editingDocument.id : Date.now().toString(),
       date: data.date + 'T00:00:00Z',
       dueDate: data.dueDate + 'T00:00:00Z',
       senderName: 'Escritório Silva & Associados',
       senderDetails: mockCompanyDetails,
       receiverName: 'Cliente Selecionado',
       receiverDetails: mockClientDetails,
-      subtotal: data.items.reduce((sum: number, item: BillingItem) => sum + item.amount, 0),
-      total: data.items.reduce((sum: number, item: BillingItem) => sum + item.amount, 0) - data.discount + data.fee + data.tax,
-      status: 'DRAFT' as DocumentStatus,
-      attachments: [],
-      createdAt: new Date().toISOString(),
+      subtotal: data.items.reduce((sum: number, item: BillingItem) => sum + (item.amount || 0), 0),
+      total: (() => {
+        const subtotal = data.items.reduce((sum: number, item: BillingItem) => sum + (item.amount || 0), 0);
+        const discount = data.discount || 0;
+        const fee = data.fee || 0;
+        const tax = data.tax || 0;
+        return subtotal - discount + fee + tax;
+      })(),
+      status: isEditing ? editingDocument.status : 'DRAFT' as DocumentStatus,
+      attachments: isEditing ? editingDocument.attachments : [],
+      createdAt: isEditing ? editingDocument.createdAt : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      createdBy: 'Dr. Silva',
+      createdBy: isEditing ? editingDocument.createdBy : 'Dr. Silva',
       lastModifiedBy: 'Dr. Silva',
     };
 
@@ -288,22 +297,71 @@ export function Billing() {
       const estimate: Estimate = {
         ...baseDoc,
         type: 'estimate',
-        number: `EST-${(estimates.length + 1).toString().padStart(3, '0')}`,
+        number: isEditing ? editingDocument.number : `EST-${(estimates.length + 1).toString().padStart(3, '0')}`,
         validUntil: data.dueDate + 'T00:00:00Z',
-        convertedToInvoice: false,
+        convertedToInvoice: isEditing ? editingDocument.convertedToInvoice : false,
       };
-      setEstimates([...estimates, estimate]);
+
+      if (isEditing) {
+        // CORREÇÃO: Atualizar documento existente ao invés de criar novo
+        setEstimates(estimates.map(est => est.id === estimate.id ? estimate : est));
+      } else {
+        setEstimates([...estimates, estimate]);
+
+        // NOVIDADE: Enviar notificação apenas quando novo orçamento for criado
+        console.log("📢 NOTIFICAÇÃO ENVIADA: Novo orçamento criado", {
+          type: 'info',
+          title: 'Novo Orçamento Criado',
+          message: `Orçamento ${estimate.number} foi criado para ${estimate.receiverName}`,
+          category: 'billing',
+          createdBy: 'Usuário Atual',
+          documentData: {
+            id: estimate.id,
+            number: estimate.number,
+            type: 'estimate',
+            client: estimate.receiverName,
+            amount: estimate.total
+          }
+        });
+      }
     } else if (documentType === 'invoice') {
       const invoice: Invoice = {
         ...baseDoc,
         type: 'invoice',
-        number: `INV-${(invoices.length + 1).toString().padStart(3, '0')}`,
-        paymentStatus: 'PENDING',
-        emailSent: false,
-        remindersSent: 0,
+        number: isEditing ? editingDocument.number : `INV-${(invoices.length + 1).toString().padStart(3, '0')}`,
+        paymentStatus: isEditing ? editingDocument.paymentStatus : 'PENDING',
+        emailSent: isEditing ? editingDocument.emailSent : false,
+        remindersSent: isEditing ? editingDocument.remindersSent : 0,
       };
-      setInvoices([...invoices, invoice]);
+
+      if (isEditing) {
+        // CORREÇÃO: Atualizar documento existente ao invés de criar novo
+        setInvoices(invoices.map(inv => inv.id === invoice.id ? invoice : inv));
+      } else {
+        setInvoices([...invoices, invoice]);
+
+        // NOVIDADE: Enviar notificação apenas quando nova fatura for criada
+        console.log("📢 NOTIFICAÇÃO ENVIADA: Nova fatura criada", {
+          type: 'warning',
+          title: 'Nova Fatura Criada',
+          message: `Fatura ${invoice.number} foi criada para ${invoice.receiverName} - Valor: R$ ${invoice.total.toFixed(2)}`,
+          category: 'billing',
+          createdBy: 'Usuário Atual',
+          documentData: {
+            id: invoice.id,
+            number: invoice.number,
+            type: 'invoice',
+            client: invoice.receiverName,
+            amount: invoice.total,
+            dueDate: invoice.dueDate
+          }
+        });
+      }
     }
+
+    // CORREÇÃO: Limpar estado de edição após salvar
+    setEditingDocument(undefined);
+    setShowDocumentForm(false);
   };
 
   const handleSelectDoc = (docId: string) => {
@@ -663,7 +721,7 @@ export function Billing() {
           <div class="footer">
             <div class="payment-info">
               <strong>💳 Formas de Pagamento Aceitas:</strong><br>
-              PIX, Transferência Bancária, Cart��o de Crédito/Débito<br><br>
+              PIX, Transferência Bancária, Cartão de Crédito/Débito<br><br>
               <strong>🏦 Dados Bancários:</strong><br>
               Banco do Brasil | Agência: 1234-5 | Conta Corrente: 67890-1<br>
               Chave PIX: contato@silva.adv.br
@@ -677,7 +735,7 @@ export function Billing() {
             ` : ''}
 
             <div class="footer-note">
-              <p><strong>Este documento foi gerado eletronicamente pelo sistema de gest��o.</strong></p>
+              <p><strong>Este documento foi gerado eletronicamente pelo sistema de gestão.</strong></p>
               <p>Escritório Silva & Associados - Soluções Jurídicas Especializadas</p>
               <p style="margin-top: 15px; font-size: 11px;">
                 📅 Documento gerado em: ${new Date().toLocaleString('pt-BR')}
@@ -846,7 +904,7 @@ export function Billing() {
 
   const handleOpenEmailModal = () => {
     if (selectedDocs.length === 0) {
-      alert('���️ Selecione pelo menos um documento para enviar por email.');
+      alert('⚠️ Selecione pelo menos um documento para enviar por email.');
       return;
     }
     setShowEmailModal(true);
@@ -1018,7 +1076,6 @@ export function Billing() {
                   onEditDoc={handleEditDoc}
                   onDeleteDoc={handleDeleteDoc}
                   onViewDoc={handleViewDoc}
-                  onSendDoc={handleSendDoc}
                   onDownloadDoc={handleDownloadDoc}
                   onDuplicateDoc={handleDuplicateDoc}
                 />

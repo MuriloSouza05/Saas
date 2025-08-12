@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,16 +10,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { 
-  Plus, 
-  MoreHorizontal, 
-  Edit, 
-  Trash2, 
-  Calendar, 
-  Users, 
+import {
+  Plus,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Calendar,
+  Users,
   DollarSign,
   AlertTriangle,
-  Clock
+  Clock,
+  ChevronLeft,
+  ChevronRight,
+  Pin,
+  Eye
 } from 'lucide-react';
 import { Project, ProjectStage, ProjectStatus } from '@/types/projects';
 
@@ -32,15 +36,12 @@ interface ProjectKanbanProps {
   onViewProject: (project: Project) => void;
 }
 
+// STAGES IGUAIS AO CRM: Mesmo pipeline do CRM Pipeline de Vendas
 const statusConfig = {
-  novo: { name: 'Novo', color: 'bg-blue-100 text-blue-800 border-blue-200' },
-  analise: { name: 'Em Análise', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
-  andamento: { name: 'Em Andamento', color: 'bg-green-100 text-green-800 border-green-200' },
-  aguardando: { name: 'Aguardando Cliente', color: 'bg-orange-100 text-orange-800 border-orange-200' },
-  revisao: { name: 'Revisão', color: 'bg-purple-100 text-purple-800 border-purple-200' },
-  concluido: { name: 'Concluído', color: 'bg-green-100 text-green-800 border-green-200' },
-  cancelado: { name: 'Cancelado', color: 'bg-red-100 text-red-800 border-red-200' },
-  arquivado: { name: 'Arquivado', color: 'bg-gray-100 text-gray-800 border-gray-200' },
+  contacted: { name: 'Em Contato', color: 'bg-blue-100 text-blue-800 border-blue-200' },
+  proposal: { name: 'Com Proposta', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
+  won: { name: 'Cliente Bem Sucedido', color: 'bg-green-100 text-green-800 border-green-200' },
+  lost: { name: 'Cliente Perdido', color: 'bg-red-100 text-red-800 border-red-200' },
 };
 
 const priorityConfig = {
@@ -50,14 +51,18 @@ const priorityConfig = {
   urgent: { icon: '🔴', color: 'text-red-600' },
 };
 
-export function ProjectKanban({ 
-  stages, 
-  onAddProject, 
-  onEditProject, 
-  onDeleteProject, 
+export function ProjectKanban({
+  stages,
+  onAddProject,
+  onEditProject,
+  onDeleteProject,
   onMoveProject,
   onViewProject
 }: ProjectKanbanProps) {
+  // IMPLEMENTAÇÃO: Paginação Kanban - 5 projects por página
+  const [stagePagination, setStagePagination] = useState<Record<string, number>>({});
+  const [pinnedProjects, setPinnedProjects] = useState<Set<string>>(new Set());
+  const PROJECTS_PER_PAGE = 5;
   const formatCurrency = (value: number, currency: string) => {
     const formatters = {
       BRL: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }),
@@ -69,6 +74,72 @@ export function ProjectKanban({
 
   const getTotalValue = (projects: Project[]) => {
     return projects.reduce((total, project) => total + project.budget, 0);
+  };
+
+  // FUNCIONALIDADES DE PAGINAÇÃO
+  const getCurrentPageProjects = (projects: Project[], stageId: string) => {
+    const currentPage = stagePagination[stageId] || 0;
+    const startIndex = currentPage * PROJECTS_PER_PAGE;
+    const endIndex = startIndex + PROJECTS_PER_PAGE;
+
+    // ORDENAÇÃO: Novos projetos aparecem no topo - mais recentes primeiro
+    const sortedProjects = [...projects].sort((a, b) =>
+      new Date(b.createdAt || b.updatedAt || 0).getTime() - new Date(a.createdAt || a.updatedAt || 0).getTime()
+    );
+
+    // Separar projetos pinados (sempre no topo) dos não pinados
+    const pinnedStageProjects = sortedProjects.filter(project => pinnedProjects.has(project.id));
+    const unpinnedProjects = sortedProjects.filter(project => !pinnedProjects.has(project.id));
+
+    // Projetos pinados sempre aparecem primeiro, depois os paginados
+    const visiblePinnedProjects = pinnedStageProjects.slice(0, PROJECTS_PER_PAGE);
+    const remainingSlots = PROJECTS_PER_PAGE - visiblePinnedProjects.length;
+
+    if (remainingSlots > 0) {
+      const paginatedUnpinned = unpinnedProjects.slice(startIndex, startIndex + remainingSlots);
+      return [...visiblePinnedProjects, ...paginatedUnpinned];
+    }
+
+    return visiblePinnedProjects;
+  };
+
+  const getTotalPages = (projects: Project[], stageId: string) => {
+    const unpinnedCount = projects.filter(project => !pinnedProjects.has(project.id)).length;
+    const pinnedCount = projects.filter(project => pinnedProjects.has(project.id)).length;
+    const totalVisibleSlots = Math.max(unpinnedCount + pinnedCount - pinnedCount, unpinnedCount);
+    return Math.ceil(totalVisibleSlots / PROJECTS_PER_PAGE);
+  };
+
+  const nextPage = (stageId: string, totalPages: number) => {
+    const currentPage = stagePagination[stageId] || 0;
+    if (currentPage < totalPages - 1) {
+      setStagePagination(prev => ({
+        ...prev,
+        [stageId]: currentPage + 1
+      }));
+    }
+  };
+
+  const prevPage = (stageId: string) => {
+    const currentPage = stagePagination[stageId] || 0;
+    if (currentPage > 0) {
+      setStagePagination(prev => ({
+        ...prev,
+        [stageId]: currentPage - 1
+      }));
+    }
+  };
+
+  const togglePin = (projectId: string) => {
+    setPinnedProjects(prev => {
+      const newPinned = new Set(prev);
+      if (newPinned.has(projectId)) {
+        newPinned.delete(projectId);
+      } else {
+        newPinned.add(projectId);
+      }
+      return newPinned;
+    });
   };
 
   const getDaysUntilDue = (dueDate: string) => {
@@ -98,8 +169,10 @@ export function ProjectKanban({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-full">
-      {stages.map((stage) => (
+    <div className="w-full">
+      {/* LAYOUT TOTALMENTE RESPONSIVO: Ocupa todo o container respeitando espaçamento */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 w-full min-h-[600px]">
+        {stages.map((stage) => (
         <div
           key={stage.id}
           className="flex flex-col h-full"
@@ -129,19 +202,20 @@ export function ProjectKanban({
               </div>
             </CardHeader>
             <CardContent className="flex-1 space-y-3 p-3 pt-0">
-              {stage.projects.map((project) => {
+              {/* IMPLEMENTAÇÃO: Cards paginados - 5 por página */}
+              {getCurrentPageProjects(stage.projects, stage.id).map((project) => {
                 const daysUntilDue = getDaysUntilDue(project.dueDate);
                 const overdue = isOverdue(project.dueDate);
                 
                 return (
                   <Card
                     key={project.id}
-                    className="cursor-move hover:shadow-md transition-shadow border-l-4"
-                    style={{ borderLeftColor: statusConfig[project.status]?.color.includes('blue') ? '#3b82f6' : 
+                    className={`cursor-move hover:shadow-md transition-shadow border-l-4 ${
+                      pinnedProjects.has(project.id) ? 'ring-2 ring-blue-200 bg-blue-50/50' : ''
+                    }`}
+                    style={{ borderLeftColor: statusConfig[project.status]?.color.includes('blue') ? '#3b82f6' :
                                              statusConfig[project.status]?.color.includes('yellow') ? '#f59e0b' :
                                              statusConfig[project.status]?.color.includes('green') ? '#10b981' :
-                                             statusConfig[project.status]?.color.includes('orange') ? '#f97316' :
-                                             statusConfig[project.status]?.color.includes('purple') ? '#8b5cf6' :
                                              statusConfig[project.status]?.color.includes('red') ? '#ef4444' : '#6b7280' }}
                     draggable
                     onDragStart={(e) => handleDragStart(e, project.id)}
@@ -173,14 +247,19 @@ export function ProjectKanban({
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => togglePin(project.id)}>
+                                  <Pin className={`mr-2 h-3 w-3 ${pinnedProjects.has(project.id) ? 'text-blue-600' : ''}`} />
+                                  {pinnedProjects.has(project.id) ? 'Desafixar' : 'Fixar'}
+                                </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => onViewProject(project)}>
+                                  <Eye className="mr-2 h-3 w-3" />
                                   Visualizar
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => onEditProject(project)}>
                                   <Edit className="mr-2 h-3 w-3" />
                                   Editar
                                 </DropdownMenuItem>
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                   onClick={() => onDeleteProject(project.id)}
                                   className="text-destructive"
                                 >
@@ -297,10 +376,40 @@ export function ProjectKanban({
                   </Button>
                 </div>
               )}
+
+              {/* CONTROLES DE PAGINAÇÃO */}
+              {stage.projects.length > PROJECTS_PER_PAGE && (
+                <div className="flex items-center justify-between pt-3 border-t">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => prevPage(stage.id)}
+                    disabled={!stagePagination[stage.id] || stagePagination[stage.id] === 0}
+                    className="h-6 w-6 p-0"
+                  >
+                    <ChevronLeft className="h-3 w-3" />
+                  </Button>
+
+                  <div className="text-xs text-muted-foreground">
+                    {(stagePagination[stage.id] || 0) + 1} / {getTotalPages(stage.projects, stage.id)}
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => nextPage(stage.id, getTotalPages(stage.projects, stage.id))}
+                    disabled={(stagePagination[stage.id] || 0) >= getTotalPages(stage.projects, stage.id) - 1}
+                    className="h-6 w-6 p-0"
+                  >
+                    <ChevronRight className="h-3 w-3" />
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
-        </div>
-      ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

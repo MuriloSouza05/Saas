@@ -176,52 +176,8 @@ export function Dashboard() {
   const navigate = useNavigate();
 
   const handleViewAllNotifications = () => {
-    // Add smooth transition animation with enhanced feedback
-    const button = document.activeElement as HTMLElement;
-    if (button) {
-      button.style.transition = 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
-      button.style.transform = 'scale(0.95)';
-      button.style.opacity = '0.7';
-
-      setTimeout(() => {
-        button.style.transform = 'scale(1.02)';
-        button.style.opacity = '1';
-        setTimeout(() => {
-          button.style.transform = 'scale(1)';
-        }, 100);
-      }, 150);
-    }
-
-    // Enhanced notification with smooth appearance
-    setTimeout(() => {
-      const notification = document.createElement('div');
-      notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: linear-gradient(135deg, #3B82F6, #1D4ED8);
-        color: white;
-        padding: 16px 24px;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
-        z-index: 9999;
-        transform: translateX(100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        font-weight: 500;
-      `;
-      notification.innerHTML = '📧 Visualizando todas as notificações<br><small style="opacity: 0.8;">Em breve: Página dedicada!</small>';
-
-      document.body.appendChild(notification);
-
-      setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-      }, 50);
-
-      setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => document.body.removeChild(notification), 300);
-      }, 3000);
-    }, 200);
+    // Redirect to notifications page instead of showing notification
+    navigate('/notificacoes');
   };
 
   const handleViewAllProjects = () => {
@@ -375,7 +331,7 @@ export function Dashboard() {
                   </div>
                 </div>
               ))}
-              <Button variant="outline" size="sm" className="w-full">
+              <Button variant="outline" size="sm" className="w-full" onClick={handleViewAllNotifications}>
                 <Plus className="h-4 w-4 mr-2" />
                 Ver mais
               </Button>

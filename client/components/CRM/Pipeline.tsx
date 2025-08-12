@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Plus, MoreHorizontal, Edit, Trash2, Mail, Phone } from 'lucide-react';
+import { Plus, MoreHorizontal, Edit, Trash2, Mail, Phone, ChevronLeft, ChevronRight, Pin, Eye } from 'lucide-react';
 import { Deal, PipelineStage, DealStage } from '@/types/crm';
 
 interface PipelineProps {
@@ -18,19 +18,24 @@ interface PipelineProps {
   onEditDeal: (deal: Deal) => void;
   onDeleteDeal: (dealId: string) => void;
   onMoveDeal: (dealId: string, newStage: DealStage) => void;
+  onViewDeal?: (deal: Deal) => void; // NOVA FUNCIONALIDADE: Visualizar deals
 }
 
+// PIPELINE SIMPLIFICADO: Apenas 4 estágios conforme solicitado
 const stageConfig = {
-  opportunity: { name: 'Oportunidade', color: 'bg-blue-100 text-blue-800' },
-  contacted: { name: 'Em Contato', color: 'bg-yellow-100 text-yellow-800' },
-  advanced: { name: 'Conversas Avançadas', color: 'bg-purple-100 text-purple-800' },
-  proposal: { name: 'Com Proposta', color: 'bg-orange-100 text-orange-800' },
+  contacted: { name: 'Em Contato', color: 'bg-blue-100 text-blue-800' },
+  proposal: { name: 'Com Proposta', color: 'bg-yellow-100 text-yellow-800' },
   won: { name: 'Cliente Bem Sucedido', color: 'bg-green-100 text-green-800' },
   lost: { name: 'Cliente Perdido', color: 'bg-red-100 text-red-800' },
-  general: { name: 'Geral', color: 'bg-gray-100 text-gray-800' },
 };
 
-export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDeal }: PipelineProps) {
+// REMOVIDOS: opportunity, advanced, general conforme solicitação
+
+export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDeal, onViewDeal }: PipelineProps) {
+  // IMPLEMENTAÇÃO: Paginação Kanban - 5 cards por página
+  const [stagePagination, setStagePagination] = useState<Record<string, number>>({});
+  const [pinnedDeals, setPinnedDeals] = useState<Set<string>>(new Set());
+  const CARDS_PER_PAGE = 5;
   const formatCurrency = (value: number, currency: string) => {
     const formatters = {
       BRL: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }),
@@ -42,6 +47,72 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
 
   const getTotalValue = (deals: Deal[]) => {
     return deals.reduce((total, deal) => total + deal.budget, 0);
+  };
+
+  // FUNCIONALIDADES DE PAGINAÇÃO
+  const getCurrentPageDeals = (deals: Deal[], stageId: string) => {
+    const currentPage = stagePagination[stageId] || 0;
+    const startIndex = currentPage * CARDS_PER_PAGE;
+    const endIndex = startIndex + CARDS_PER_PAGE;
+
+    // ORDENAÇÃO: Novos negócios aparecem no topo - mais recentes primeiro
+    const sortedDeals = [...deals].sort((a, b) =>
+      new Date(b.createdAt || b.updatedAt || 0).getTime() - new Date(a.createdAt || a.updatedAt || 0).getTime()
+    );
+
+    // Separar deals pinados (sempre no topo) dos não pinados
+    const pinnedStageDeals = sortedDeals.filter(deal => pinnedDeals.has(deal.id));
+    const unpinnedDeals = sortedDeals.filter(deal => !pinnedDeals.has(deal.id));
+
+    // Deals pinados sempre aparecem primeiro, depois os paginados
+    const visiblePinnedDeals = pinnedStageDeals.slice(0, CARDS_PER_PAGE);
+    const remainingSlots = CARDS_PER_PAGE - visiblePinnedDeals.length;
+
+    if (remainingSlots > 0) {
+      const paginatedUnpinned = unpinnedDeals.slice(startIndex, startIndex + remainingSlots);
+      return [...visiblePinnedDeals, ...paginatedUnpinned];
+    }
+
+    return visiblePinnedDeals;
+  };
+
+  const getTotalPages = (deals: Deal[], stageId: string) => {
+    const unpinnedCount = deals.filter(deal => !pinnedDeals.has(deal.id)).length;
+    const pinnedCount = deals.filter(deal => pinnedDeals.has(deal.id)).length;
+    const totalVisibleSlots = Math.max(unpinnedCount + pinnedCount - pinnedCount, unpinnedCount);
+    return Math.ceil(totalVisibleSlots / CARDS_PER_PAGE);
+  };
+
+  const nextPage = (stageId: string, totalPages: number) => {
+    const currentPage = stagePagination[stageId] || 0;
+    if (currentPage < totalPages - 1) {
+      setStagePagination(prev => ({
+        ...prev,
+        [stageId]: currentPage + 1
+      }));
+    }
+  };
+
+  const prevPage = (stageId: string) => {
+    const currentPage = stagePagination[stageId] || 0;
+    if (currentPage > 0) {
+      setStagePagination(prev => ({
+        ...prev,
+        [stageId]: currentPage - 1
+      }));
+    }
+  };
+
+  const togglePin = (dealId: string) => {
+    setPinnedDeals(prev => {
+      const newPinned = new Set(prev);
+      if (newPinned.has(dealId)) {
+        newPinned.delete(dealId);
+      } else {
+        newPinned.add(dealId);
+      }
+      return newPinned;
+    });
   };
 
   const handleDragStart = (e: React.DragEvent, dealId: string) => {
@@ -59,8 +130,10 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4 h-full">
-      {stages.map((stage) => (
+    <div className="w-full">
+      {/* LAYOUT TOTALMENTE RESPONSIVO: Ocupa todo o container respeitando espaçamento */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 w-full min-h-[600px]">
+        {stages.map((stage) => (
         <div
           key={stage.id}
           className="flex flex-col h-full"
@@ -90,10 +163,13 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
               </div>
             </CardHeader>
             <CardContent className="flex-1 space-y-3 p-3 pt-0">
-              {stage.deals.map((deal) => (
+              {/* IMPLEMENTAÇÃO: Cards paginados - 5 por página */}
+              {getCurrentPageDeals(stage.deals, stage.id).map((deal) => (
                 <Card
                   key={deal.id}
-                  className="cursor-move hover:shadow-md transition-shadow"
+                  className={`cursor-move hover:shadow-md transition-shadow ${
+                    pinnedDeals.has(deal.id) ? 'ring-2 ring-blue-200 bg-blue-50/50' : ''
+                  }`}
                   draggable
                   onDragStart={(e) => handleDragStart(e, deal.id)}
                 >
@@ -110,11 +186,21 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => togglePin(deal.id)}>
+                              <Pin className={`mr-2 h-3 w-3 ${pinnedDeals.has(deal.id) ? 'text-blue-600' : ''}`} />
+                              {pinnedDeals.has(deal.id) ? 'Desafixar' : 'Fixar'}
+                            </DropdownMenuItem>
+                            {onViewDeal && (
+                              <DropdownMenuItem onClick={() => onViewDeal(deal)}>
+                                <Eye className="mr-2 h-3 w-3" />
+                                Visualizar
+                              </DropdownMenuItem>
+                            )}
                             <DropdownMenuItem onClick={() => onEditDeal(deal)}>
                               <Edit className="mr-2 h-3 w-3" />
                               Editar
                             </DropdownMenuItem>
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               onClick={() => onDeleteDeal(deal.id)}
                               className="text-destructive"
                             >
@@ -210,10 +296,40 @@ export function Pipeline({ stages, onAddDeal, onEditDeal, onDeleteDeal, onMoveDe
                   </Button>
                 </div>
               )}
+
+              {/* CONTROLES DE PAGINAÇÃO */}
+              {stage.deals.length > CARDS_PER_PAGE && (
+                <div className="flex items-center justify-between pt-3 border-t">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => prevPage(stage.id)}
+                    disabled={!stagePagination[stage.id] || stagePagination[stage.id] === 0}
+                    className="h-6 w-6 p-0"
+                  >
+                    <ChevronLeft className="h-3 w-3" />
+                  </Button>
+
+                  <div className="text-xs text-muted-foreground">
+                    {(stagePagination[stage.id] || 0) + 1} / {getTotalPages(stage.deals, stage.id)}
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => nextPage(stage.id, getTotalPages(stage.deals, stage.id))}
+                    disabled={(stagePagination[stage.id] || 0) >= getTotalPages(stage.deals, stage.id) - 1}
+                    className="h-6 w-6 p-0"
+                  >
+                    <ChevronRight className="h-3 w-3" />
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
-        </div>
-      ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -37,10 +37,11 @@ const dealSchema = z.object({
   organization: z.string().optional(),
   email: z.string().email('Email inválido'),
   mobile: z.string().min(1, 'Telefone é obrigatório'),
-  address: z.string().min(1, 'Endereço é obrigatório'),
-  budget: z.number().min(0, 'Orçamento deve ser positivo'),
+  address: z.string().optional(), // CAMPO NÃO OBRIGATÓRIO conforme solicitado
+  budget: z.number().optional(), // CAMPO NÃO OBRIGATÓRIO conforme solicitado
   currency: z.enum(['BRL', 'USD', 'EUR']),
-  stage: z.enum(['opportunity', 'contacted', 'advanced', 'proposal', 'won', 'lost', 'general']),
+  // PIPELINE SIMPLIFICADO: Apenas 4 estágios conforme solicitado
+  stage: z.enum(['contacted', 'proposal', 'won', 'lost']),
   description: z.string().optional(),
 });
 
@@ -55,26 +56,41 @@ interface DealFormProps {
   isEditing?: boolean;
 }
 
+// PIPELINE SIMPLIFICADO: Apenas 4 estágios conforme solicitado
 const stageOptions = [
-  { value: 'opportunity', label: 'Oportunidade' },
   { value: 'contacted', label: 'Em Contato' },
-  { value: 'advanced', label: 'Conversas Avançadas' },
   { value: 'proposal', label: 'Com Proposta' },
   { value: 'won', label: 'Cliente Bem Sucedido' },
   { value: 'lost', label: 'Cliente Perdido' },
-  { value: 'general', label: 'Geral' },
 ];
 
-export function DealForm({ 
-  open, 
-  onOpenChange, 
-  deal, 
+// REMOVIDOS: opportunity, advanced, general conforme solicitação
+
+// Lista de tags existentes para dropdown - seria carregada da API
+const existingTags = [
+  'Consultoria Jurídica',
+  'Ação Trabalhista',
+  'Contrato Empresarial',
+  'Direito Previdenciário',
+  'Divórcio',
+  'Inventário',
+  'Recuperação Judicial',
+  'Direito Imobiliário',
+  'Direito Tributário',
+  'Assessoria Legal'
+];
+
+export function DealForm({
+  open,
+  onOpenChange,
+  deal,
   initialStage,
-  onSubmit, 
-  isEditing = false 
+  onSubmit,
+  isEditing = false
 }: DealFormProps) {
   const [tags, setTags] = useState<string[]>(deal?.tags || []);
   const [newTag, setNewTag] = useState('');
+  const [selectedExistingTag, setSelectedExistingTag] = useState('');
 
   const form = useForm<DealFormData>({
     resolver: zodResolver(dealSchema),
@@ -85,9 +101,9 @@ export function DealForm({
       email: deal?.email || '',
       mobile: deal?.mobile || '',
       address: deal?.address || '',
-      budget: deal?.budget || 0,
+      budget: deal?.budget || undefined, // Permite campo vazio
       currency: deal?.currency || 'BRL',
-      stage: deal?.stage || initialStage || 'opportunity',
+      stage: deal?.stage || initialStage || 'contacted', // Estágio válido
       description: deal?.description || '',
     },
   });
@@ -102,14 +118,15 @@ export function DealForm({
         email: deal.email || '',
         mobile: deal.mobile || '',
         address: deal.address || '',
-        budget: deal.budget || 0,
+        budget: deal.budget || undefined, // Alterado para permitir campo vazio
         currency: deal.currency || 'BRL',
-        stage: deal.stage || initialStage || 'opportunity',
+        stage: deal.stage || initialStage || 'contacted', // Alterado para stage válido
         description: deal.description || '',
       });
       setTags(deal.tags || []);
     } else {
       setTags([]);
+      setSelectedExistingTag(''); // Reset dropdown selection
     }
   }, [deal, initialStage, form]);
 
@@ -117,6 +134,7 @@ export function DealForm({
     form.reset();
     setTags([]);
     setNewTag('');
+    setSelectedExistingTag(''); // Reset dropdown selection
     onOpenChange(false);
   };
 
@@ -229,9 +247,9 @@ export function DealForm({
                   name="address"
                   render={({ field }) => (
                     <FormItem className="md:col-span-2">
-                      <FormLabel>Endereço *</FormLabel>
+                      <FormLabel>Endereço</FormLabel>
                       <FormControl>
-                        <Input placeholder="Endereço completo" {...field} />
+                        <Input placeholder="Endereço completo (opcional)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -243,11 +261,11 @@ export function DealForm({
                   name="budget"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Orçamento *</FormLabel>
+                      <FormLabel>Orçamento</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
-                          placeholder="0.00"
+                        <Input
+                          type="number"
+                          placeholder="0.00 (opcional)"
                           {...field}
                           onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                         />
@@ -307,26 +325,66 @@ export function DealForm({
               </div>
             </div>
 
-            {/* Tags */}
+            {/* Tags - DROPDOWN PARA TAGS EXISTENTES + CRIAÇÃO DE NOVAS */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Tags</h3>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Adicionar tag"
-                  value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                />
-                <Button type="button" onClick={addTag}>
-                  <Plus className="h-4 w-4" />
-                </Button>
+
+              {/* Dropdown para tags existentes */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Selecionar tag existente:</label>
+                <Select value={selectedExistingTag} onValueChange={setSelectedExistingTag}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Escolher tag existente..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {existingTags
+                      .filter(tag => !tags.includes(tag))
+                      .map((tag) => (
+                        <SelectItem key={tag} value={tag}>
+                          {tag}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                {selectedExistingTag && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => {
+                      if (!tags.includes(selectedExistingTag)) {
+                        setTags([...tags, selectedExistingTag]);
+                        setSelectedExistingTag('');
+                      }
+                    }}
+                  >
+                    Adicionar tag selecionada
+                  </Button>
+                )}
               </div>
+
+              {/* Campo para criar nova tag */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Ou criar nova tag:</label>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Nova tag personalizada"
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                  />
+                  <Button type="button" onClick={addTag}>
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Tags adicionadas */}
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
                   <Badge key={tag} variant="secondary" className="flex items-center gap-1">
                     {tag}
-                    <X 
-                      className="h-3 w-3 cursor-pointer" 
+                    <X
+                      className="h-3 w-3 cursor-pointer"
                       onClick={() => removeTag(tag)}
                     />
                   </Badge>

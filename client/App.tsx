@@ -13,6 +13,7 @@ import { Tasks } from "./pages/Tasks";
 import { Billing } from "./pages/Billing";
 import { CashFlow } from "./pages/CashFlow";
 import { Settings } from "./pages/Settings";
+import { Notifications } from "./pages/Notifications";
 import { Login } from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/cobranca" element={<Billing />} />
           <Route path="/fluxo-caixa" element={<CashFlow />} />
           <Route path="/configuracoes" element={<Settings />} />
+          <Route path="/notificacoes" element={<Notifications />} />
           <Route path="/login" element={<Login />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

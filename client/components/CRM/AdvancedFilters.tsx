@@ -24,6 +24,7 @@ interface AdvancedFiltersProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onApplyFilters: (filters: any) => void;
+  existingTags?: string[]; // Tags já existentes em todos os clientes
 }
 
 const clientLevels = [
@@ -51,7 +52,7 @@ const budgetRanges = [
   { label: 'Acima de R$ 50.000', min: 50001, max: null },
 ];
 
-export function AdvancedFilters({ open, onOpenChange, onApplyFilters }: AdvancedFiltersProps) {
+export function AdvancedFilters({ open, onOpenChange, onApplyFilters, existingTags = [] }: AdvancedFiltersProps) {
   const [filters, setFilters] = useState({
     levels: [] as string[],
     locations: [] as string[],
@@ -81,6 +82,15 @@ export function AdvancedFilters({ open, onOpenChange, onApplyFilters }: Advanced
       ...filters,
       tags: filters.tags.filter(tag => tag !== tagToRemove),
     });
+  };
+
+  const addExistingTag = (tag: string) => {
+    if (!filters.tags.includes(tag)) {
+      setFilters({
+        ...filters,
+        tags: [...filters.tags, tag],
+      });
+    }
   };
 
   const addLevel = (level: string) => {
@@ -235,23 +245,54 @@ export function AdvancedFilters({ open, onOpenChange, onApplyFilters }: Advanced
           {/* Tags */}
           <div className="space-y-2">
             <Label>Tags</Label>
-            <div className="flex gap-2">
-              <Input
-                placeholder="Adicionar tag"
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-              />
-              <Button type="button" onClick={addTag}>
-                Adicionar
-              </Button>
+
+            {/* IMPLEMENTAÇÃO MELHORADA: Dropdown com tags existentes + input para novas */}
+            <div className="space-y-3">
+              {/* Dropdown com tags já existentes no sistema */}
+              {existingTags.length > 0 && (
+                <div>
+                  <Label className="text-sm text-muted-foreground">Selecionar de tags existentes:</Label>
+                  <Select onValueChange={addExistingTag}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Escolher tag existente" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {existingTags
+                        .filter(tag => !filters.tags.includes(tag))
+                        .map((tag) => (
+                          <SelectItem key={tag} value={tag}>
+                            {tag}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {/* Input para criar nova tag */}
+              <div>
+                <Label className="text-sm text-muted-foreground">Ou criar nova tag:</Label>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Digite nova tag"
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                  />
+                  <Button type="button" onClick={addTag}>
+                    Adicionar
+                  </Button>
+                </div>
+              </div>
             </div>
+
+            {/* Tags selecionadas */}
             <div className="flex flex-wrap gap-2">
               {filters.tags.map((tag) => (
                 <Badge key={tag} variant="secondary" className="flex items-center gap-1">
                   {tag}
-                  <X 
-                    className="h-3 w-3 cursor-pointer" 
+                  <X
+                    className="h-3 w-3 cursor-pointer"
                     onClick={() => removeTag(tag)}
                   />
                 </Badge>
