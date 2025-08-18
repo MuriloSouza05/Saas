@@ -7,6 +7,7 @@
  */
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -131,7 +132,7 @@ export function Publications() {
             </TabsTrigger>
           </TabsList>
 
-          {/* ABA PUBLICA��ÕES */}
+          {/* ABA PUBLICAÇÕES */}
           <TabsContent value="publicacoes" className="space-y-4">
             <Card>
               <CardHeader>
