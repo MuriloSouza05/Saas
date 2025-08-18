@@ -35,6 +35,7 @@ const App = () => (
           <Route path="/cobranca" element={<Billing />} />
           <Route path="/fluxo-caixa" element={<CashFlow />} />
           <Route path="/publicacoes" element={<Publications />} />
+          <Route path="/publicacoes/:id" element={<PublicationDetail />} />
           <Route path="/configuracoes" element={<Settings />} />
           <Route path="/notificacoes" element={<Notifications />} />
           <Route path="/login" element={<Login />} />
