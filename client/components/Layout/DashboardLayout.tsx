@@ -54,6 +54,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Scale,
+  Newspaper,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserProfileDialog } from "./UserProfileDialog";
