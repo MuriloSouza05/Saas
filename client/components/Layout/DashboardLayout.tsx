@@ -68,6 +68,7 @@ const navigation = [
   { name: "Tarefas", href: "/tarefas", icon: CheckSquare },
   { name: "Cobrança", href: "/cobranca", icon: FileText },
   { name: "Fluxo de Caixa", href: "/fluxo-caixa", icon: TrendingUp },
+  { name: "Painel de Publicações", href: "/publicacoes", icon: Newspaper },
   { name: "Configurações", href: "/configuracoes", icon: Settings },
 ];
 
