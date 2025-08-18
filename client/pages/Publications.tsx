@@ -96,12 +96,10 @@ const getUrgencyColor = (urgencia?: string) => {
 
 export function Publications() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPublication, setSelectedPublication] = useState<Publication | null>(null);
-  const [showViewDialog, setShowViewDialog] = useState(false);
+  const navigate = useNavigate();
 
   const handleViewPublication = (publication: Publication) => {
-    setSelectedPublication(publication);
-    setShowViewDialog(true);
+    navigate(`/publicacoes/${publication.id}`);
   };
 
   const filteredPublications = mockPublications.filter(pub =>
