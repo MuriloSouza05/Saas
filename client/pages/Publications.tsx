@@ -258,14 +258,6 @@ export function Publications() {
           </TabsContent>
         </Tabs>
 
-        {/* Dialog de Visualização */}
-        {selectedPublication && (
-          <PublicationViewDialog
-            publication={selectedPublication}
-            open={showViewDialog}
-            onOpenChange={setShowViewDialog}
-          />
-        )}
       </div>
     </DashboardLayout>
   );
