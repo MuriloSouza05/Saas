@@ -34,7 +34,6 @@ import {
   Scale
 } from "lucide-react";
 import { Publication, PublicationStatus } from "@/types/publications";
-import { PublicationViewDialog } from "@/components/Publications/PublicationViewDialog";
 
 // Dados mock para demonstração
 const mockPublications: Publication[] = [
