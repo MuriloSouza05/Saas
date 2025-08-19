@@ -436,6 +436,24 @@ export function Receivables() {
     console.log(`✅ ${importedInvoices.length} fatura(s) importada(s) com sucesso!`);
   };
 
+  const handleCreateInvoice = (newInvoices: any[]) => {
+    // Adicionar novas faturas ao estado
+    const invoicesWithIds = newInvoices.map(invoice => ({
+      ...invoice,
+      id: `new_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    }));
+
+    setInvoices(prev => [...invoicesWithIds, ...prev]);
+
+    // Notificação de sucesso
+    console.log(`✅ ${newInvoices.length} nova(s) fatura(s) criada(s) com sucesso!`);
+
+    // Se for recorrente, mostrar mensagem específica
+    if (newInvoices.length > 1) {
+      console.log(`🔄 Fatura recorrente criada com ${newInvoices.length} parcelas`);
+    }
+  };
+
   const handleViewInvoice = (invoice: Invoice) => {
     setViewingInvoice(invoice);
     setShowViewDialog(true);
