@@ -23,35 +23,52 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 const originalWarn = console.warn;
 const originalError = console.error;
 
-console.warn = (...args) => {
-  const message = args[0];
-  if (typeof message === 'string') {
-    // Suppress Recharts defaultProps warnings
-    if (message.includes('defaultProps will be removed') &&
-        (message.includes('XAxis') || message.includes('YAxis'))) {
-      return;
-    }
-    // Also catch React development warnings about Recharts components
-    if (message.includes('Warning: ') &&
-        (message.includes('XAxis') || message.includes('YAxis')) &&
-        message.includes('defaultProps')) {
-      return;
-    }
-  }
-  originalWarn.apply(console, args);
-};
+// Store the original console methods for restoration if needed
+const consoleSuppressionActive = true;
 
-console.error = (...args) => {
-  const message = args[0];
-  if (typeof message === 'string') {
-    // Suppress React error logs about defaultProps from Recharts
-    if (message.includes('defaultProps') &&
-        (message.includes('XAxis') || message.includes('YAxis'))) {
-      return;
+if (consoleSuppressionActive) {
+  console.warn = (...args) => {
+    const message = typeof args[0] === 'string' ? args[0] : String(args[0]);
+
+    // Comprehensive suppression of Recharts defaultProps warnings
+    const suppressPatterns = [
+      'Support for defaultProps will be removed from function components',
+      'defaultProps will be removed',
+      'XAxis',
+      'YAxis',
+      'CartesianGrid',
+      'Tooltip',
+      'Legend'
+    ];
+
+    // Check if this is a Recharts defaultProps warning
+    const isRechartsWarning = suppressPatterns.some(pattern =>
+      message.includes(pattern)
+    ) && (
+      message.includes('defaultProps') ||
+      message.includes('XAxis') ||
+      message.includes('YAxis')
+    );
+
+    if (!isRechartsWarning) {
+      originalWarn.apply(console, args);
     }
-  }
-  originalError.apply(console, args);
-};
+  };
+
+  console.error = (...args) => {
+    const message = typeof args[0] === 'string' ? args[0] : String(args[0]);
+
+    // Suppress React error logs about defaultProps from Recharts
+    const isRechartsError = (
+      message.includes('defaultProps') &&
+      (message.includes('XAxis') || message.includes('YAxis') || message.includes('recharts'))
+    );
+
+    if (!isRechartsError) {
+      originalError.apply(console, args);
+    }
+  };
+}
 
 // Mock data for charts
 const monthlyFinancialData = [
