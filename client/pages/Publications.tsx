@@ -108,11 +108,33 @@ const mockPublications: Publication[] = [
 
 const getStatusBadge = (status: PublicationStatus) => {
   const statusConfig = {
-    descartada: { label: "Descartada", variant: "secondary" as const, color: "text-gray-600" },
-    atribuida: { label: "Atribuída", variant: "default" as const, color: "text-blue-600" },
-    finalizada: { label: "Finalizada", variant: "outline" as const, color: "text-green-600" }
+    nova: {
+      label: "Nova",
+      variant: "default" as const,
+      color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+    },
+    pendente: {
+      label: "Pendente",
+      variant: "secondary" as const,
+      color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+    },
+    atribuida: {
+      label: "Atribuída",
+      variant: "outline" as const,
+      color: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
+    },
+    finalizada: {
+      label: "Finalizada",
+      variant: "outline" as const,
+      color: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+    },
+    descartada: {
+      label: "Descartada",
+      variant: "destructive" as const,
+      color: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+    }
   };
-  
+
   return statusConfig[status];
 };
 
