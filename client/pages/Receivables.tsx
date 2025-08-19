@@ -382,15 +382,44 @@ export function Receivables() {
     // BACKEND: POST /api/recebiveis/cobranca-lote
   };
 
-  const filteredInvoices = invoices.filter(invoice => {
-    const matchesSearch =
-      invoice.numeroFatura.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      invoice.descricao.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredInvoices = invoices
+    .filter(invoice => {
+      const matchesSearch =
+        invoice.numeroFatura.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        invoice.descricao.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter === "all" || invoice.status === statusFilter;
+      const matchesStatus = statusFilter === "all" || invoice.status === statusFilter;
 
-    return matchesSearch && matchesStatus;
-  });
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      // Ordenação personalizada conforme solicitado:
+      // 1. Pendente (topo - prioridade máxima)
+      // 2. Nova (logo abaixo de pendente)
+      // 3. Processando (meio)
+      // 4. Atribuida (meio)
+      // 5. Paga (final)
+
+      const statusPriority = {
+        pendente: 1,    // Topo (vermelho)
+        nova: 2,        // Abaixo de pendente
+        processando: 3, // Meio
+        atribuida: 4,   // Meio
+        paga: 5,        // Final
+        vencida: 6,     // Final (caso ainda exista)
+        cancelada: 7    // Final
+      };
+
+      const priorityA = statusPriority[a.status as keyof typeof statusPriority] || 8;
+      const priorityB = statusPriority[b.status as keyof typeof statusPriority] || 8;
+
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+      }
+
+      // Se o status for igual, ordenar por data de vencimento (mais próximo primeiro)
+      return new Date(a.dataVencimento).getTime() - new Date(b.dataVencimento).getTime();
+    });
 
   const handleImportBilling = (importedInvoices: any[]) => {
     // Adicionar faturas importadas ao estado
