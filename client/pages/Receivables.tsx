@@ -466,10 +466,6 @@ export function Receivables() {
             <h1 className="text-2xl font-bold">Gestão de Recebíveis</h1>
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
-              <Settings className="h-4 w-4 mr-2" />
-              Configurações
-            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -478,7 +474,10 @@ export function Receivables() {
               <Import className="h-4 w-4 mr-2" />
               Importar Cobranças
             </Button>
-            <Button size="sm">
+            <Button
+              size="sm"
+              onClick={() => setShowNewInvoiceModal(true)}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Nova Fatura
             </Button>
