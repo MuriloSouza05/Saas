@@ -140,9 +140,44 @@ export function PublicationDetail() {
     console.log("Concluindo publicação:", publication.id);
   };
 
-  const handleManagement = () => {
-    // Implementar lógica de gerenciamento
-    console.log("Abrindo gerenciamentos:", publication.id);
+  /**
+   * INTEGRAÇÃO COM SISTEMA DE TAREFAS
+   * =================================
+   *
+   * BACKEND: Quando uma tarefa é criada vinculada à publicação:
+   * 1. POST /api/tarefas com { publicacaoId: publication.id }
+   * 2. Atualizar campo tarefasVinculadas da publicação
+   * 3. Se tarefa for atribuída a alguém, mudar status da publicação para 'atribuida'
+   * 4. Enviar notificação para o responsável atribuído
+   */
+  const handleAddTask = () => {
+    setShowTaskForm(true);
+  };
+
+  const handleTaskSubmit = (taskData: any) => {
+    // BACKEND: Criar tarefa vinculada à publicação
+    console.log("Criando tarefa vinculada à publicação:", publication.id, taskData);
+
+    // BACKEND: Se tarefa tem responsável, mudar status da publicação para 'atribuida'
+    if (taskData.assignedTo) {
+      console.log("Mudando status da publicação para ATRIBUIDA - responsável:", taskData.assignedTo);
+      // PATCH /api/publicacoes/{id}/status { status: 'atribuida', responsavel: taskData.assignedTo }
+    }
+
+    // BACKEND: Enviar notificação para o responsável
+    console.log("Enviando notificação para:", taskData.assignedTo);
+
+    setShowTaskForm(false);
+  };
+
+  const handleViewTasks = () => {
+    // Navegar para lista de tarefas filtrada por esta publicação
+    navigate(`/tarefas?publicacao=${publication.id}`);
+  };
+
+  const handleAssignToTeam = () => {
+    // Implementar modal de atribuição direta
+    console.log("Abrindo modal de atribuição:", publication.id);
   };
 
   return (
