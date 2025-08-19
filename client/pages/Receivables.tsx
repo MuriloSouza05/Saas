@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { ImportBillingModal } from "@/components/Receivables/ImportBillingModal";
 import { InvoiceViewDialog } from "@/components/Receivables/InvoiceViewDialog";
+import { NewInvoiceModal } from "@/components/Receivables/NewInvoiceModal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
