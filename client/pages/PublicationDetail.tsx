@@ -102,6 +102,8 @@ const getStatusConfig = (status: PublicationStatus) => {
 export function PublicationDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [showTaskForm, setShowTaskForm] = useState(false);
+  const [publicationTasks, setPublicationTasks] = useState<any[]>([]);
 
   // Buscar publicação pelo ID (mock)
   const publication = mockPublications.find(p => p.id === id);
