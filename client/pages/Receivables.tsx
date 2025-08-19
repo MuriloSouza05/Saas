@@ -569,14 +569,9 @@ export function Receivables() {
                       <SelectItem value="nova">Nova</SelectItem>
                       <SelectItem value="pendente">Pendente</SelectItem>
                       <SelectItem value="paga">Paga</SelectItem>
-                      <SelectItem value="vencida">Vencida</SelectItem>
                       <SelectItem value="processando">Processando</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button variant="outline" size="sm">
-                    <Filter className="h-4 w-4 mr-2" />
-                    Mais Filtros
-                  </Button>
                 </div>
               </CardHeader>
               <CardContent>
