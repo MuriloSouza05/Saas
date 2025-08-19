@@ -149,10 +149,37 @@ const getUrgencyColor = (urgencia?: string) => {
 
 export function Publications() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleViewPublication = (publication: Publication) => {
+    // BACKEND: Implementar mudança automática de status NOVA -> PENDENTE
+    if (publication.status === 'nova') {
+      // Fazer PATCH /api/publicacoes/{id}/status para mudar para 'pendente'
+      console.log(`Mudando status da publicação ${publication.id} de NOVA para PENDENTE`);
+    }
     navigate(`/publicacoes/${publication.id}`);
+  };
+
+  const handleLoadPublications = async () => {
+    setIsLoading(true);
+    try {
+      // BACKEND: Implementar chamada para API
+      // const response = await fetch('/api/publicacoes/carregar');
+      // const newPublications = await response.json();
+
+      console.log('Carregando novas publicações da API...');
+
+      // Simular carregamento
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // TODO: Atualizar estado com novas publicações
+      console.log('Publicações carregadas com sucesso!');
+    } catch (error) {
+      console.error('Erro ao carregar publicações:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const filteredPublications = mockPublications.filter(pub =>
