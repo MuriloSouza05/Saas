@@ -18,12 +18,28 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Enhanced suppression of Recharts defaultProps warnings for React 18+
-// These warnings come from the Recharts library itself and cannot be fixed from our application code
+/**
+ * RECHARTS DEFAULTPROPS WARNING SUPPRESSION
+ * ==========================================
+ *
+ * IMPORTANT: These warnings come from the Recharts library itself and cannot be fixed
+ * from our application code. The Recharts team is aware of this issue and it will be
+ * resolved in future versions. Until then, we suppress these specific warnings to
+ * avoid console noise while preserving other important warnings.
+ *
+ * This suppression only affects:
+ * - XAxis and YAxis defaultProps warnings from Recharts
+ * - Does NOT suppress other React warnings or errors
+ * - Does NOT affect application functionality
+ *
+ * Reference: https://github.com/recharts/recharts/issues/3615
+ */
+
+// Store original console methods for proper cleanup
 const originalWarn = console.warn;
 const originalError = console.error;
 
-// Store the original console methods for restoration if needed
+// Control flag for suppression (can be disabled if needed)
 const consoleSuppressionActive = true;
 
 if (consoleSuppressionActive) {
