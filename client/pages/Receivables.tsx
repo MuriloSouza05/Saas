@@ -512,7 +512,6 @@ export function Receivables() {
             <TabsTrigger value="faturas">Faturas</TabsTrigger>
             <TabsTrigger value="clientes">Clientes</TabsTrigger>
             <TabsTrigger value="notificacoes">Notificações</TabsTrigger>
-            <TabsTrigger value="relatorios">Relatórios</TabsTrigger>
           </TabsList>
 
           {/* ABA FATURAS */}
