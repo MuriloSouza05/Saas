@@ -69,23 +69,23 @@ import {
  */
 
 const mockDashboard: DashboardRecebiveis = {
-  faturasPagas: 45,
-  faturasPendentes: 12,
-  faturasVencidas: 3,
-  faturasProximoVencimento: 7,
-  valorTotal: 125000,
-  valorPago: 89000,
-  valorPendente: 32000,
-  valorVencido: 4000,
-  novosClientes: 8,
-  taxaCobranças: 94.2,
-  tempoMedioPagamento: 12,
-  notificacoesAgendadas: 15,
+  faturasPagas: 68,
+  faturasPendentes: 15,
+  faturasVencidas: 1,
+  faturasProximoVencimento: 4,
+  valorTotal: 187500,
+  valorPago: 142800,
+  valorPendente: 39200,
+  valorVencido: 5500,
+  novosClientes: 12,
+  taxaCobranças: 96.8,
+  tempoMedioPagamento: 8,
+  notificacoesAgendadas: 6,
   faturas3Dias: [],
   faturasVencidas: [],
-  faturamentoMensal: 89000,
-  crescimentoMensal: 15.8,
-  clientesAtivos: 67
+  faturamentoMensal: 142800,
+  crescimentoMensal: 22.4,
+  clientesAtivos: 84
 };
 
 const mockInvoices: Invoice[] = [
