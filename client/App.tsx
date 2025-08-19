@@ -11,6 +11,7 @@ import { CRM } from "./pages/CRM";
 import { Projects } from "./pages/Projects";
 import { Tasks } from "./pages/Tasks";
 import { Billing } from "./pages/Billing";
+import { Receivables } from "./pages/Receivables";
 import { CashFlow } from "./pages/CashFlow";
 import { Publications } from "./pages/Publications";
 import { PublicationDetail } from "./pages/PublicationDetail";
