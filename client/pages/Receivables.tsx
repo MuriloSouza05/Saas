@@ -572,7 +572,17 @@ export function Receivables() {
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-12">
-                          <input type="checkbox" className="rounded border-gray-300" />
+                          <input
+                            type="checkbox"
+                            className="rounded border-gray-300"
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedInvoices(filteredInvoices.map(inv => inv.id));
+                              } else {
+                                setSelectedInvoices([]);
+                              }
+                            }}
+                          />
                         </TableHead>
                         <TableHead>Número</TableHead>
                         <TableHead>Cliente</TableHead>
@@ -584,81 +594,152 @@ export function Receivables() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredInvoices.map((invoice) => {
-                        const statusConfig = getStatusBadge(invoice.status);
-                        const diasVencimento = calcularDiasVencimento(invoice.dataVencimento);
-                        const cliente = mockClientes.find(c => c.id === invoice.clienteId);
-                        
-                        return (
-                          <TableRow key={invoice.id}>
-                            <TableCell>
-                              <input 
-                                type="checkbox" 
-                                className="rounded border-gray-300"
-                                checked={selectedInvoices.includes(invoice.id)}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setSelectedInvoices([...selectedInvoices, invoice.id]);
-                                  } else {
-                                    setSelectedInvoices(selectedInvoices.filter(id => id !== invoice.id));
-                                  }
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell className="font-mono">
-                              {invoice.numeroFatura}
-                            </TableCell>
-                            <TableCell>{cliente?.nome || "Cliente não encontrado"}</TableCell>
-                            <TableCell className="font-semibold">
-                              {formatCurrency(invoice.valor)}
-                            </TableCell>
-                            <TableCell>
-                              {invoice.dataVencimento.toLocaleDateString('pt-BR')}
-                            </TableCell>
-                            <TableCell>
-                              <Badge className={statusConfig.className}>
-                                {statusConfig.label}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              {invoice.status === 'pendente' && (
-                                <span className={
-                                  diasVencimento < 0 ? "text-red-600 font-semibold" :
-                                  diasVencimento <= 3 ? "text-orange-600 font-semibold" :
-                                  "text-muted-foreground"
-                                }>
-                                  {diasVencimento < 0 ? `${Math.abs(diasVencimento)} dias em atraso` :
-                                   diasVencimento === 0 ? "Vence hoje" :
-                                   `${diasVencimento} dias`}
-                                </span>
-                              )}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex items-center space-x-1">
-                                <Button variant="ghost" size="sm">
-                                  <Eye className="h-4 w-4" />
-                                </Button>
-                                {invoice.status === 'pendente' && (
-                                  <Button 
-                                    variant="ghost" 
+                      {filteredInvoices.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={8} className="text-center py-8">
+                            <div className="text-muted-foreground">
+                              <CreditCard className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                              <p>Nenhuma fatura encontrada</p>
+                              <p className="text-sm">Tente ajustar os filtros ou criar uma nova fatura</p>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        filteredInvoices.map((invoice) => {
+                          const statusConfig = getStatusBadge(invoice.status);
+                          const diasVencimento = calcularDiasVencimento(invoice.dataVencimento);
+                          const cliente = mockClientes.find(c => c.id === invoice.clienteId);
+
+                          return (
+                            <TableRow key={invoice.id} className="hover:bg-muted/30">
+                              <TableCell>
+                                <input
+                                  type="checkbox"
+                                  className="rounded border-gray-300"
+                                  checked={selectedInvoices.includes(invoice.id)}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      setSelectedInvoices([...selectedInvoices, invoice.id]);
+                                    } else {
+                                      setSelectedInvoices(selectedInvoices.filter(id => id !== invoice.id));
+                                    }
+                                  }}
+                                />
+                              </TableCell>
+                              <TableCell className="font-mono text-sm">
+                                <div className="space-y-1">
+                                  <span className="font-semibold">{invoice.numeroFatura}</span>
+                                  {invoice.recorrente && (
+                                    <div className="text-xs text-blue-600">🔄 Recorrente</div>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div className="space-y-1">
+                                  <span className="font-medium">
+                                    {cliente?.nome || invoice.clienteNome || "Cliente não identificado"}
+                                  </span>
+                                  <div className="text-xs text-muted-foreground">
+                                    {invoice.servicoPrestado}
+                                  </div>
+                                </div>
+                              </TableCell>
+                              <TableCell className="font-semibold text-green-600">
+                                {formatCurrency(invoice.valor)}
+                              </TableCell>
+                              <TableCell>
+                                <div className="space-y-1">
+                                  <span>{invoice.dataVencimento.toLocaleDateString('pt-BR')}</span>
+                                  {invoice.dataPagamento && (
+                                    <div className="text-xs text-green-600">
+                                      Pago: {invoice.dataPagamento.toLocaleDateString('pt-BR')}
+                                    </div>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <Badge className={statusConfig.className}>
+                                  {statusConfig.label}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                {(invoice.status === 'pendente' || invoice.status === 'nova') && (
+                                  <span className={
+                                    diasVencimento < 0 ? "text-red-600 font-semibold" :
+                                    diasVencimento <= 3 ? "text-orange-600 font-semibold" :
+                                    "text-muted-foreground"
+                                  }>
+                                    {diasVencimento < 0 ? (
+                                      <div className="flex items-center space-x-1">
+                                        <AlertTriangle className="h-3 w-3" />
+                                        <span>{Math.abs(diasVencimento)} dias em atraso</span>
+                                      </div>
+                                    ) : diasVencimento === 0 ? (
+                                      <div className="flex items-center space-x-1 text-red-600">
+                                        <Clock className="h-3 w-3" />
+                                        <span>Vence hoje</span>
+                                      </div>
+                                    ) : (
+                                      `${diasVencimento} dias`
+                                    )}
+                                  </span>
+                                )}
+                                {invoice.status === 'paga' && (
+                                  <span className="text-green-600 text-sm">
+                                    ✅ Paga
+                                  </span>
+                                )}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <div className="flex items-center justify-end space-x-1">
+                                  <Button
+                                    variant="ghost"
                                     size="sm"
-                                    onClick={() => handleNotificarCliente(invoice)}
+                                    onClick={() => handleViewInvoice(invoice)}
+                                    title="Visualizar"
                                   >
-                                    <MessageSquare className="h-4 w-4" />
+                                    <Eye className="h-4 w-4" />
                                   </Button>
-                                )}
-                                {invoice.linkPagamento && (
-                                  <Button variant="ghost" size="sm" asChild>
-                                    <a href={invoice.linkPagamento} target="_blank" rel="noopener noreferrer">
-                                      <ExternalLink className="h-4 w-4" />
-                                    </a>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleEditInvoice(invoice)}
+                                    title="Editar"
+                                  >
+                                    <Edit className="h-4 w-4" />
                                   </Button>
-                                )}
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                                  {(invoice.status === 'pendente' || invoice.status === 'nova') && (
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleNotificarCliente(invoice)}
+                                      title="Enviar Notificação"
+                                    >
+                                      <MessageSquare className="h-4 w-4" />
+                                    </Button>
+                                  )}
+                                  {invoice.linkPagamento && (
+                                    <Button variant="ghost" size="sm" asChild title="Abrir Link de Pagamento">
+                                      <a href={invoice.linkPagamento} target="_blank" rel="noopener noreferrer">
+                                        <ExternalLink className="h-4 w-4" />
+                                      </a>
+                                    </Button>
+                                  )}
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleDeleteInvoice(invoice)}
+                                    title="Excluir"
+                                    className="text-red-600 hover:text-red-700"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })
+                      )}
                     </TableBody>
                   </Table>
                 </div>
