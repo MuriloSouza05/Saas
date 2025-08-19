@@ -428,6 +428,14 @@ export function Receivables() {
               <Settings className="h-4 w-4 mr-2" />
               Configurações
             </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowImportModal(true)}
+            >
+              <Import className="h-4 w-4 mr-2" />
+              Importar Cobranças
+            </Button>
             <Button size="sm">
               <Plus className="h-4 w-4 mr-2" />
               Nova Fatura
