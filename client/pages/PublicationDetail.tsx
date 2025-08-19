@@ -69,23 +69,33 @@ const mockPublications: Publication[] = [
 
 const getStatusConfig = (status: PublicationStatus) => {
   const statusConfigs = {
-    descartada: { 
-      label: "DESCARTADA", 
-      className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800",
-      icon: Trash2
+    nova: {
+      label: "NOVA",
+      className: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800",
+      icon: FileText
     },
-    atribuida: { 
-      label: "ATRIBUÍDA", 
-      className: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 border-amber-200 dark:border-amber-800",
-      icon: User
+    pendente: {
+      label: "PENDENTE",
+      className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800",
+      icon: AlertTriangle
     },
-    finalizada: { 
-      label: "FINALIZADA", 
+    atribuida: {
+      label: "ATRIBUÍDA",
+      className: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 border-purple-200 dark:border-purple-800",
+      icon: UserPlus
+    },
+    finalizada: {
+      label: "FINALIZADA",
       className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800",
       icon: CheckCircle
+    },
+    descartada: {
+      label: "DESCARTADA",
+      className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-800",
+      icon: Trash2
     }
   };
-  
+
   return statusConfigs[status];
 };
 
