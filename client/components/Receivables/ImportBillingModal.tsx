@@ -598,11 +598,40 @@ export function ImportBillingModal({ open, onOpenChange, onImport }: ImportBilli
                         </div>
                       </div>
 
-                      <div className="bg-muted/30 p-3 rounded-lg">
-                        <div className="flex items-center justify-between text-sm">
-                          <span>Valor Total: <strong>{formatCurrency(doc.total)}</strong></span>
-                          <span>Valor por Parcela: <strong>{formatCurrency(data.valorParcela)}</strong></span>
+                      <div className="bg-muted/30 p-4 rounded-lg space-y-2">
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <span className="text-muted-foreground">Valor Total:</span>
+                            <div className="font-bold text-green-600">{formatCurrency(doc.total)}</div>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Valor por Parcela:</span>
+                            <div className="font-bold text-blue-600">{formatCurrency(data.valorParcela)}</div>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Intervalo de Cobrança:</span>
+                            <div className="font-semibold">30 dias</div>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Data Final:</span>
+                            <div className="font-semibold">
+                              {(() => {
+                                const dataFinal = new Date(data.dataInicio);
+                                dataFinal.setMonth(dataFinal.getMonth() + (data.parcelas - 1));
+                                return dataFinal.toLocaleDateString('pt-BR');
+                              })()}
+                            </div>
+                          </div>
                         </div>
+                        {data.parcelas > 1 && (
+                          <div className="pt-2 border-t text-xs text-muted-foreground">
+                            💡 As parcelas serão cobradas automaticamente a cada 30 dias até {(() => {
+                              const dataFinal = new Date(data.dataInicio);
+                              dataFinal.setMonth(dataFinal.getMonth() + (data.parcelas - 1));
+                              return dataFinal.toLocaleDateString('pt-BR');
+                            })()}
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
