@@ -86,6 +86,14 @@ if (consoleSuppressionActive) {
   };
 }
 
+// Cleanup function to restore original console methods if needed
+export const restoreConsole = () => {
+  if (consoleSuppressionActive) {
+    console.warn = originalWarn;
+    console.error = originalError;
+  }
+};
+
 // Mock data for charts
 const monthlyFinancialData = [
   { month: 'Jan', receitas: 45000, despesas: 28000, saldo: 17000 },
