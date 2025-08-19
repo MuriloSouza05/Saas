@@ -369,13 +369,13 @@ export function Receivables() {
     // BACKEND: POST /api/recebiveis/cobranca-lote
   };
 
-  const filteredInvoices = mockInvoices.filter(invoice => {
-    const matchesSearch = 
+  const filteredInvoices = invoices.filter(invoice => {
+    const matchesSearch =
       invoice.numeroFatura.toLowerCase().includes(searchTerm.toLowerCase()) ||
       invoice.descricao.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesStatus = statusFilter === "all" || invoice.status === statusFilter;
-    
+
     return matchesSearch && matchesStatus;
   });
 
