@@ -386,6 +386,14 @@ export function PublicationDetail() {
             </Card>
           </div>
         </div>
+
+        {/* Modal de Criação de Tarefa */}
+        <TaskForm
+          open={showTaskForm}
+          onOpenChange={setShowTaskForm}
+          onSubmit={handleTaskSubmit}
+          isEditing={false}
+        />
       </div>
     </DashboardLayout>
   );
