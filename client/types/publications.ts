@@ -122,3 +122,32 @@ export interface PublicationTableItem extends Publication {
     color: string;
   };
 }
+
+/**
+ * INTEGRAÇÃO COM MÓDULO DE TAREFAS - PARA BACKEND
+ * ==============================================
+ *
+ * O botão "Gerenciamentos" na página de detalhes da publicação
+ * deve permitir criar tarefas vinculadas à publicação.
+ *
+ * FUNCIONALIDADES NECESSÁRIAS:
+ * 1. Dropdown com opção "+ Adicionar Tarefa"
+ * 2. Usar o mesmo formulário do módulo de Tarefas
+ * 3. Vincular tarefa criada à publicação (campo tarefasVinculadas)
+ * 4. Quando tarefa é atribuída a alguém, status da publicação vira 'atribuida'
+ * 5. Mostrar tarefas vinculadas na página de detalhes
+ *
+ * ESTRUTURA DA TAREFA VINCULADA:
+ */
+export interface PublicationTask {
+  id: string;
+  publicacaoId: string;
+  titulo: string;
+  descricao?: string;
+  prazo?: Date;
+  prioridade: 'baixa' | 'media' | 'alta';
+  responsavel?: TeamMember;
+  status: 'pendente' | 'em_andamento' | 'concluida' | 'cancelada';
+  dataCriacao: Date;
+  dataAtualizacao?: Date;
+}
