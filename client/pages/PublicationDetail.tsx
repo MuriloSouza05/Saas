@@ -34,8 +34,13 @@ import {
   Settings,
   Plus,
   Lightbulb,
+  ChevronDown,
+  ListTodo,
+  UserPlus,
+  Eye,
 } from "lucide-react";
 import { Publication, PublicationStatus } from "@/types/publications";
+import { TaskForm } from "@/components/Tasks/TaskForm";
 
 // Dados mock - em produção viria de uma API
 const mockPublications: Publication[] = [
