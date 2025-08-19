@@ -448,7 +448,15 @@ export function Receivables() {
   const handleDeleteInvoice = (invoice: Invoice) => {
     if (confirm(`Deseja realmente excluir a fatura ${invoice.numeroFatura}?`)) {
       setInvoices(prev => prev.filter(inv => inv.id !== invoice.id));
-      console.log("Fatura excluída:", invoice.numeroFatura);
+      setSelectedInvoices(prev => prev.filter(id => id !== invoice.id));
+
+      // Fechar dialog automaticamente se estiver aberto
+      if (showViewDialog && viewingInvoice?.id === invoice.id) {
+        setShowViewDialog(false);
+        setViewingInvoice(null);
+      }
+
+      console.log("✅ Fatura excluída:", invoice.numeroFatura);
     }
   };
 
