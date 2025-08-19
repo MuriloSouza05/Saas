@@ -57,7 +57,7 @@ const mockPublications: Publication[] = [
     diario: "Diário do Tribunal Regional do Trabalho de São Paulo (2ª Região) - Eletrônico - Edição 2727",
     varaComarca: "2ª Vara do Trabalho de São Paulo - Comarca: CAPITAL",
     nomePesquisado: "JOÃO BATISTA XAVIER",
-    status: "atribuida",
+    status: "pendente", // Status será atualizado dinamicamente
     conteudo: "Processo Nº RTOrd-0001193-84.2013.5.02.0002 REQUERANTE JOÃO BATISTA XAVIER ADVOGADO SUELI SZNIFER CATTANIO/AB 000000SC) REQUERIDO LUAN FRONZA REQUERIDO CONSTRUTORA BI Intimação(s)/Citação(s) - JOÃO CARLOS Justiça do Trabalho - 2 Reqfa 2 Vara do Trabalho de So Paulo Avenida Marginal da Sa Vicente, 235, Vrza da Barra Funda, SAO PAULO - SP - CEP 0100-001 - v40028@trtsp.jus.br Destinatário: JOÃO CARLOS INTIMAÇÃO - Processo: Ple - Processo: 0001193- 84.2013.5.02.0002 - Processo Ple Classe: AO TRABALHISTA",
     responsavel: "Dr. Advogado Silva",
     urgencia: "alta",
