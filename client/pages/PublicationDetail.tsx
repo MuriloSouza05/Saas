@@ -42,7 +42,13 @@ import {
 import { Publication, PublicationStatus } from "@/types/publications";
 import { TaskForm } from "@/components/Tasks/TaskForm";
 
-// Dados mock - em produção viria de uma API
+/**
+ * DADOS MOCK PARA PUBLICAÇÃO DETALHADA
+ * ===================================
+ *
+ * BACKEND: Esta publicação virá da API GET /api/publicacoes/{id}
+ * Incluindo todas as tarefas vinculadas e histórico de atribuições
+ */
 const mockPublications: Publication[] = [
   {
     id: "1",
