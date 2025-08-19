@@ -852,57 +852,24 @@ export function Receivables() {
             </Card>
           </TabsContent>
 
-          {/* ABA RELATÓRIOS */}
-          <TabsContent value="relatorios" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Relatórios e Análises</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="p-4 border rounded-lg">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <BarChart3 className="h-5 w-5 text-primary" />
-                      <h4 className="font-medium">Taxa de Cobrança</h4>
-                    </div>
-                    <p className="text-2xl font-bold text-green-600">
-                      {mockDashboard.taxaCobranças}%
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Cobranças bem-sucedidas
-                    </p>
-                  </div>
-                  
-                  <div className="p-4 border rounded-lg">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <Clock className="h-5 w-5 text-primary" />
-                      <h4 className="font-medium">Tempo Médio</h4>
-                    </div>
-                    <p className="text-2xl font-bold">
-                      {mockDashboard.tempoMedioPagamento} dias
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Para pagamento
-                    </p>
-                  </div>
-                  
-                  <div className="p-4 border rounded-lg">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <TrendingUp className="h-5 w-5 text-primary" />
-                      <h4 className="font-medium">Crescimento</h4>
-                    </div>
-                    <p className="text-2xl font-bold text-green-600">
-                      +{mockDashboard.crescimentoMensal}%
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Mensal
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
         </Tabs>
+
+        {/* Modal de Importação de Cobranças */}
+        <ImportBillingModal
+          open={showImportModal}
+          onOpenChange={setShowImportModal}
+          onImport={handleImportBilling}
+        />
+
+        {/* Modal de Visualização de Fatura */}
+        <InvoiceViewDialog
+          invoice={viewingInvoice}
+          open={showViewDialog}
+          onOpenChange={setShowViewDialog}
+          onEdit={handleEditInvoice}
+          onDelete={handleDeleteInvoice}
+          onNotify={handleNotificarCliente}
+        />
       </div>
     </DashboardLayout>
   );
