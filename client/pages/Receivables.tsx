@@ -313,6 +313,10 @@ export function Receivables() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [showViewDialog, setShowViewDialog] = useState(false);
+  const [viewingInvoice, setViewingInvoice] = useState<Invoice | null>(null);
+  const [invoices, setInvoices] = useState<Invoice[]>(mockInvoices);
 
   /**
    * FUNÇÃO PARA DETECÇÃO DE VENCIMENTOS (3 DIAS)
