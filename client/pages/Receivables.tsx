@@ -379,7 +379,37 @@ export function Receivables() {
     return matchesSearch && matchesStatus;
   });
 
-  const invoicesProximoVencimento = mockInvoices.filter(invoice => {
+  const handleImportBilling = (importedInvoices: any[]) => {
+    // Adicionar faturas importadas ao estado
+    const newInvoices = importedInvoices.map(imported => ({
+      ...imported,
+      id: `imported_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    }));
+
+    setInvoices(prev => [...prev, ...newInvoices]);
+
+    // Notificação de sucesso
+    console.log(`✅ ${importedInvoices.length} fatura(s) importada(s) com sucesso!`);
+  };
+
+  const handleViewInvoice = (invoice: Invoice) => {
+    setViewingInvoice(invoice);
+    setShowViewDialog(true);
+  };
+
+  const handleEditInvoice = (invoice: Invoice) => {
+    console.log("Editando fatura:", invoice.numeroFatura);
+    // Implementar modal de edição
+  };
+
+  const handleDeleteInvoice = (invoice: Invoice) => {
+    if (confirm(`Deseja realmente excluir a fatura ${invoice.numeroFatura}?`)) {
+      setInvoices(prev => prev.filter(inv => inv.id !== invoice.id));
+      console.log("Fatura excluída:", invoice.numeroFatura);
+    }
+  };
+
+  const invoicesProximoVencimento = invoices.filter(invoice => {
     const dias = calcularDiasVencimento(invoice.dataVencimento);
     return dias <= 3 && dias >= 0 && invoice.status === 'pendente';
   });
