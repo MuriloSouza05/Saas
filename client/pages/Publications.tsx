@@ -35,7 +35,22 @@ import {
 } from "lucide-react";
 import { Publication, PublicationStatus } from "@/types/publications";
 
-// Dados mock para demonstração
+/**
+ * DADOS MOCK - SERÃO SUBSTITUÍDOS POR API
+ * ======================================
+ *
+ * IMPORTANTE PARA O BACKEND:
+ *
+ * ENDPOINT NECESSÁRIO: GET /api/publicacoes/carregar
+ * - Busca novas publicações dos diários oficiais
+ * - Retorna: Data Publicação, Processo, Diário, Vara/Comarca, Nome Pesquisado
+ * - Todas as novas publicações devem vir com status: 'nova'
+ * - Implementar filtros por data, comarca, etc.
+ *
+ * ENDPOINT: PATCH /api/publicacoes/{id}/status
+ * - Atualiza status da publicação
+ * - Usado para mudança automática NOVA -> PENDENTE ao visualizar
+ */
 const mockPublications: Publication[] = [
   {
     id: "1",
@@ -44,9 +59,8 @@ const mockPublications: Publication[] = [
     diario: "Diário de Justiça Eletrônico",
     varaComarca: "1ª Vara Cível - São Paulo/SP",
     nomePesquisado: "João Silva Santos",
-    status: "atribuida",
+    status: "nova", // Status inicial de publicações da API
     conteudo: "Intimação para audiência de conciliação...",
-    responsavel: "Dr. Advogado Silva",
     urgencia: "alta"
   },
   {
@@ -56,9 +70,8 @@ const mockPublications: Publication[] = [
     diario: "Diário Oficial do Estado",
     varaComarca: "2ª Vara Criminal - Rio de Janeiro/RJ",
     nomePesquisado: "Maria Oliveira Costa",
-    status: "finalizada",
+    status: "pendente", // Já foi visualizada
     conteudo: "Sentença publicada nos autos...",
-    responsavel: "Dra. Advogada Santos",
     urgencia: "media"
   },
   {
@@ -71,6 +84,25 @@ const mockPublications: Publication[] = [
     status: "descartada",
     conteudo: "Publicação não relacionada ao caso...",
     urgencia: "baixa"
+  },
+  {
+    id: "4",
+    dataPublicacao: new Date("2024-01-12"),
+    processo: "4001234-56.2024.8.26.0400",
+    diario: "Diário de Justiça Eletrônico",
+    varaComarca: "3ª Vara Trabalhista - São Paulo/SP",
+    nomePesquisado: "Ana Paula Silva",
+    status: "atribuida",
+    conteudo: "Despacho do juiz...",
+    responsavel: "Dr. Silva",
+    urgencia: "alta",
+    atribuidoPara: {
+      id: "1",
+      nome: "Dr. Silva",
+      email: "silva@escritorio.com",
+      cargo: "Gerente",
+      ativo: true
+    }
   },
 ];
 
