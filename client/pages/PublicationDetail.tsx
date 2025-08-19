@@ -210,10 +210,30 @@ export function PublicationDetail() {
               <Printer className="h-4 w-4 mr-2" />
               Imprimir
             </Button>
-            <Button variant="default" size="sm" onClick={handleManagement}>
-              <Settings className="h-4 w-4 mr-2" />
-              GERENCIAMENTOS
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="default" size="sm">
+                  <Settings className="h-4 w-4 mr-2" />
+                  GERENCIAMENTOS
+                  <ChevronDown className="h-4 w-4 ml-2" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem onClick={handleAddTask}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Adicionar Tarefa
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleViewTasks}>
+                  <Eye className="h-4 w-4 mr-2" />
+                  Ver Tarefas Vinculadas
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleAssignToTeam}>
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Atribuir à Equipe
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button variant="destructive" size="sm" onClick={handleDiscard}>
               <Trash2 className="h-4 w-4 mr-2" />
               DESCARTAR
@@ -232,7 +252,7 @@ export function PublicationDetail() {
             {/* Informações do Diário */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Informações da Publicação</CardTitle>
+                <CardTitle className="text-lg">Informações da Publicaç��o</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
