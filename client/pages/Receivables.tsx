@@ -49,6 +49,12 @@ import {
   Smartphone,
   Mail,
   ExternalLink,
+  Import,
+  Edit,
+  Trash2,
+  Phone,
+  Building2,
+  User,
 } from "lucide-react";
 import { 
   Invoice, 
