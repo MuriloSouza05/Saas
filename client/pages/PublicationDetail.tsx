@@ -62,7 +62,8 @@ const mockPublications: Publication[] = [
     responsavel: "Dr. Advogado Silva",
     urgencia: "alta",
     numeroProcesso: "0001193-84.2013.5.02.0002",
-    cliente: "João Batista Xavier"
+    cliente: "João Batista Xavier",
+    tarefasVinculadas: [] // Tarefas vinculadas serão carregadas da API
   },
 ];
 
