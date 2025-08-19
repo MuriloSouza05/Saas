@@ -22,8 +22,10 @@
  * 5. Webhook do Stripe confirma pagamento e atualiza status no sistema
  */
 
-export type InvoiceStatus = 
+export type InvoiceStatus =
+  | 'nova'         // Status inicial de todas as faturas vindas da API
   | 'pendente'     // Fatura criada, aguardando pagamento
+  | 'atribuida'    // Fatura atribuída a um responsável
   | 'paga'         // Pagamento confirmado
   | 'vencida'      // Passou da data de vencimento
   | 'cancelada'    // Fatura cancelada
