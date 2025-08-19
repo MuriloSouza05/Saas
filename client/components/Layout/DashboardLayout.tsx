@@ -55,6 +55,7 @@ import {
   ChevronRight,
   Scale,
   Newspaper,
+  CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserProfileDialog } from "./UserProfileDialog";
