@@ -541,7 +541,7 @@ export function Receivables() {
                   <div className="relative flex-1 max-w-md">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder="Buscar faturas..."
+                      placeholder="Buscar por fatura, cliente ou descrição..."
                       className="pl-10"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -553,12 +553,17 @@ export function Receivables() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos Status</SelectItem>
+                      <SelectItem value="nova">Nova</SelectItem>
                       <SelectItem value="pendente">Pendente</SelectItem>
                       <SelectItem value="paga">Paga</SelectItem>
                       <SelectItem value="vencida">Vencida</SelectItem>
                       <SelectItem value="processando">Processando</SelectItem>
                     </SelectContent>
                   </Select>
+                  <Button variant="outline" size="sm">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Mais Filtros
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent>
