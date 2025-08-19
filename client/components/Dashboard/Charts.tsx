@@ -192,6 +192,11 @@ export function DashboardCharts({ className }: ChartsProps) {
                 allowDecimals={false}
                 allowDuplicatedCategory={false}
                 scale="auto"
+                tickCount={6}
+                minTickGap={5}
+                mirror={false}
+                reversed={false}
+                hide={false}
               />
               <YAxis
                 type="number"
@@ -205,6 +210,11 @@ export function DashboardCharts({ className }: ChartsProps) {
                 orientation="left"
                 allowDecimals={false}
                 scale="auto"
+                tickCount={5}
+                minTickGap={5}
+                mirror={false}
+                reversed={false}
+                hide={false}
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
