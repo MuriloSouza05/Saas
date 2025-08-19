@@ -40,6 +40,36 @@ export interface Publication {
   cliente?: string;
   urgencia?: 'baixa' | 'media' | 'alta';
   tags?: string[];
+  // BACKEND: Campos para sistema de atribuição
+  atribuidoPara?: TeamMember; // Membro da equipe responsável
+  dataAtribuicao?: Date; // Quando foi atribuído
+  tarefasVinculadas?: string[]; // IDs das tarefas vinculadas
+}
+
+/**
+ * SISTEMA DE ATRIBUIÇÃO - PARA BACKEND
+ * ===================================
+ *
+ * Cada tenant possui múltiplos membros da equipe.
+ * Exemplo de estrutura de membros por tenant:
+ * - Dr. Silva (Gerente)
+ * - Dra. Costa (Financeiro)
+ * - Ana (Atendimento)
+ * - Carlos (Estagiário)
+ *
+ * FUNCIONALIDADES NECESSÁRIAS:
+ * 1. API para listar membros do tenant atual
+ * 2. Sistema de notificações quando publicação é atribuída
+ * 3. Filtro por responsável nas listagens
+ * 4. Histórico de atribuições
+ */
+export interface TeamMember {
+  id: string;
+  nome: string;
+  email: string;
+  cargo: string;
+  avatar?: string;
+  ativo: boolean;
 }
 
 export interface PublicationFilters {
