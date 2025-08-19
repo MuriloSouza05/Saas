@@ -328,6 +328,7 @@ export function Receivables() {
   const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
   const [showImportModal, setShowImportModal] = useState(false);
   const [showViewDialog, setShowViewDialog] = useState(false);
+  const [showNewInvoiceModal, setShowNewInvoiceModal] = useState(false);
   const [viewingInvoice, setViewingInvoice] = useState<Invoice | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>(mockInvoices);
 
