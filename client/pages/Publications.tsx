@@ -224,9 +224,22 @@ export function Publications() {
                       <Filter className="h-4 w-4 mr-2" />
                       Filtros
                     </Button>
-                    <Button size="sm">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Nova Publicação
+                    <Button
+                      size="sm"
+                      onClick={handleLoadPublications}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Carregando...
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Carregar
+                        </>
+                      )}
                     </Button>
                   </div>
                 </div>
