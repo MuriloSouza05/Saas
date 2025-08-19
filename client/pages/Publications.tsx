@@ -299,8 +299,13 @@ export function Publications() {
                               {publication.nomePesquisado}
                             </TableCell>
                             <TableCell>
-                              <Badge variant={statusConfig.variant} className={statusConfig.color}>
+                              <Badge className={`${statusConfig.color} px-2 py-1 text-xs font-medium`}>
                                 {statusConfig.label}
+                                {publication.status === 'atribuida' && publication.atribuidoPara && (
+                                  <span className="ml-1 text-xs">
+                                    ({publication.atribuidoPara.nome})
+                                  </span>
+                                )}
                               </Badge>
                             </TableCell>
                             <TableCell>
