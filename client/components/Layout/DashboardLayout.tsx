@@ -54,6 +54,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Scale,
+  Newspaper,
+  CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserProfileDialog } from "./UserProfileDialog";
@@ -66,7 +68,9 @@ const navigation = [
   { name: "Projetos", href: "/projetos", icon: FolderKanban },
   { name: "Tarefas", href: "/tarefas", icon: CheckSquare },
   { name: "Cobrança", href: "/cobranca", icon: FileText },
+  { name: "Gestão de Recebíveis", href: "/recebiveis", icon: CreditCard },
   { name: "Fluxo de Caixa", href: "/fluxo-caixa", icon: TrendingUp },
+  { name: "Painel de Publicações", href: "/publicacoes", icon: Newspaper },
   { name: "Configurações", href: "/configuracoes", icon: Settings },
 ];
 

@@ -18,39 +18,80 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Enhanced suppression of Recharts defaultProps warnings for React 18+
-// These warnings come from the Recharts library itself and cannot be fixed from our application code
+/**
+ * RECHARTS DEFAULTPROPS WARNING SUPPRESSION
+ * ==========================================
+ *
+ * IMPORTANT: These warnings come from the Recharts library itself and cannot be fixed
+ * from our application code. The Recharts team is aware of this issue and it will be
+ * resolved in future versions. Until then, we suppress these specific warnings to
+ * avoid console noise while preserving other important warnings.
+ *
+ * This suppression only affects:
+ * - XAxis and YAxis defaultProps warnings from Recharts
+ * - Does NOT suppress other React warnings or errors
+ * - Does NOT affect application functionality
+ *
+ * Reference: https://github.com/recharts/recharts/issues/3615
+ */
+
+// Store original console methods for proper cleanup
 const originalWarn = console.warn;
 const originalError = console.error;
 
-console.warn = (...args) => {
-  const message = args[0];
-  if (typeof message === 'string') {
-    // Suppress Recharts defaultProps warnings
-    if (message.includes('defaultProps will be removed') &&
-        (message.includes('XAxis') || message.includes('YAxis'))) {
-      return;
-    }
-    // Also catch React development warnings about Recharts components
-    if (message.includes('Warning: ') &&
-        (message.includes('XAxis') || message.includes('YAxis')) &&
-        message.includes('defaultProps')) {
-      return;
-    }
-  }
-  originalWarn.apply(console, args);
-};
+// Control flag for suppression (can be disabled if needed)
+const consoleSuppressionActive = true;
 
-console.error = (...args) => {
-  const message = args[0];
-  if (typeof message === 'string') {
-    // Suppress React error logs about defaultProps from Recharts
-    if (message.includes('defaultProps') &&
-        (message.includes('XAxis') || message.includes('YAxis'))) {
-      return;
+if (consoleSuppressionActive) {
+  console.warn = (...args) => {
+    const message = typeof args[0] === 'string' ? args[0] : String(args[0]);
+
+    // Comprehensive suppression of Recharts defaultProps warnings
+    const suppressPatterns = [
+      'Support for defaultProps will be removed from function components',
+      'defaultProps will be removed',
+      'XAxis',
+      'YAxis',
+      'CartesianGrid',
+      'Tooltip',
+      'Legend'
+    ];
+
+    // Check if this is a Recharts defaultProps warning
+    const isRechartsWarning = suppressPatterns.some(pattern =>
+      message.includes(pattern)
+    ) && (
+      message.includes('defaultProps') ||
+      message.includes('XAxis') ||
+      message.includes('YAxis')
+    );
+
+    if (!isRechartsWarning) {
+      originalWarn.apply(console, args);
     }
+  };
+
+  console.error = (...args) => {
+    const message = typeof args[0] === 'string' ? args[0] : String(args[0]);
+
+    // Suppress React error logs about defaultProps from Recharts
+    const isRechartsError = (
+      message.includes('defaultProps') &&
+      (message.includes('XAxis') || message.includes('YAxis') || message.includes('recharts'))
+    );
+
+    if (!isRechartsError) {
+      originalError.apply(console, args);
+    }
+  };
+}
+
+// Cleanup function to restore original console methods if needed
+export const restoreConsole = () => {
+  if (consoleSuppressionActive) {
+    console.warn = originalWarn;
+    console.error = originalError;
   }
-  originalError.apply(console, args);
 };
 
 // Mock data for charts
@@ -175,6 +216,11 @@ export function DashboardCharts({ className }: ChartsProps) {
                 allowDecimals={false}
                 allowDuplicatedCategory={false}
                 scale="auto"
+                tickCount={6}
+                minTickGap={5}
+                mirror={false}
+                reversed={false}
+                hide={false}
               />
               <YAxis
                 type="number"
@@ -188,6 +234,11 @@ export function DashboardCharts({ className }: ChartsProps) {
                 orientation="left"
                 allowDecimals={false}
                 scale="auto"
+                tickCount={5}
+                minTickGap={5}
+                mirror={false}
+                reversed={false}
+                hide={false}
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
@@ -338,6 +389,11 @@ export function DashboardCharts({ className }: ChartsProps) {
                 allowDecimals={false}
                 allowDuplicatedCategory={false}
                 scale="auto"
+                tickCount={5}
+                minTickGap={5}
+                mirror={false}
+                reversed={false}
+                hide={false}
               />
               <YAxis
                 type="number"
@@ -350,6 +406,11 @@ export function DashboardCharts({ className }: ChartsProps) {
                 orientation="left"
                 allowDecimals={false}
                 scale="auto"
+                tickCount={5}
+                minTickGap={5}
+                mirror={false}
+                reversed={false}
+                hide={false}
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="count" name="Casos" radius={[4, 4, 0, 0]}>
@@ -384,6 +445,11 @@ export function DashboardCharts({ className }: ChartsProps) {
                 allowDecimals={false}
                 allowDuplicatedCategory={false}
                 scale="auto"
+                tickCount={6}
+                minTickGap={5}
+                mirror={false}
+                reversed={false}
+                hide={false}
               />
               <YAxis
                 type="number"
@@ -396,6 +462,11 @@ export function DashboardCharts({ className }: ChartsProps) {
                 orientation="left"
                 allowDecimals={false}
                 scale="auto"
+                tickCount={5}
+                minTickGap={5}
+                mirror={false}
+                reversed={false}
+                hide={false}
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />

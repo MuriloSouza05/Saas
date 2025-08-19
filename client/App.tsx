@@ -11,7 +11,10 @@ import { CRM } from "./pages/CRM";
 import { Projects } from "./pages/Projects";
 import { Tasks } from "./pages/Tasks";
 import { Billing } from "./pages/Billing";
+import { Receivables } from "./pages/Receivables";
 import { CashFlow } from "./pages/CashFlow";
+import { Publications } from "./pages/Publications";
+import { PublicationDetail } from "./pages/PublicationDetail";
 import { Settings } from "./pages/Settings";
 import { Notifications } from "./pages/Notifications";
 import { Login } from "./pages/Login";
@@ -31,7 +34,10 @@ const App = () => (
           <Route path="/projetos" element={<Projects />} />
           <Route path="/tarefas" element={<Tasks />} />
           <Route path="/cobranca" element={<Billing />} />
+          <Route path="/recebiveis" element={<Receivables />} />
           <Route path="/fluxo-caixa" element={<CashFlow />} />
+          <Route path="/publicacoes" element={<Publications />} />
+          <Route path="/publicacoes/:id" element={<PublicationDetail />} />
           <Route path="/configuracoes" element={<Settings />} />
           <Route path="/notificacoes" element={<Notifications />} />
           <Route path="/login" element={<Login />} />
